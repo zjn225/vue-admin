@@ -11,15 +11,11 @@
                 </div>
             </el-col>
             <!--用户信息-->
-            <el-col :span="4" class="userinfo">
-                <el-dropdown trigger="hover">
-                    <span class="el-dropdown-link userinfo-inner"><img
-                            :src="this.sysUserAvatar"/> {{sysUserName}}</span>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
+            <el-col :span="4" class="goOut">
+                <span class="el-dropdown-link" @click="logout">{{goOut}}</span>
+                <span class="el-dropdown-link">{{goSite}}</span>
             </el-col>
+
         </el-col>
 
         <el-col :span="24" class="main">
@@ -96,6 +92,8 @@
                 smlName: 'lts',
                 collapsed: false,
                 sysUserName: '',
+                goOut: '登出',
+                goSite: '网站',
                 sysUserAvatar: '',
                 form: {
                     name: '',
@@ -127,7 +125,7 @@
                 this.$confirm('确认退出吗?', '提示', {
                     //type: 'warning'
                 }).then(() => {
-                    sessionStorage.removeItem('user');
+                    sessionStorage.removeItem('status');
                     _this.$router.push('/login');
                 }).catch(() => {
 
@@ -148,12 +146,6 @@
             }
         },
         mounted() {
-            var user = sessionStorage.getItem('user');
-            if (user) {
-                user = JSON.parse(user);
-                this.sysUserName = user.name || '';
-                this.sysUserAvatar = user.avatar || '';
-            }
 
         }
     }
@@ -173,20 +165,13 @@
             line-height: 60px;
             background: $color-primary;
             color: #fff;
-            .userinfo {
+            .goOut{
                 text-align: right;
                 padding-right: 35px;
                 float: right;
-                .userinfo-inner {
+                span{
                     cursor: pointer;
-                    color: #fff;
-                    img {
-                        width: 40px;
-                        height: 40px;
-                        border-radius: 20px;
-                        margin: 10px 0px 10px 10px;
-                        float: right;
-                    }
+                    margin: 10px;
                 }
             }
             .logo {

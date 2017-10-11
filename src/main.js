@@ -12,11 +12,14 @@ import Vuex from 'vuex'
 //import 'nprogress/nprogress.css'
 import routes from './routes'
 import Mock from './mock'
-Mock.bootstrap();
+import VueQuillEditor from "vue-quill-editor"
+
+Mock.bootstrap();  //初始化mock
 
 Vue.use(ElementUI);
 Vue.use(VueRouter);
 Vue.use(Vuex);
+Vue.use(VueQuillEditor);
 
 const router = new VueRouter({
   routes
@@ -25,21 +28,17 @@ const router = new VueRouter({
 // 注册一个全局前置守卫
 router.beforeEach((to, from, next) => {
   //手动进入这个login
-  if (to.path == '/login') {
+  if (to.path === '/login') {
     sessionStorage.removeItem('user');
   }
-  let user = JSON.parse(sessionStorage.getItem('user'));
-  //sessionStorage没有用户且即将进入的路由对象不是login
-  if (!user && to.path != '/login') {
+  let status = JSON.parse(sessionStorage.getItem('status'));
+  //sessionStorage不存在状态码且即将进入的路由对象不是login
+  if (!status && to.path != '/login') {
     next({ path: '/login' })
   } else {
     next();//进行管道中的下一个钩子
   }
 })
-
-router.afterEach(transition => {
-NProgress.done();
-});
 
 new Vue({
   //el: '#app',

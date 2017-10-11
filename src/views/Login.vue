@@ -21,21 +21,29 @@
 
 <script>
     import {requestLogin} from '../api/api';
-    //import NProgress from 'nprogress'
+
     export default {
         data() {
+            var validateAccount = (rule, value, callback) => {
+
+            };
+            var validatePass = (rule, value, callback) => {
+
+            };
             return {
                 logining: false,
                 ruleForm2: {
                     account: 'admin',
-                    checkPass: '123456'
+                    checkPass: 'admin'
                 },
                 rules2: {
                     account: [
-                        {required: true, message: '请输入账号', trigger: 'blur'},
+                        {required: true,  message: '请输入账号', trigger: 'blur'},
+                        { min: 3, message: '账号长度在3个字符以上', trigger: 'blur' }
                     ],
                     checkPass: [
                         {required: true, message: '请输入密码', trigger: 'blur'},
+                        { min: 5, message: '密码长度在5个字符以上', trigger: 'blur' }
                     ]
                 },
             };
@@ -44,20 +52,20 @@
             handleSubmit2(ev) {
                 var _this = this;
                 this.$refs.ruleForm2.validate((valid) => {
+                    console.log(this.$refs)//{ruleForm2: VueComponent}
                     if (valid) {
                         this.logining = true;
-                        var loginParams = {username: this.ruleForm2.account, password: this.ruleForm2.checkPass};
+                        var loginParams = {account: this.ruleForm2.account, password: this.ruleForm2.checkPass};
                         requestLogin(loginParams).then(data => {
                             this.logining = false;
-                            //NProgress.done();
-                            let {msg, code, user} = data;
+                            let {code, msg} = data;
                             if (code !== 200) {
                                 this.$message({
                                     message: msg,
                                     type: 'error'
                                 });
                             } else {
-                                sessionStorage.setItem('user', JSON.stringify(user));
+                                sessionStorage.setItem('status', 1);
                                 this.$router.push({path: '/main'});
                             }
                         });
@@ -73,13 +81,12 @@
 </script>
 
 <style lang="scss" scoped>
-    .wrap{
+    .wrap {
         position: absolute;
         width: 100%;
         height: 100%;
         background-color: #2D3A4B;
     }
-
 
     .login-container {
         /*box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);*/

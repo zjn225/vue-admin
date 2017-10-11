@@ -2,7 +2,7 @@ import Login from './views/Login.vue'
 import NotFound from './views/404.vue'
 import Home from './views/Home.vue'
 
-import Message from './views/nav1/Message.vue'
+import Safety from './views/nav1/Safety.vue'
 import skin from './views/nav1/Skin.vue'
 import Main from './views/nav1/Main.vue'
 
@@ -36,7 +36,7 @@ let routes = [
         iconCls: 'el-icon-setting',//图标样式class
         children: [
             {path: '/main', component: Main, name: '网站概要', hidden: false},
-            {path: '/message', component: Message, name: '个人信息'},
+            {path: '/safety', component: Safety, name: '账户安全'},
             {path: '/skin', component: skin, name: '首页外观'},
         ]
     },
