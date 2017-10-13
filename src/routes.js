@@ -8,7 +8,7 @@ import Main from './views/nav1/Main.vue'
 
 import user from './views/nav2/user.vue'
 import Write from './views/nav2/Write.vue'
-import Posts from './views/nav2/Posts.vue'
+import Article from './views/nav2/Article.vue'
 import Column from './views/nav2/Column.vue'
 import Book from './views/nav2/Book.vue'
 
@@ -47,7 +47,7 @@ let routes = [
         iconCls: 'el-icon-menu',
         children: [
             {path: '/write', component: Write, name: '撰写文章'},
-            {path: '/posts', component: Posts, name: '文章管理'},
+            {path: '/article', component: Article, name: '文章管理'},
             {path: '/column', component: Column, name: '栏目管理'},
             {path: '/book', component: Book, name: '著作管理'},
             {path: '/user', component: user, name: '专家团队管理'},

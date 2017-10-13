@@ -4,10 +4,10 @@
         <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
             <el-form :inline="true" :model="filters">
                 <el-form-item>
-                    <el-input v-model="filters.title" placeholder="输入著作名称"></el-input>
+                    <el-input v-model="filters.title" placeholder="输入文章标题"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" v-on:click="getBookList">查询</el-button>
+                    <el-button type="primary" v-on:click="getArticleList">查询</el-button>
                 </el-form-item>
             </el-form>
         </el-col>
@@ -19,7 +19,13 @@
             </el-table-column>
             <el-table-column type="index" label="序号" width="100">
             </el-table-column>
-            <el-table-column prop="column" label="著作" max-width="220" sortable>
+            <el-table-column prop="name" label="标题" width="220" sortable>
+            </el-table-column>
+            <el-table-column prop="author" label="作者" width="200" sortable>
+            </el-table-column>
+            <el-table-column prop="source" label="文章来源" width="200" sortable>
+            </el-table-column>
+            <el-table-column prop="time" label="发布时间" max-width="200" sortable>
             </el-table-column>
             <el-table-column label="操作" width="150">
                 <template scope="scope">
@@ -41,7 +47,7 @@
 
 <script>
     import util from '../../common/js/util'
-    import { getBookListPage, removeBook, batchRemoveBook, editUser, addBook } from '../../api/api';
+    import { getArticleListPage, removeArticle, batchRemoveArticle, editArticle } from '../../api/api';
 
     export default {
         data() {
@@ -59,17 +65,17 @@
         methods: {
             handleCurrentChange(val) {
                 this.page = val;
-                this.getBookList();
+                this.getArticleList();
             },
             //获取用户列表
-            getBookList() {
+            getArticleList() {
                 let para = {
                     page: this.page,
                     title: this.filters.title
                 };
                 this.listLoading = true;
                 //NProgress.start();
-                getBookListPage(para).then((res) => {
+                getArticleListPage(para).then((res) => {
                     this.total = res.data.total;
                     this.users = res.data.users;
                     this.listLoading = false;
@@ -84,14 +90,14 @@
                     this.listLoading = true;
                     //NProgress.start();
                     let para = { id: row.id };
-                    removeBook(para).then((res) => {
+                    removeArticle(para).then((res) => {
                         this.listLoading = false;
                         //NProgress.done();
                         this.$message({
                             message: '删除成功',
                             type: 'success'
                         });
-                        this.getBookList();
+                        this.getArticleList();
                     });
                 }).catch(() => {
 
@@ -110,14 +116,14 @@
                     this.listLoading = true;
                     //NProgress.start();
                     let para = { ids: ids };
-                    batchRemoveBook(para).then((res) => {
+                    batchRemoveArticle(para).then((res) => {
                         this.listLoading = false;
                         //NProgress.done();
                         this.$message({
                             message: '删除成功',
                             type: 'success'
                         });
-                        this.getBookList();
+                        this.getArticleList();
                     });
                 }).catch(() => {
 
@@ -125,7 +131,7 @@
             }
         },
         mounted() {
-            this.getBookList();
+            this.getArticleList();
         }
     }
 
