@@ -9,7 +9,6 @@
                           @focus="onEditorFocus($event)"
                           @ready="onEditorReady($event)">
             </quill-editor>
-            <el-input class="source" v-model="source" placeholder="文章来源"></el-input>
         </div>
         <div class="right">
             <!--作者-->
@@ -25,6 +24,7 @@
                     <el-date-picker
                             v-model="time"
                             type="date"
+                            format="yyyy/MM/dd"
                             placeholder="选择日期"
                             :picker-options="pickerOptions0">
                     </el-date-picker>
@@ -40,6 +40,10 @@
                         @change="handleChange">
                 </el-cascader>
             </div>
+            <!--分类-->
+            <h3>文章来源</h3>
+            <el-input class="source" v-model="source" placeholder="文章来源"></el-input>
+
         </div>
         <div class="btn">
             <el-button type="primary" class="btn" id="submit" @click="onEditorChange()">发表文章</el-button>
@@ -62,7 +66,7 @@
                 title: '默认标题',//标题
                 author: 'admin',//作者
                 source: 'baidu.com',//文章来源
-                content: '<h2>I am Example</h2>',// 编辑器的内容
+                content: 'I am Example',// 编辑器的内容
                 selectedOptions: [],  //级联选择器
                 editorOption: {                  // 编辑器的配置
                     // something config
@@ -183,12 +187,21 @@
 //                console.log('editor ready!', editor)
             },
             onEditorChange() {
-                console.log(this.title);
-                console.log(this.author);
-                console.log(this.time);
-                console.log(JSON.stringify(this.selectedOptions));
-                console.log(this.source);
-                this.$message.success('提交成功！');
+                if (this.title && this.author && this.time && this.selectedOptions && this.source) {
+                    console.log(this.title);
+                    console.log(this.content);
+                    console.log(this.author);
+                    console.log(this.time);
+                    console.log(this.selectedOptions);
+                    console.log(this.source);
+                    this.$message.success('提交成功！');
+                }
+                this.content||this.$message("请不要发表内容为空的文章")
+                this.title || this.$message("请输入标题")
+                this.author || this.$message("请标明作者")
+                this.time || this.$message("请选择发布日期")
+                this.selectedOptions.length !== 0 || this.$message("请选择分类")
+                this.source || this.$message("请输入文章来源")
             }
         },
         // 如果你需要得到当前的editor对象来做一些事情，你可以像下面这样定义一个方法属性来获取当前的editor对象，
@@ -229,6 +242,11 @@
             bottom: 555px;
             width: 20%;
             float: right;
+
+            .el-date-editor, .el-cascader {
+                width: 100%;
+            }
+
             h3 {
                 font-size: 15px;
                 color: #444444;
@@ -243,4 +261,6 @@
             left: 61%;
         }
     }
+
+
 </style>
