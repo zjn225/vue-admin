@@ -56,15 +56,18 @@
                     if (valid) {
                         this.logining = true;
                         var loginParams = {account: this.ruleForm2.account, password: this.ruleForm2.checkPass};
+                        console.log("2")
                         requestLogin(loginParams).then(data => {
                             this.logining = false;
                             let {code, msg} = data;
                             if (code !== 200) {
+                                console.log("gg")
                                 this.$message({
                                     message: msg,
                                     type: 'error'
                                 });
                             } else {
+                                console.log("nice")
                                 sessionStorage.setItem('status', 1);
                                 this.$router.push({path: '/main'});
                             }

@@ -72,7 +72,7 @@
                     // something config
                 },
                 options: [{
-                    value: '1',
+                    value: 'information',
                     label: '科研资讯',
                     children: [{
                         value: '1',
@@ -86,7 +86,7 @@
                     }]
                 },
                     {
-                        value: '2',
+                        value: 'research',
                         label: '科学研究',
                         children: [{
                             value: '1',
@@ -102,7 +102,7 @@
                         }]
                     },
                     {
-                        value: '3',
+                        value: 'achievement',
                         label: '科研成果',
                         children: [{
                             value: '1',
@@ -118,7 +118,7 @@
                         }]
                     },
                     {
-                        value: '4',
+                        value: 'exchange',
                         label: '学术交流',
                         children: [{
                             value: '1',
@@ -137,7 +137,7 @@
                         }]
                     },
                     {
-                        value: '5',
+                        value: 'train',
                         label: '咨询培训',
                         children: [{
                             value: '1',
@@ -153,7 +153,7 @@
                         }]
                     },
                     {
-                        value: '6',
+                        value: 'construction',
                         label: '智库建设',
                         children: [{
                             value: '1',
@@ -224,22 +224,25 @@
         width: 100%;
         .left {
             width: 77%;
+            height: auto;
             .title {
                 margin-top: 20px;
+
             }
             .quill-editor {
                 margin-top: 20px;
-                height: 450px;
+                height: 590px;
             }
             .source {
                 position: relative;
                 top: 90px;
+
             }
         }
 
         .right {
             position: relative;
-            bottom: 555px;
+            bottom: 662px;
             width: 20%;
             float: right;
 
@@ -257,9 +260,11 @@
         .btn {
             width: 100px;
             position: relative;
-            top: 53px;
-            left: 61%;
+            top: 50px;
+            left: 63%;
         }
+
+
     }
 
 

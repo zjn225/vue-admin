@@ -8,8 +8,6 @@ import 'font-awesome/css/font-awesome.min.css'  //引入font-awesome样式
 import VueRouter from 'vue-router'
 import store from './vuex/store'
 import Vuex from 'vuex'
-//import NProgress from 'nprogress'
-//import 'nprogress/nprogress.css'
 import routes from './routes'
 import Mock from './mock'
 import VueQuillEditor from "vue-quill-editor"

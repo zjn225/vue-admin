@@ -1,10 +1,19 @@
 import axios from "axios";
+import Qs from 'qs';
 
 let instance = axios.create({
-    baseURL: 'http://120.78.73.55:3000/lts',
+    baseURL: '',
     headers: {
         "Content-Type": "application/x-www-form-urlencoded"
     },
+    withCredentials: true,
+ /*   transformRequest: [
+        function(data) {
+            data = Qs.stringify(data);
+            return data;
+        }
+    ],暂时不加入，否则mock会失效*/
+    timeout: 35000
 });
 
 /*登录模块*/
@@ -16,7 +25,7 @@ export const requestLogin = params => {
 /*文章模块*/
 
 export const getArticleListPage = params => {
-    return instance.get(`/login`, {params: params});
+    return instance.get(`/tt`, {params: params});
 };
 
 export const getArticleList = params => {
@@ -37,7 +46,7 @@ export const editArticle = params => {
 
 /*栏目模块*/
 export const getColumnListPage = params => {
-    return instance.get(`/login`, {params: params});
+    return instance.get(`/tt`, {params: params});
 };
 
 export const removeColumn = params => {
@@ -58,7 +67,7 @@ export const addColumn = params => {
 
 /*著作模块*/
 export const getBookListPage = params => {
-    return instance.get(`/login`, {params: params});
+    return instance.get(`/tt`, {params: params});
 };
 
 export const removeBook = params => {
@@ -105,7 +114,7 @@ export const addUser = params => {
 
 /*友情链接*/
 export const getLinkListPage = params => {
-    return instance.get(`/login`, {params: params});
+    return instance.get(`/tt`, {params: params});
 };
 
 export const removeLink = params => {
