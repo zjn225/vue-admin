@@ -53,6 +53,7 @@
 
 <script>
     import {quillEditor} from 'vue-quill-editor';
+    import {postArticle} from '../../api/api';
 
     export default {
         data() {
@@ -72,7 +73,7 @@
                     // something config
                 },
                 options: [{
-                    value: '1',
+                    value: 'information',
                     label: '科研资讯',
                     children: [{
                         value: '1',
@@ -86,7 +87,7 @@
                     }]
                 },
                     {
-                        value: '2',
+                        value: 'research',
                         label: '科学研究',
                         children: [{
                             value: '1',
@@ -102,7 +103,7 @@
                         }]
                     },
                     {
-                        value: '3',
+                        value: 'achievement',
                         label: '科研成果',
                         children: [{
                             value: '1',
@@ -118,7 +119,7 @@
                         }]
                     },
                     {
-                        value: '4',
+                        value: 'exchange',
                         label: '学术交流',
                         children: [{
                             value: '1',
@@ -137,7 +138,7 @@
                         }]
                     },
                     {
-                        value: '5',
+                        value: 'train',
                         label: '咨询培训',
                         children: [{
                             value: '1',
@@ -153,7 +154,7 @@
                         }]
                     },
                     {
-                        value: '6',
+                        value: 'construction',
                         label: '智库建设',
                         children: [{
                             value: '1',
@@ -201,7 +202,9 @@
                 this.author || this.$message("请标明作者")
                 this.time || this.$message("请选择发布日期")
                 this.selectedOptions.length !== 0 || this.$message("请选择分类")
-                this.source || this.$message("请输入文章来源")
+                this.source || this.$message("请输入文章来源");
+
+                postArticle({title:this.title,author:this.author,time:this.time,source:this.source,content:this.content,selectedOptions:this.selectedOptions})
             }
         },
         // 如果你需要得到当前的editor对象来做一些事情，你可以像下面这样定义一个方法属性来获取当前的editor对象，

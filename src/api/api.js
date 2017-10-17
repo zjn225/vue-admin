@@ -1,16 +1,25 @@
 import axios from "axios";
-
+import Qs from 'qs';
 let instance = axios.create({
-    baseURL: 'http://120.78.73.55:3000/lts',
+    baseURL: 'http://localhost:3000',
     headers: {
         "Content-Type": "application/x-www-form-urlencoded"
     },
+    transformRequest: [
+        function(data) {
+          data = Qs.stringify(data);
+          return data;
+        }
+      ],
+    
 });
-
+export const postArticle = params => {
+    return instance.post(`/admin/article/postArticle`, params).then(res => res.data);
+};
 /*登录模块*/
 
 export const requestLogin = params => {
-    return instance.post(`/login`, params).then(res => res.data);
+    return instance.post(`/admin/user/login`, params).then(res => res.data);
 };
 
 /*文章模块*/
