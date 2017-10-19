@@ -27,7 +27,7 @@
                         <!--不是叶子节点-->
                         <el-submenu :index="index+''" v-if="!item.leaf">
                             <template slot="title"><i :class="item.iconCls"></i>{{item.name}}</template>
-                            <el-menu-item v-for="child in item.children" :index="child.path" :key="child.path"
+                            <el-menu-item class="liItem" v-for="child in item.children" :index="child.path" :key="child.path"
                                           v-if="!child.hidden">{{child.name}}
                             </el-menu-item>
                         </el-submenu>
@@ -254,7 +254,7 @@
                 // top: 0px;
                 // bottom: 0px;
                 // left: 230px;
-                /*overflow-y: scroll;*/
+                overflow-y: scroll;
                 padding: 20px;
                 height: 100%;
                 .breadcrumb-container {
@@ -273,6 +273,10 @@
                     box-sizing: border-box;
                 }
             }
+        }
+        .liItem:nth-child(6),
+        .liItem:nth-child(7){
+            /*display: none;*/
         }
     }
 </style>

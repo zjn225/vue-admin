@@ -8,6 +8,8 @@ import Main from './views/nav1/Main.vue'
 
 import user from './views/nav2/user.vue'
 import Write from './views/nav2/Write.vue'
+import writePerson from './views/nav2/writePerson.vue'
+import writeArticle from './views/nav2/writeArticle.vue'
 import Article from './views/nav2/Article.vue'
 import Column from './views/nav2/Column.vue'
 import Book from './views/nav2/Book.vue'
@@ -51,6 +53,8 @@ let routes = [
             {path: '/column', component: Column, name: '栏目管理'},
             {path: '/book', component: Book, name: '著作管理'},
             {path: '/user', component: user, name: '专家团队管理'},
+            {path: '/writeArticle', component: writeArticle, name: '修改文章'},
+            {path: '/writePerson', component: writePerson, name: '修改专家团队'},
         ]
     },
     {

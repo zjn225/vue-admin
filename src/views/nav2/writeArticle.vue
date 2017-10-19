@@ -60,6 +60,7 @@
 
 <script>
     import {quillEditor} from 'vue-quill-editor';
+    import store from '../../vuex/store'
 
     export default {
         data() {
@@ -69,13 +70,6 @@
                         return time.getTime() < Date.now() - 8.64e7;
                     }
                 },
-                time: '', //发表时间
-                title: '默认标题',//标题
-                author: 'admin',//作者
-                source: 'baidu.com',//文章来源
-                content: 'I am Example',// 编辑器的内容
-                selectedOptions: [],  //级联选择器
-                isBanner: true,  //是否列为首页banner
                 editorOption: {                  // 编辑器的配置
                     // something config
                 },
@@ -218,7 +212,70 @@
         computed: {
             editor() {
                 return this.$refs.myTextEditor.quillEditor
-            }
+            },
+            title:{
+                get: function () {
+                    return this.$store.state.title
+                },
+                // setter
+                set: function (newValue) {
+                    this.title = newValue;
+                }
+            },
+            author:{
+                get: function () {
+                    return this.$store.state.author
+                },
+                // setter
+                set: function (newValue) {
+                    this.title = newValue;
+                }
+            },
+            time:{
+                get: function () {
+                    return this.$store.state.time
+                },
+                // setter
+                set: function (newValue) {
+                    this.time = newValue;
+                }
+            },
+            selectedOptions:{
+                get: function () {
+                    return this.$store.state.selectedOptions
+                },
+                // setter
+                set: function (newValue) {
+                    this.selectedOptions = newValue;
+                }
+            },
+            source:{
+                get: function () {
+                    return this.$store.state.source
+                },
+                // setter
+                set: function (newValue) {
+                    this.source = newValue;
+                }
+            },
+            content:{
+                get: function () {
+                    return this.$store.state.content
+                },
+                // setter
+                set: function (newValue) {
+                    this.content = newValue;
+                }
+            },
+            isBanner:{
+                get: function () {
+                    return this.$store.state.isBanner
+                },
+                // setter
+                set: function (newValue) {
+                    this.isBanner = newValue;
+                }
+            },
         },
         mounted() {
             // you can use current editor object to do something(editor methods)
