@@ -8,7 +8,7 @@
                             expand-trigger="hover"
                             :options="options"
                             v-model="selectedOptions"
-                            @change="handleChange">
+                            @change="getArticleList">
                     </el-cascader>
                 </el-form-item>
                 <el-form-item>
@@ -54,26 +54,27 @@
 <script>
     import util from '../../common/js/util'
     import store from '../../vuex/store'
-    import { getArticleListPage, removeArticle, batchRemoveArticle, editArticle ,getArticle} from '../../api/api';
+    import { getCatalog, removeArticle, batchRemoveArticle, editArticle ,getArticle} from '../../api/api';
 
     export default {
         data() {
             return {
                 selectedOptions: [],  //级联选择器
-                options: [{
-                    value: 'information',
-                    label: '科研资讯',
-                    children: [{
-                        value: '1',
-                        label: '流通所新闻',
-                    }, {
-                        value: '2',
-                        label: '基地资讯',
-                    }, {
-                        value: '3',
-                        label: '媒体报道',
-                    }]
-                },
+                options: [
+                    {
+                        value: 'information',
+                        label: '科研资讯',
+                        children: [{
+                            value: '1',
+                            label: '流通所新闻',
+                        }, {
+                            value: '2',
+                            label: '基地资讯',
+                        }, {
+                            value: '3',
+                            label: '媒体报道',
+                        }]
+                    },
                     {
                         value: 'research',
                         label: '科学研究',
@@ -168,11 +169,11 @@
         },
         methods: {
             async handleCurrentChange(currentPage) {
-                
+
 
                 const start = (currentPage - 1)*14 + currentPage - 1;
                 this.start = start;
-                const result = await getArticleListPage({sort:'information','type' : 1,'start':start});
+                const result = await getCatalog({sort:'information','type' : 1,'start':start});
 
                 this.articles = result.data.data;
             },
@@ -183,8 +184,18 @@
             //获取文章列表
             async getArticleList() {
 
-                const result = await getArticleListPage({sort:'information','type' : 1, 'start' : this.statr});
-                console.log(result);
+                if(this.selectedOptions.length === 0){
+                    this.$confirm('请选择分类?', '提示', {
+                        type: 'warning'
+                    })
+                    return;
+                }
+
+                const sort = this.selectedOptions[0];
+                const type = this.selectedOptions[1];
+                const start = this.statr;
+                const result = await getCatalog({sort, type, start});
+
                 let para = {
                     page: this.page,
                     title: this.filters.title
@@ -192,7 +203,7 @@
                 this.listLoading = true;
                 this.articles = result.data.data;
                 this.total = result.data.pageCount;
-               
+
             },
             //删除
             handleDel: function (index, row) {
@@ -260,9 +271,6 @@
 
                 });
             }
-        },
-        mounted() {
-            this.getArticleList();
         }
     }
 
