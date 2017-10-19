@@ -25,23 +25,24 @@ export const requestLogin = params => {
 /*文章模块*/
 
 export const getArticleListPage = params => {
-    return instance.get(`/login`, {params: params});
+    return instance.get(`/admin/article/getCatalog`, {params: params});
 };
 
-export const getArticleList = params => {
-    return instance.get(`/user/list`, {params: params});
-};
+
 
 export const removeArticle = params => {
-    return instance.get(`/user/remove`, {params: params});
+    return instance.get(`/admin/article/deleteArticle`, {params: params});
 };
 
 export const batchRemoveArticle = params => {
-    return instance.get(`/user/batchremove`, {params: params});
+    return instance.post(`/admin/article/batchDeleteArticle`, params);
 };
 
 export const editArticle = params => {
-    return instance.get(`/user/edit`, {params: params});
+    return instance.post(`/admin/article/editArticle`, {params: params});
+};
+export const getArticle = params => {
+    return instance.get(`/admin/article/getArticle`, {params: params});
 };
 
 /*栏目模块*/

@@ -13,13 +13,13 @@
         </el-col>
 
         <!--列表-->
-        <el-table :data="users" highlight-current-row  @selection-change="" style="width: 100%;">
+        <el-table :data="articles" highlight-current-row  style="width: 100%;" @selection-change='selectArticle'>
             <!-- 加入接口后补充 v-loading="listLoading"  -->
             <el-table-column type="selection" width="55">
             </el-table-column>
             <el-table-column type="index" label="序号" width="100">
             </el-table-column>
-            <el-table-column prop="name" label="标题" width="220" sortable>
+            <el-table-column prop="title" label="标题" width="220" sortable>
             </el-table-column>
             <el-table-column prop="author" label="作者" width="200" sortable>
             </el-table-column>
@@ -39,7 +39,7 @@
         <el-col :span="24" class="toolbar">
             <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
             <!--换页-->
-            <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
+            <el-pagination @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;" >
             </el-pagination>
         </el-col>
     </section>
@@ -47,7 +47,7 @@
 
 <script>
     import util from '../../common/js/util'
-    import { getArticleListPage, removeArticle, batchRemoveArticle, editArticle } from '../../api/api';
+    import { getArticleListPage, removeArticle, batchRemoveArticle, editArticle ,getArticle} from '../../api/api';
 
     export default {
         data() {
@@ -55,32 +55,41 @@
                 filters: {
                     title: ''
                 },
-                users: [],
+                articles: [],
                 total: 0,
                 page: 1,
                 listLoading: false,
                 sels: [],//列表选中列
+                start :0,//第一篇文章起始位置
             }
         },
         methods: {
-            handleCurrentChange(val) {
-                this.page = val;
-                this.getArticleList();
+            async handleCurrentChange(currentPage) {
+                
+
+                const start = (currentPage - 1)*14 + currentPage - 1;
+                this.start = start;
+                const result = await getArticleListPage({sort:'information','type' : 1,'start':start});
+
+                this.articles = result.data.data;
             },
-            //获取用户列表
-            getArticleList() {
+            selectArticle(selection, row){
+                console.log(selection[selection.length - 1].id)
+                this.sels.push(selection[selection.length - 1])
+            },
+            //获取文章列表
+            async getArticleList() {
+
+                const result = await getArticleListPage({sort:'information','type' : 1, 'start' : this.statr});
+                console.log(result);
                 let para = {
                     page: this.page,
                     title: this.filters.title
                 };
                 this.listLoading = true;
-                //NProgress.start();
-                getArticleListPage(para).then((res) => {
-                    this.total = res.data.total;
-                    this.users = res.data.users;
-                    this.listLoading = false;
-                    //NProgress.done();
-                });
+                this.articles = result.data.data;
+                this.total = result.data.pageCount;
+               
             },
             //删除
             handleDel: function (index, row) {
@@ -88,8 +97,10 @@
                     type: 'warning'
                 }).then(() => {
                     this.listLoading = true;
+                    console.log(this.articles[index].id)
                     //NProgress.start();
-                    let para = { id: row.id };
+                    let para = { id: this.articles[index].id, sort:'information',type:this.articles[index].type};
+                    console.log(para);
                     removeArticle(para).then((res) => {
                         this.listLoading = false;
                         //NProgress.done();
@@ -105,18 +116,22 @@
             },
             //显示编辑界面
             handleEdit: function (index, row) {
-                console.log("exit")
+                var id   = this.articles[index].id;
+                var type = this.articles[index].type;
+                var sort = 'information';//需要获取值，当前只是为了调试
+
+                getArticle({id,type,sort});
             },
             //批量删除
             batchRemove: function () {
-                var ids = this.sels.map(item => item.id).toString();
+                var params = this.sels.map(item =>  ({id : item.id,type : item.type}));
+                var sort = 'information';//需要获取值，当前只是为了调试
                 this.$confirm('确认删除选中记录吗？', '提示', {
                     type: 'warning'
                 }).then(() => {
                     this.listLoading = true;
                     //NProgress.start();
-                    let para = { ids: ids };
-                    batchRemoveArticle(para).then((res) => {
+                    batchRemoveArticle({params,sort}).then((res) => {
                         this.listLoading = false;
                         //NProgress.done();
                         this.$message({
