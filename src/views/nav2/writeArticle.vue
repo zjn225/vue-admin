@@ -60,7 +60,6 @@
 
 <script>
     import {quillEditor} from 'vue-quill-editor';
-    import store from '../../vuex/store'
 
     export default {
         data() {

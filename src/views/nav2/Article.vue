@@ -53,7 +53,6 @@
 
 <script>
     import util from '../../common/js/util'
-    import store from '../../vuex/store'
     import { getCatalog, removeArticle, batchRemoveArticle, editArticle ,getArticle} from '../../api/api';
 
     export default {
