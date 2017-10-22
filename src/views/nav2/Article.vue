@@ -8,13 +8,13 @@
                             expand-trigger="hover"
                             :options="options"
                             v-model="selectedOptions"
-                            @change="getArticleList">
+                            @change="getArticleList()">
                     </el-cascader>
                 </el-form-item>
                 <el-form-item>
                     <el-input v-model="filters.title" placeholder="输入文章标题查找"></el-input>
                 </el-form-item>
-                <el-button type="primary" v-on:click="getArticleList">筛选</el-button>
+                <el-button type="primary" v-on:click="getArticleList()">筛选</el-button>
             </el-form>
         </el-col>
 
@@ -54,7 +54,7 @@
 <script>
     import util from '../../common/js/util'
     import store from '../../vuex/store'
-    import { getCatalog, removeArticle, batchRemoveArticle, editArticle ,getArticle} from '../../api/api';
+    import { getCatalog, removeArticle, batchRemoveArticle, editArticle ,getArticle} from '../../api/xh_api';
 
     export default {
         data() {
@@ -183,23 +183,21 @@
             },
             //获取文章列表
             async getArticleList() {
-
                 if(this.selectedOptions.length === 0){
                     this.$confirm('请选择分类?', '提示', {
                         type: 'warning'
                     })
                     return;
                 }
-
                 const sort = this.selectedOptions[0];
                 const type = this.selectedOptions[1];
                 const start = this.statr;
                 const result = await getCatalog({sort, type, start});
 
-                let para = {
-                    page: this.page,
-                    title: this.filters.title
-                };
+                // let para = {
+                //     page: this.page,
+                //     title: this.filters.title
+                // };
                 this.listLoading = true;
                 this.articles = result.data.data;
                 this.total = result.data.pageCount;
@@ -231,23 +229,10 @@
             //显示编辑界面
             handleEdit: function (index, row) {
                 var id   = this.articles[index].id;
-                var title = this.articles[index].title;
-                var author = this.articles[author].type;
-                var date = this.articles[index].date;
                 var type = this.articles[index].type;
-                var sort = 'information';//需要获取值，当前只是为了调试
-                var source = this.articles[index].source;
-                var isBanner = this.articles[index].isBanner;
+                var sort = this.selectedOptions[0];
 
-                this.$store.commit('changeTitle', title)
-                this.$store.commit('changeAuthor', author)
-                this.$store.commit('changeDate', date)
-                this.$store.commit('changeType', type)
-                this.$store.commit('changeSort', sort)
-                this.$store.commit('changeSource', source)
-                this.$store.commit('changeIsBanner', isBanner)
-
-//                getArticle({id,type,sort});
+               getArticle({id,type,sort});
             },
             //批量删除
             batchRemove: function () {

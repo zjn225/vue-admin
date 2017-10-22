@@ -2,7 +2,7 @@
  <div>
   <div class="left">
    <quill-editor ref="myTextEditor"
-                 v-model="content"
+                 v-model="userInfo.content"
                  :options="editorOption"
                  @blur="onEditorBlur($event)"
                  @focus="onEditorFocus($event)"
@@ -13,22 +13,22 @@
    <!--作者-->
    <div class="author">
     <h3>专家名字</h3>
-    <el-input class="right_input" v-model="name" placeholder=""></el-input>
+    <el-input class="right_input" v-model="userInfo.name" placeholder=""></el-input>
 
     <h3>性别</h3>
-       <el-radio class="radio" v-model="sex" label="1">男</el-radio>
-       <el-radio class="radio" v-model="sex" label="2">女</el-radio>
+       <el-radio class="radio" v-model="userInfo.sex" label="1">男</el-radio>
+       <el-radio class="radio" v-model="userInfo.sex" label="2">女</el-radio>
    </div>
 
       <h3>年龄</h3>
-      <el-input class="right_input" v-model="age" placeholder=""></el-input>
+      <el-input class="right_input" v-model="userInfo.age" placeholder=""></el-input>
 
       <h3>地址</h3>
-      <el-input class="right_input" v-model="addr" placeholder=""></el-input>
+      <el-input class="right_input" v-model="userInfo.addr" placeholder=""></el-input>
 
   </div>
   <div class="btn">
-   <el-button type="primary" class="btn" id="submit" @click="onEditorChange()">发表文章</el-button>
+   <el-button type="primary" class="btn" id="submit" @click="onEditorChange()">更新数据</el-button>
   </div>
  </div>
 </template>
@@ -36,7 +36,7 @@
 <script>
     import {quillEditor} from 'vue-quill-editor'
     import store from '../../vuex/store'
-
+    import {mapState} from 'vuex'
     export default {
         data() {
             return {
@@ -70,7 +70,8 @@
             },
             onEditorChange() {
                 console.log("来自writeperson页面："+this.$store.state.age)
-                console.log("来自writeperson页面："+this.age)
+                console.log("来自writeperson页面："+this.age);
+                console.log(this.$store.state.userInfo);
             }
         },
 
@@ -78,53 +79,57 @@
             editor() {
                 return this.$refs.myTextEditor.quillEditor
             },
-            name:{
-                get: function () {
-                    return this.$store.state.name
-                },
-                // setter
-                set: function (newValue) {
-                    return this.$store.state.name
-                }
-            } ,
-            sex:{
-                get: function () {
-                    return this.$store.state.sex
-                },
-                // setter
-                set: function (newValue) {
-                    this.sex = newValue;
-                }
-            },
-            age:{
-                get: function () {
-                    return this.$store.state.age
-                },
-                // setter
-                set: function (newValue) {
-                   console.log(this.age)//正常
-                   console.log(newValue)//正常
-                    this.age= newValue;
-                }
-            },
-            addr:{
-                get: function () {
-                    return this.$store.state.addr
-                },
-                // setter
-                set: function (newValue) {
-                    this.addr= newValue;
-                }
-            },
-            content:{
-                get: function () {
-                    return this.$store.state.content
-                },
-                // setter
-                set: function (newValue) {
-                    this.content= newValue;
-                }
-            }
+
+            ...mapState([
+                'userInfo'
+            ])
+            // name:{
+            //     get: function () {
+            //         return this.$store.state.name
+            //     },
+            //     // setter
+            //     set: function (newValue) {
+            //         return this.$store.state.name
+            //     }
+            // } ,
+            // sex:{
+            //     get: function () {
+            //         return this.$store.state.sex
+            //     },
+            //     // setter
+            //     set: function (newValue) {
+            //         this.sex = newValue;
+            //     }
+            // },
+            // age:{
+            //     get: function () {
+            //         return this.$store.state.age
+            //     },
+            //     // setter
+            //     set: function (newValue) {
+            //        console.log(this.age)//正常
+            //        console.log(newValue)//正常
+            //         this.age= newValue;
+            //     }
+            // },
+            // addr:{
+            //     get: function () {
+            //         return this.$store.state.addr
+            //     },
+            //     // setter
+            //     set: function (newValue) {
+            //         this.addr= newValue;
+            //     }
+            // },
+            // content:{
+            //     get: function () {
+            //         return this.$store.state.content
+            //     },
+            //     // setter
+            //     set: function (newValue) {
+            //         this.content= newValue;
+            //     }
+            // }
 
         },
         mounted() {

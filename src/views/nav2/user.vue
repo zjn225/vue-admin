@@ -57,6 +57,9 @@
     import store from '../../vuex/store'
     import {getUserListPage, removeUser, batchRemoveUser, addUser} from '../../api/api';
 
+
+    import { mapMutations } from 'vuex'
+
     export default {
         data() {
             return {
@@ -130,6 +133,8 @@
 
                 });
             },
+
+            
             //显示编辑界面
             handleEdit: function (index, row) {
                 var id = this.users[index].id;
@@ -138,11 +143,13 @@
                 var age = this.users[index].age;
                 var addr = this.users[index].addr;
                 var content = this.users[index].content;
-                this.$store.commit('changeName', name)
-                this.$store.commit('changeSex', sex)
-                this.$store.commit('changeAge', age)
-                this.$store.commit('changeAddr', addr)
-                this.$store.commit('changeContent', content)
+                // this.$store.commit('changeName', name)
+                // this.$store.commit('changeSex', sex)
+                // this.$store.commit('changeAge', age)
+                // this.$store.commit('changeAddr', addr)
+                // this.$store.commit('changeContent', content)
+                this.$store.dispatch('getUserInfo',{name,sex,age,addr});
+
                 this.$router.push({path:'/writePerson'})
             },
             //新增

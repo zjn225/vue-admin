@@ -60,6 +60,7 @@
 
 <script>
     import {quillEditor} from 'vue-quill-editor';
+    import {postArticle} from '../../api/xh_api';
 
     export default {
         data() {
@@ -211,6 +212,7 @@
                 this.time || this.$message("请选择发布日期")
                 this.selectedOptions.length !== 0 || this.$message("请选择分类")
                 this.source || this.$message("请输入文章来源")
+                postArticle({title:this.title,author:this.author,content:this.content,source:this.source,time:this.time,selectedOptions:this.selectedOptions,isBanner:this.isBanner})
             }
         },
         // 如果你需要得到当前的editor对象来做一些事情，你可以像下面这样定义一个方法属性来获取当前的editor对象，

@@ -6,11 +6,12 @@ import 'element-ui/lib/theme-default/index.css'  //引入饿了么样式
 import 'font-awesome/css/font-awesome.min.css'  //引入font-awesome样式
 //import './assets/theme/theme-green/index.css'
 import VueRouter from 'vue-router'
-import store from './vuex/store'
+// import store from './vuex/store'
 import Vuex from 'vuex'
 import routes from './routes'
 import Mock from './mock'
 import VueQuillEditor from "vue-quill-editor"
+import store from './vuex/index'
 
 Mock.bootstrap();  //初始化mock
 
