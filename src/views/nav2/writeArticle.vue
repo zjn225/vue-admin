@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="left">
-            <el-input class="title" v-model="articleInfo.title" placeholder="请输入标题"></el-input>
+            <el-input class="title" v-model="article.title" placeholder="请输入标题"></el-input>
             <quill-editor ref="myTextEditor"
-                          v-model="articleInfo.content"
+                          v-model="article.content"
                           :options="editorOption"
                           @blur="onEditorBlur($event)"
                           @focus="onEditorFocus($event)"
@@ -14,7 +14,7 @@
             <!--作者-->
             <div class="author">
                 <h3>作者</h3>
-                <el-input class="right_input" v-model="articleInfo.author" placeholder="作者"></el-input>
+                <el-input class="right_input" v-model="article.author" placeholder="作者"></el-input>
             </div>
             <!--发布日期-->
             <div class="date">
@@ -22,7 +22,7 @@
                 <div class="block">
                     <span class="demonstration"></span>
                     <el-date-picker
-                            v-model="articleInfo.time"
+                            v-model="article.time"
                             type="date"
                             format="yyyy/MM/dd"
                             placeholder="选择日期"
@@ -36,17 +36,17 @@
                 <el-cascader
                         expand-trigger="hover"
                         :options="options"
-                        v-model="articleInfo.selectedOptions"
+                        v-model="article.selectedOptions"
                         @change="handleChange">
                 </el-cascader>
             </div>
             <!--分类-->
             <h3>文章来源</h3>
-            <el-input class="source" v-model="articleInfo.source" placeholder="文章来源"></el-input>
+            <el-input class="source" v-model="article.source" placeholder="文章来源"></el-input>
 
             <h3>是否将该文章列为首页banner</h3>
             <el-switch
-                    v-model="articleInfo.isBanner"
+                    v-model="article.isBanner"
                     on-color="#13ce66"
                     on-text="是"
                     off-text="否">
@@ -214,7 +214,7 @@
                 return this.$refs.myTextEditor.quillEditor
             },
             ...mapState([
-                'articleInfo'
+                'article'
             ])
         },
         mounted() {
