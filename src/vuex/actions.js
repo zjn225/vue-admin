@@ -10,10 +10,13 @@ export default {
     console.log(userInfo);
     commit(types.SAVE_USERINFO,userInfo);
   },
-  async getArticle({commit},article){
-    let _article = await  getArticle(user);
 
-    console.log(userInfo);
-    commit(types.SAVE_ARTICLE,getArticle);
-  },
+    async getArticleInfo({commit},article){
+        console.log(article);
+        let articleInfo = await  getArticle(article);
+
+        console.log(articleInfo.data.data);
+        commit(types.SAVE_USERINFO,articleInfo.data.data);
+        
+    }
 };

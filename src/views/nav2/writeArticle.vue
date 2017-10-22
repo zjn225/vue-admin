@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="left">
-            <el-input class="title" v-model="title" placeholder="请输入标题"></el-input>
+            <el-input class="title" v-model="articleInfo.title" placeholder="请输入标题"></el-input>
             <quill-editor ref="myTextEditor"
-                          v-model="content"
+                          v-model="articleInfo.content"
                           :options="editorOption"
                           @blur="onEditorBlur($event)"
                           @focus="onEditorFocus($event)"
@@ -14,7 +14,7 @@
             <!--作者-->
             <div class="author">
                 <h3>作者</h3>
-                <el-input class="right_input" v-model="author" placeholder="作者"></el-input>
+                <el-input class="right_input" v-model="articleInfo.author" placeholder="作者"></el-input>
             </div>
             <!--发布日期-->
             <div class="date">
@@ -22,7 +22,7 @@
                 <div class="block">
                     <span class="demonstration"></span>
                     <el-date-picker
-                            v-model="time"
+                            v-model="articleInfo.time"
                             type="date"
                             format="yyyy/MM/dd"
                             placeholder="选择日期"
@@ -36,17 +36,17 @@
                 <el-cascader
                         expand-trigger="hover"
                         :options="options"
-                        v-model="selectedOptions"
+                        v-model="articleInfo.selectedOptions"
                         @change="handleChange">
                 </el-cascader>
             </div>
             <!--分类-->
             <h3>文章来源</h3>
-            <el-input class="source" v-model="source" placeholder="文章来源"></el-input>
+            <el-input class="source" v-model="articleInfo.source" placeholder="文章来源"></el-input>
 
             <h3>是否将该文章列为首页banner</h3>
             <el-switch
-                    v-model="isBanner"
+                    v-model="articleInfo.isBanner"
                     on-color="#13ce66"
                     on-text="是"
                     off-text="否">
@@ -60,7 +60,7 @@
 
 <script>
     import {quillEditor} from 'vue-quill-editor';
-    import store from '../../vuex/store'
+    import {mapState} from 'vuex'
 
     export default {
         data() {
@@ -213,69 +213,9 @@
             editor() {
                 return this.$refs.myTextEditor.quillEditor
             },
-            title:{
-                get: function () {
-                    return this.$store.state.title
-                },
-                // setter
-                set: function (newValue) {
-                    this.title = newValue;
-                }
-            },
-            author:{
-                get: function () {
-                    return this.$store.state.author
-                },
-                // setter
-                set: function (newValue) {
-                    this.title = newValue;
-                }
-            },
-            time:{
-                get: function () {
-                    return this.$store.state.time
-                },
-                // setter
-                set: function (newValue) {
-                    this.time = newValue;
-                }
-            },
-            selectedOptions:{
-                get: function () {
-                    return this.$store.state.selectedOptions
-                },
-                // setter
-                set: function (newValue) {
-                    this.selectedOptions = newValue;
-                }
-            },
-            source:{
-                get: function () {
-                    return this.$store.state.source
-                },
-                // setter
-                set: function (newValue) {
-                    this.source = newValue;
-                }
-            },
-            content:{
-                get: function () {
-                    return this.$store.state.content
-                },
-                // setter
-                set: function (newValue) {
-                    this.content = newValue;
-                }
-            },
-            isBanner:{
-                get: function () {
-                    return this.$store.state.isBanner
-                },
-                // setter
-                set: function (newValue) {
-                    this.isBanner = newValue;
-                }
-            },
+            ...mapState([
+                'articleInfo'
+            ])
         },
         mounted() {
             // you can use current editor object to do something(editor methods)

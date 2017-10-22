@@ -13,6 +13,8 @@ import Mock from './mock'
 import VueQuillEditor from "vue-quill-editor"
 import store from './vuex/index'
 
+Vue.config.productionTip = false
+
 Mock.bootstrap();  //初始化mock
 
 Vue.use(ElementUI);
@@ -21,30 +23,30 @@ Vue.use(Vuex);
 Vue.use(VueQuillEditor);
 
 const router = new VueRouter({
-  routes
+    routes
 })
 
 // 注册一个全局前置守卫
 router.beforeEach((to, from, next) => {
-  //手动进入这个login
-  if (to.path === '/login') {
-    sessionStorage.removeItem('user');
-  }
-  let status = JSON.parse(sessionStorage.getItem('status'));
-  //sessionStorage不存在状态码且即将进入的路由对象不是login
-  if (!status && to.path != '/login') {
-    next({ path: '/login' })
-  } else {
-    next();//进行管道中的下一个钩子
-  }
+    //手动进入这个login
+    if (to.path === '/login') {
+        sessionStorage.removeItem('user');
+    }
+    let status = JSON.parse(sessionStorage.getItem('status'));
+    //sessionStorage不存在状态码且即将进入的路由对象不是login
+    if (!status && to.path != '/login') {
+        next({ path: '/login' })
+    } else {
+        next();//进行管道中的下一个钩子
+    }
 })
 
 new Vue({
-  //el: '#app',
-  //template: '<App/>',
-  router,
-  store,
-  //components: { App }
-  render: h => h(App)
+    //el: '#app',
+    //template: '<App/>',
+    router,
+    store,
+    //components: { App }
+    render: h => h(App)
 }).$mount('#app')
 

@@ -136,4 +136,7 @@ export const batchRemoveLink = params => {
 export const addLink = params => {
     return axios.get(`/user/add`, {params: params});
 };
+export const editLink = params => {
+    return axios.get(`/user/add`, {params: params});
+};
 

@@ -12,7 +12,6 @@
                 <el-form-item>
                     <el-button type="primary" @click="handleAdd">新增</el-button>
                 </el-form-item>
-                <h3>{{this.$store.state.name}}</h3>
             </el-form>
         </el-col>
 
@@ -25,12 +24,9 @@
             </el-table-column>
             <el-table-column prop="name" label="姓名" width="120" sortable>
             </el-table-column>
-            <el-table-column prop="sex" label="性别" width="100" :formatter="formatSex" sortable>
+            <el-table-column prop="job" label="职称" width="100"  sortable>
             </el-table-column>
-            <el-table-column prop="age" label="年龄" width="100" sortable>
-            </el-table-column>
-
-            <el-table-column prop="addr" label="地址" min-width="180" sortable>
+            <el-table-column prop="content" label="内容" min-width="160" sortable>
             </el-table-column>
             <el-table-column label="操作" width="150">
                 <template scope="scope">
@@ -54,7 +50,6 @@
 
 <script>
     import util from '../../common/js/util'
-    import store from '../../vuex/store'
     import {getUserListPage, removeUser, batchRemoveUser, addUser} from '../../api/api';
 
 
@@ -90,10 +85,6 @@
             }
         },
         methods: {
-            //性别显示转换
-            formatSex: function (row, column) {
-                return row.sex == 1 ? '男' : row.sex == 2 ? '女' : '未知';
-            },
             handleCurrentChange(val) {
                 this.page = val;
                 const result = this.getUsers();
@@ -134,21 +125,14 @@
                 });
             },
 
-            
             //显示编辑界面
             handleEdit: function (index, row) {
-                var id = this.users[index].id;
                 var name = this.users[index].name;
-                var sex = this.users[index].sex;
-                var age = this.users[index].age;
-                var addr = this.users[index].addr;
+                var job = this.users[index].job;
                 var content = this.users[index].content;
                 // this.$store.commit('changeName', name)
-                // this.$store.commit('changeSex', sex)
-                // this.$store.commit('changeAge', age)
-                // this.$store.commit('changeAddr', addr)
                 // this.$store.commit('changeContent', content)
-                this.$store.dispatch('getUserInfo',{name,sex,age,addr});
+                this.$store.dispatch('getUserInfo',{name,job,content});
 
                 this.$router.push({path:'/writePerson'})
             },
@@ -184,7 +168,6 @@
         },
         mounted() {
             this.getUsers();
-            console.log(this.$store.state.name)
         }
     }
 

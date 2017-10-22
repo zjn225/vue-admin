@@ -57,7 +57,7 @@
         .submit{
             position: absolute;
             top: 30%;
-            left: 80%;
+            left: 85%;
         }
     }
 </style>
