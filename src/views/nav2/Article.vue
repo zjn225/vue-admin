@@ -54,7 +54,7 @@
 <script>
     import util from '../../common/js/util'
     import {mapMutations} from 'vuex'
-    import {getCatalog, removeArticle, batchRemoveArticle, editArticle, getArticle} from '../../api/xh_api';
+    import {getCatalog,  deleteArticle, editArticle, getArticle} from '../../api/xh_api';
 
     export default {
         data() {
@@ -213,11 +213,11 @@
                     type: 'warning'
                 }).then(() => {
                     this.listLoading = true;
-                    console.log(this.articles[index].id)
+                  
                     //NProgress.start();
-                    let para = {id: this.articles[index].id, sort: 'information', type: this.articles[index].type};
-                    console.log(para);
-                    removeArticle(para).then((res) => {
+                    let article =[{id: this.articles[index].id,  type: this.articles[index].type}];
+                    let sort = this.selectedOptions[0];
+                    deleteArticle({article,sort}).then((res) => {
                         this.listLoading = false;
                         //NProgress.done();
                         this.$message({
@@ -234,23 +234,23 @@
             async  handleEdit  (index, row) {
                 var id = this.articles[index].id;
                 var type = this.articles[index].type;
-                var sort = this.selectedOptions[0];//需要获取值，当前只是为了调试
-
+                var sort = this.selectedOptions[0];
                 const result = await getArticle ({ type, sort,id})
                 this.SAVE_ARTICLEINFO(result.data.data);
                 this.$router.push({path: '/writeArticle'})
-                        
+
+
             },
             //批量删除
             batchRemove: function () {
-                var params = this.sels.map(item => ({id: item.id, type: item.type}));
-                var sort = 'information';//需要获取值，当前只是为了调试
+                var article = this.sels.map(item => ({id: item.id, type: item.type}));
+                var sort = this.selectedOptions[0];
                 this.$confirm('确认删除选中记录吗？', '提示', {
                     type: 'warning'
                 }).then(() => {
                     this.listLoading = true;
                     //NProgress.start();
-                    batchRemoveArticle({params, sort}).then((res) => {
+                     deleteArticle({article, sort}).then((res) => {
                         this.listLoading = false;
                         //NProgress.done();
                         this.$message({
