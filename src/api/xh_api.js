@@ -22,31 +22,41 @@ export const requestLogin = params => {
     return instance.post(`/user/login`, params).then(res => res.data);
 };
 
+
 /*文章模块*/
 export const postArticle = params => {
-    return instance.post(`/article/postArticle`,params);
+    return instance.post(`/data/article`,params);
 };
 export const getCatalog = params => {
-    return instance.get(`/article/getCatalog`, {params: params});
+    console.log("sss")
+    return instance.get(`/data/catalog`, {params: params});
 };
 
 export const getArticle = params => {
-    return instance.get(`/article/getArticle`, {params: params});
+    return instance.get(`/data/article`, {params: params});
 };
 
 
 export const removeArticle = params => {
-    return instance.get(`/article/deleteArticle`, {params: params});
+    return instance.delete(`/data/article`, {params: params});
 };
 
 export const batchRemoveArticle = params => {
-    return instance.post(`/article/batchDeleteArticle`, {params: params});
+    return instance.delete(`/data/article`, {params: params});
 };
 
 export const editArticle = params => {
-    return instance.get(`/article/editArticle`, {params: params});
+    return instance.patch(`/data/article`, {params: params});
 };
 
+
+/*专家模块*/
+export const getUserCatalog = params => {
+    return instance.get(`/data/teamall`, params).then(res => res.data);
+};
+export const getUser = params => {
+    return instance.get(`/article/getUser`, {params}).then(res => res.data);
+};
 /*栏目模块*/
 export const getColumnListPage = params => {
     return axios.get(`/tt`, {params: params});

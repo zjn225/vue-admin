@@ -13,6 +13,8 @@ import Mock from './mock'
 import VueQuillEditor from "vue-quill-editor"
 import store from './vuex/index'
 
+Vue.config.productionTip = false
+
 Mock.bootstrap();  //初始化mock
 
 Vue.use(ElementUI);

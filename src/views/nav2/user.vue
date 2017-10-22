@@ -169,7 +169,6 @@
         },
         mounted() {
             this.getUsers();
-            console.log(this.$store.state.name)
         }
     }
 

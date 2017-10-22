@@ -1,3 +1,4 @@
 
 export const SAVE_USERINFO = 'SAVE_USERINFO'
+export const SAVE_ARTICLEINFO = 'SAVE_ARTICLEINFO'
 

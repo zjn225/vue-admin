@@ -80,54 +80,6 @@
             ...mapState([
                 'userInfo'
             ])
-            // name:{
-            //     get: function () {
-            //         return this.$store.state.name
-            //     },
-            //     // setter
-            //     set: function (newValue) {
-            //         return this.$store.state.name
-            //     }
-            // } ,
-            // sex:{
-            //     get: function () {
-            //         return this.$store.state.sex
-            //     },
-            //     // setter
-            //     set: function (newValue) {
-            //         this.sex = newValue;
-            //     }
-            // },
-            // age:{
-            //     get: function () {
-            //         return this.$store.state.age
-            //     },
-            //     // setter
-            //     set: function (newValue) {
-            //        console.log(this.age)//正常
-            //        console.log(newValue)//正常
-            //         this.age= newValue;
-            //     }
-            // },
-            // addr:{
-            //     get: function () {
-            //         return this.$store.state.addr
-            //     },
-            //     // setter
-            //     set: function (newValue) {
-            //         this.addr= newValue;
-            //     }
-            // },
-            // content:{
-            //     get: function () {
-            //         return this.$store.state.content
-            //     },
-            //     // setter
-            //     set: function (newValue) {
-            //         this.content= newValue;
-            //     }
-            // }
-
         },
         mounted() {
 

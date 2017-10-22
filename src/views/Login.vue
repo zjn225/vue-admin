@@ -2,7 +2,7 @@
     <div class="wrap">
         <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px"
                  class="demo-ruleForm login-container">
-            <h2 class="title">流通所后台管理系统</h2>
+            <h2 class="title">广财流通所后台管理系统</h2>
             <el-form-item prop="account">
                 <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="账号"></el-input>
             </el-form-item>

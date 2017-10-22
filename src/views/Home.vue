@@ -88,7 +88,7 @@
     export default {
         data() {
             return {
-                sysName: '流通所管理系统',
+                sysName: '广财流通所管理系统',
                 smlName: 'lts',
                 collapsed: false,
                 sysUserName: '',
@@ -177,12 +177,9 @@
             .logo {
                 //width:230px;
                 height: 60px;
-                font-size: 22px;
+                font-size: 20px;
                 padding-left: 20px;
                 padding-right: 20px;
-                border-color: rgba(238, 241, 146, 0.3);
-                border-right-width: 1px;
-                border-right-style: solid;
                 img {
                     width: 40px;
                     float: left;
