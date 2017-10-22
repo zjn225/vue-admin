@@ -37,13 +37,11 @@ export const getArticle = params => {
 };
 
 
-export const removeArticle = params => {
-    return instance.delete(`/data/article`, {params: params});
+export const deleteArticle = params => {
+    return instance.post(`/data/deletearticle`,params);
 };
 
-export const batchRemoveArticle = params => {
-    return instance.delete(`/data/article`, {params: params});
-};
+
 
 export const editArticle = params => {
     return instance.patch(`/data/article`, {params: params});
