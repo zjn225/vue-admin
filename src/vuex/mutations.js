@@ -9,5 +9,13 @@ export default {
     }
 
   },
+  [types.SAVE_ARTICLEINFO](state, article){
+    console.log(state.article)
+    
+    for(let attr in article){
+      state.article[attr] = article[attr];
+    }
+    console.log(state.article)
 
+  },
 }

@@ -23,6 +23,13 @@ const state = {
         age: '',
         addr: '',
         content:'',
+    },
+    article:{
+        title:'',
+        author:'',
+        source:'',
+        time:'',
+        content:''
     }
 };
 export default new Vuex.Store({
