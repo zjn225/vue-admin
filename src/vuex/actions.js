@@ -16,6 +16,6 @@ export default {
         let articleInfo = await  getArticleInfo(article);
 
         console.log(articleInfo);
-        commit(types.SAVE_USERINFO,articleInfo);
+        commit(types.SAVE_ARTICLEINFO,articleInfo);
     }
 };

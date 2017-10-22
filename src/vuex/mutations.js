@@ -7,7 +7,11 @@ export default {
     for(let attr in userInfo){
       state.userInfo[attr] = userInfo[attr];
     }
-
   },
-
+    //存储文章信息
+    [types.SAVE_ARTICLEINFO](state, articleInfo){
+        for(let attr in articleInfo){
+            state.articleInfo[attr] = articleInfo[attr];
+        }
+    },
 }
