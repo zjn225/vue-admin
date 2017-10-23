@@ -1,8 +1,9 @@
 import axios from "axios";
 import Qs from 'qs';
+let ipath = process.env.API_ROOT;
 
 let instance = axios.create({
-    baseURL: ' http://localhost:3000/admin',
+    baseURL: ipath,
     headers: {
         "Content-Type": "application/x-www-form-urlencoded"
     },
