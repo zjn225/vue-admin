@@ -185,7 +185,7 @@
             async getArticleList() {
 
                 if (this.selectedOptions.length === 0) {
-                    this.$confirm('请选择分类后进行文章管理。', '温馨提示', {
+                    this.$confirm('请选择分类后进行文章管理，否则无数据显示。', '温馨提示', {
                         type: 'warning'
                     })
                     return;

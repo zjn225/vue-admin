@@ -2,7 +2,7 @@
     <div>
         <div class="left">
             <quill-editor ref="myTextEditor"
-                          v-model="userInfo.content"
+                          v-model="bookInfo.content"
                           :options="editorOption"
                           @blur="onEditorBlur($event)"
                           @focus="onEditorFocus($event)"
@@ -12,12 +12,12 @@
         <div class="right">
             <!--作者-->
             <div class="author">
-                <h3>专家名字</h3>
-                <el-input class="right_input" v-model="userInfo.name" placeholder=""></el-input>
+                <h3>著作名称</h3>
+                <el-input class="right_input" v-model="bookInfo.name" placeholder=""></el-input>
             </div>
 
             <h3>职称</h3>
-            <el-input class="right_input" v-model="userInfo.job" placeholder=""></el-input>
+            <el-input class="right_input" v-model="bookInfo.job" placeholder=""></el-input>
 
         </div>
         <div class="btn">
@@ -62,7 +62,7 @@
 //                console.log('editor ready!', editor)
             },
             onEditorChange() {
-                console.log(this.$store.state.userInfo);
+                console.log(this.$store.state.bookInfo);
             }
         },
 
@@ -72,7 +72,7 @@
             },
 
             ...mapState([
-                'userInfo'
+                'bookInfo'
             ])
         },
         mounted() {

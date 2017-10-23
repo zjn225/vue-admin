@@ -44,7 +44,7 @@
             <h3>文章来源</h3>
             <el-input class="source" v-model="source" placeholder="文章来源"></el-input>
 
-            <h3>是否将该文章列为首页banner</h3>
+            <h3>是否将该文章列为首页轮播图</h3>
             <el-switch
                     v-model="isBanner"
                     on-color="#13ce66"
@@ -76,7 +76,7 @@
                 source: 'baidu.com',//文章来源
                 content: 'I am Example',// 编辑器的内容
                 selectedOptions: [],  //级联选择器
-                isBanner: true,  //是否列为首页banner
+                isBanner: false,  //是否列为首页banner
                 editorOption: {                  // 编辑器的配置
                     // something config
                 },

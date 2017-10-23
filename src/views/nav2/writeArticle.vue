@@ -44,7 +44,7 @@
             <h3>文章来源</h3>
             <el-input class="source" v-model="article.source" placeholder="文章来源"></el-input>
 
-            <h3>是否将该文章列为首页banner</h3>
+            <h3>是否将该文章列为首页轮播图r</h3>
             <el-switch
                     v-model="article.isBanner"
                     on-color="#13ce66"

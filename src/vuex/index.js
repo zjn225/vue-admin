@@ -30,6 +30,12 @@ const state = {
         source:'',
         time:'',
         content:''
+    },
+    books:{
+        name:'',
+        time:'',
+        time:'',
+        content:''
     }
 };
 export default new Vuex.Store({

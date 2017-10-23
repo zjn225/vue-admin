@@ -7,7 +7,6 @@ export default {
         for(let attr in userInfo){
             state.userInfo[attr] = userInfo[attr];
         }
-
     },
     [types.SAVE_ARTICLEINFO](state, article){
         console.log(state.article)
@@ -16,6 +15,13 @@ export default {
             state.article[attr] = article[attr];
         }
         console.log(state.article)
+    },
+    [types.SAVE_BOOKINFO](state, book){
+        console.log(state.book)
 
+        for(let attr in book){
+            state.book[attr] = book[attr];
+        }
+        console.log(state.book)
     },
 }
