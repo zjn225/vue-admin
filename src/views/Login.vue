@@ -20,7 +20,7 @@
 </template>
 
 <script>
-    import {requestLogin} from '../api/api';
+    import {requestLogin} from '../api/xh_api';
 
     export default {
         data() {
@@ -89,7 +89,7 @@
         width: 100%;
         height: 100%;
         /*background-color: #2D3A4B;*/
-        background-image: url(../assets/bg2.jpg);
+        background-image: url('../assets/bg2.jpg');
         background-size: cover;
     }
 

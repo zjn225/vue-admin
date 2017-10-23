@@ -3,6 +3,6 @@ var prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
-  API_ROOT: '"//localhost:3000/"'
+  API_ROOT: '"//localhost:3000/admin/"'
   
 })
