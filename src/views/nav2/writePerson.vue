@@ -19,6 +19,18 @@
             <h3>职称</h3>
             <el-input class="right_input" v-model="userInfo.job" placeholder=""></el-input>
 
+            <h3>头像</h3>
+            <el-upload
+                    action="https://jsonplaceholder.typicode.com/posts/"
+                    list-type="picture-card"
+                    :on-preview="handlePictureCardPreview"
+                    :on-remove="handleRemove" class="upl">
+                <i class="el-icon-plus"></i>
+            </el-upload>
+            <el-dialog v-model="dialogVisible" size="tiny">
+                <img width="100%" :src="dialogImageUrl" alt="">
+            </el-dialog>
+
         </div>
         <div class="btn">
             <el-button type="primary" class="btn" id="submit" @click="onEditorChange()">更新数据</el-button>
@@ -33,6 +45,8 @@
     export default {
         data() {
             return {
+                dialogImageUrl: '',
+                dialogVisible: false,
                 pickerOptions0: {
                     disabledDate(time) {
                         return time.getTime() < Date.now() - 8.64e7;
@@ -63,6 +77,13 @@
             },
             onEditorChange() {
                 console.log(this.$store.state.userInfo);
+            },
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
+            },
+            handlePictureCardPreview(file) {
+                this.dialogImageUrl = file.url;
+                this.dialogVisible = true;
             }
         },
 
@@ -116,6 +137,10 @@
             position: relative;
             top: 50px;
             left: 63%;
+        }
+
+        .upl {
+            margin: 10px 0px;
         }
 
     }
