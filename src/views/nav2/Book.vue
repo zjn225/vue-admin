@@ -70,7 +70,7 @@
                 this.books = result.data.data;
             },
             handleAdd: function () {
-                this.$router.push({path:'/writeBook'})
+                this.$router.push({path: '/writeBook'})
             },
             selectBook(selection, row) {
                 console.log(selection[selection.length - 1].id)
@@ -105,12 +105,19 @@
                     let sort = this.selectedOptions[0];
                     deleteBook({book, sort}).then((res) => {
                         this.listLoading = false;
-                        //NProgress.done();
-                        this.$message({
-                            message: '删除成功',
-                            type: 'success'
-                        });
-                        this.getBookList();
+                        let {code, msg} = res;
+                        if (code === 200) {
+                            this.$message({
+                                message: '删除成功',
+                                type: 'success'
+                            });
+                            this.getBookList();
+                        } else {
+                            this.$message({
+                                message: msg,
+                                type: 'error'
+                            });
+                        }
                     });
                 }).catch(() => {
 
@@ -139,12 +146,19 @@
                     //NProgress.start();
                     deleteBook({book, sort}).then((res) => {
                         this.listLoading = false;
-                        //NProgress.done();
-                        this.$message({
-                            message: '删除成功',
-                            type: 'success'
-                        });
-                        this.getBookList();
+                        let{code,msg}=res;
+                        if (code ===200){
+                            this.$message({
+                                message: '删除成功',
+                                type: 'success'
+                            });
+                            this.getBookList();
+                        }else{
+                            this.$message({
+                                message: msg,
+                                type: 'error'
+                            });
+                        }
                     });
                 }).catch(() => {
 

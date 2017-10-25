@@ -3,7 +3,6 @@ import NotFound from './views/404.vue'
 import Home from './views/Home.vue'
 
 import Safety from './views/nav1/Safety.vue'
-import skin from './views/nav1/Skin.vue'
 import Main from './views/nav1/Main.vue'
 
 import user from './views/nav2/user.vue'
@@ -39,7 +38,6 @@ let routes = [
         children: [
             {path: '/main', component: Main, name: '网站概要', hidden: false},
             {path: '/safety', component: Safety, name: '账户安全'},
-            {path: '/skin', component: skin, name: '首页外观'},
         ]
     },
     {

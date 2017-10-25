@@ -24,7 +24,7 @@
             </el-table-column>
             <el-table-column prop="name" label="姓名" width="120" sortable>
             </el-table-column>
-            <el-table-column prop="job" label="职称" width="100"  sortable>
+            <el-table-column prop="job" label="职称" width="100" sortable>
             </el-table-column>
             <el-table-column prop="content" label="内容" min-width="160" sortable>
             </el-table-column>
@@ -52,7 +52,7 @@
     import {getUserListPage, removeUser, batchRemoveUser, addUser} from '../../api/api';
 
 
-    import { mapMutations } from 'vuex'
+    import {mapMutations} from 'vuex'
 
     export default {
         data() {
@@ -108,16 +108,23 @@
                     type: 'warning'
                 }).then(() => {
                     this.listLoading = true;
-                    //NProgress.start();
                     let para = {id: row.id};
                     removeUser(para).then((res) => {
                         this.listLoading = false;
-                        //NProgress.done();
-                        this.$message({
-                            message: '删除成功',
-                            type: 'success'
-                        });
-                        this.getUsers();
+                        let {code, msg} = res;
+                        if (code === 200) {
+                            this.$message({
+                                message: '删除成功',
+                                type: 'success'
+                            });
+                            this.getUsers();
+                        } else {
+                            this.$message({
+                                message: msg,
+                                type: 'error'
+                            });
+                        }
+
                     });
                 }).catch(() => {
 
@@ -131,13 +138,13 @@
                 var content = this.users[index].content;
                 // this.$store.commit('changeName', name)
                 // this.$store.commit('changeContent', content)
-                this.$store.dispatch('getUserInfo',{name,job,content});
+                this.$store.dispatch('getUserInfo', {name, job, content});
 
-                this.$router.push({path:'/writePerson'})
+                this.$router.push({path: '/writePerson'})
             },
             //新增
             handleAdd: function () {
-                this.$router.push({path:'/writePerson'})
+                this.$router.push({path: '/writePerson'})
             },
             selsChange: function (sels) {
                 this.sels = sels;
@@ -153,12 +160,19 @@
                     let para = {ids: ids};
                     batchRemoveUser(para).then((res) => {
                         this.listLoading = false;
-                        //NProgress.done();
-                        this.$message({
-                            message: '删除成功',
-                            type: 'success'
-                        });
-                        this.getUsers();
+                        let {code, msg} = res;
+                        if(code ===200){
+                            this.$message({
+                                message: '删除成功',
+                                type: 'success'
+                            });
+                            this.getUsers();
+                        }else{
+                            this.$message({
+                                message: msg,
+                                type: 'error'
+                            });
+                        }
                     });
                 }).catch(() => {
 

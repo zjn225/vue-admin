@@ -169,8 +169,6 @@
         },
         methods: {
             async handleCurrentChange(currentPage) {
-
-
                 const start = (currentPage - 1) * 14 + currentPage - 1;
                 this.start = start;
                 const result = await getCatalog({sort: 'information', 'type': 1, 'start': start});
@@ -219,12 +217,19 @@
                     let sort = this.selectedOptions[0];
                     deleteArticle({article,sort}).then((res) => {
                         this.listLoading = false;
-                        //NProgress.done();
-                        this.$message({
-                            message: '删除成功',
-                            type: 'success'
-                        });
-                        this.getArticleList();
+                        let {code, msg} = res;
+                        if (code ===200){
+                            this.$message({
+                                message: '删除成功',
+                                type: 'success'
+                            });
+                            this.getArticleList();
+                        }else{
+                            this.$message({
+                                message: msg,
+                                type: 'error'
+                            });
+                        }
                     });
                 }).catch(() => {
 
@@ -238,8 +243,6 @@
                 const result = await getArticle ({ type, sort,id})
                 this.SAVE_ARTICLEINFO(result.data.data);
                 this.$router.push({path: '/writeArticle'})
-
-
             },
             //批量删除
             batchRemove: function () {
@@ -252,12 +255,19 @@
                     //NProgress.start();
                      deleteArticle({article, sort}).then((res) => {
                         this.listLoading = false;
-                        //NProgress.done();
-                        this.$message({
-                            message: '删除成功',
-                            type: 'success'
-                        });
-                        this.getArticleList();
+                        let{code,msg} = res;
+                        if (codes ===200){
+                            this.$message({
+                                message: '删除成功',
+                                type: 'success'
+                            });
+                            this.getArticleList();
+                        }else{
+                            this.$message({
+                                message: msg,
+                                type: 'error'
+                            });
+                        }
                     });
                 }).catch(() => {
 
