@@ -27,7 +27,8 @@
                         <!--不是叶子节点-->
                         <el-submenu :index="index+''" v-if="!item.leaf">
                             <template slot="title"><i :class="item.iconCls"></i>{{item.name}}</template>
-                            <el-menu-item class="liItem" v-for="child in item.children" :index="child.path" :key="child.path"
+                            <el-menu-item class="liItem" v-for="child in item.children" :index="child.path"
+                                          :key="child.path"
                                           v-if="!child.hidden">{{child.name}}
                             </el-menu-item>
                         </el-submenu>
@@ -165,11 +166,11 @@
             line-height: 60px;
             background: $color-primary;
             color: #fff;
-            .goOut{
+            .goOut {
                 text-align: right;
                 padding-right: 35px;
                 float: right;
-                span{
+                span {
                     cursor: pointer;
                     margin: 10px;
                 }
@@ -271,9 +272,12 @@
                 }
             }
         }
+        .liItem:nth-child(5),
         .liItem:nth-child(6),
-        .liItem:nth-child(7){
-            /*display: none;*/
+        .liItem:nth-child(7),
+        .liItem:nth-child(8),
+        .liItem:nth-child(9) {
+            display: none;
         }
     }
 </style>

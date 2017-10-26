@@ -2,7 +2,7 @@
     <div>
         <div class="left">
             <quill-editor ref="myTextEditor"
-                          v-model="userInfo.content"
+                          v-model="content"
                           :options="editorOption"
                           @blur="onEditorBlur($event)"
                           @focus="onEditorFocus($event)"
@@ -13,11 +13,11 @@
             <!--作者-->
             <div class="author">
                 <h3>专家名字</h3>
-                <el-input class="right_input" v-model="userInfo.name" placeholder=""></el-input>
+                <el-input class="right_input" v-model="name" placeholder=""></el-input>
             </div>
 
             <h3>职位</h3>
-            <el-input class="right_input" v-model="userInfo.job" placeholder=""></el-input>
+            <el-input class="right_input" v-model="job" placeholder=""></el-input>
 
             <h3>头像</h3>
             <el-upload
@@ -33,25 +33,22 @@
 
         </div>
         <div class="btn">
-            <el-button type="primary" class="btn" id="submit" @click="onEditorChange()">更新数据</el-button>
+            <el-button type="primary" class="btn" id="submit" @click="onEditorChange()">提交</el-button>
         </div>
     </div>
 </template>
 
 <script>
     import {quillEditor} from 'vue-quill-editor'
-    import {mapState} from 'vuex'
 
     export default {
         data() {
             return {
+                name: '',
+                job: '',
+                content: '',
                 dialogImageUrl: '',
                 dialogVisible: false,
-                pickerOptions0: {
-                    disabledDate(time) {
-                        return time.getTime() < Date.now() - 8.64e7;
-                    }
-                },
                 editorOption: {                  // 编辑器的配置
                     // something config
                 },
@@ -75,8 +72,38 @@
             onEditorReady(editor) {
 //                console.log('editor ready!', editor)
             },
-            onEditorChange() {
-                console.log(this.$store.state.userInfo);
+            async onEditorChange() {
+                if (
+                    this.name  &&
+                    this.job &&
+                    this.content
+                ) {
+                    console.log(this.name);
+                    console.log(this.time);
+                    console.log(this.content);
+                    this.$message.success("提交成功！");
+                }
+                this.content || this.$message("请不要发表内容为空的文章");
+                this.name || this.$message("请输入该专家的名字");
+                this.job || this.$message("请输入该专家的职位");
+                result = await addPerson({
+                    name:this.name,
+                    time: this.time,
+                    content: this.content,
+                });
+                const { code, msg } = result.data;
+
+                if (code === 200) {
+                    this.$message({
+                        message: msg,
+                        type: "success"
+                    });
+                } else {
+                    this.$message({
+                        message: msg,
+                        type: "error"
+                    });
+                }
             },
             handleRemove(file, fileList) {
                 console.log(file, fileList);
@@ -92,9 +119,6 @@
                 return this.$refs.myTextEditor.quillEditor
             },
 
-            ...mapState([
-                'userInfo'
-            ])
         },
         mounted() {
 

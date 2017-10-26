@@ -144,7 +144,7 @@
             },
             //新增
             handleAdd: function () {
-                this.$router.push({path: '/writePerson'})
+                this.$router.push({path: '/addPerson'})
             },
             selsChange: function (sels) {
                 this.sels = sels;

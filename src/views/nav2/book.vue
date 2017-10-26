@@ -70,7 +70,7 @@
                 this.books = result.data.data;
             },
             handleAdd: function () {
-                this.$router.push({path: '/writeBook'})
+                this.$router.push({path: '/addBook'})
             },
             selectBook(selection, row) {
                 console.log(selection[selection.length - 1].id)

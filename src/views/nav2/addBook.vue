@@ -2,7 +2,7 @@
     <div>
         <div class="left">
             <quill-editor ref="myTextEditor"
-                          v-model="userInfo.content"
+                          v-model="content"
                           :options="editorOption"
                           @blur="onEditorBlur($event)"
                           @focus="onEditorFocus($event)"
@@ -10,41 +10,39 @@
             </quill-editor>
         </div>
         <div class="right">
-            <!--作者-->
             <div class="author">
-                <h3>专家名字</h3>
-                <el-input class="right_input" v-model="userInfo.name" placeholder=""></el-input>
+                <h3>著作名称</h3>
+                <el-input class="right_input" v-model="name" placeholder=""></el-input>
             </div>
 
-            <h3>职位</h3>
-            <el-input class="right_input" v-model="userInfo.job" placeholder=""></el-input>
-
-            <h3>头像</h3>
-            <el-upload
-                    action="https://jsonplaceholder.typicode.com/posts/"
-                    list-type="picture-card"
-                    :on-preview="handlePictureCardPreview"
-                    :on-remove="handleRemove" class="upl">
-                <i class="el-icon-plus"></i>
-            </el-upload>
-            <el-dialog v-model="dialogVisible" size="tiny">
-                <img width="100%" :src="dialogImageUrl" alt="">
-            </el-dialog>
+            <h3>发布日期</h3>
+            <div class="block">
+                <span class="demonstration"></span>
+                <el-date-picker
+                        v-model="time"
+                        type="date"
+                        format="yyyy/MM/dd"
+                        placeholder="选择日期"
+                        :picker-options="pickerOptions0">
+                </el-date-picker>
+            </div>
 
         </div>
         <div class="btn">
-            <el-button type="primary" class="btn" id="submit" @click="onEditorChange()">更新数据</el-button>
+            <el-button type="primary" class="btn" id="submit" @click="onEditorChange()">提交</el-button>
         </div>
     </div>
 </template>
 
 <script>
     import {quillEditor} from 'vue-quill-editor'
-    import {mapState} from 'vuex'
 
     export default {
         data() {
             return {
+                name:'',
+                content:'',
+                time: '', //发表时间
                 dialogImageUrl: '',
                 dialogVisible: false,
                 pickerOptions0: {
@@ -75,9 +73,40 @@
             onEditorReady(editor) {
 //                console.log('editor ready!', editor)
             },
-            onEditorChange() {
-                console.log(this.$store.state.userInfo);
+            async onEditorChange() {
+                if (
+                    this.name  &&
+                    this.time &&
+                    this.content
+                ) {
+                    console.log(this.name);
+                    console.log(this.time);
+                    console.log(this.content);
+                    this.$message.success("提交成功！");
+                }
+                this.content || this.$message("请不要发表内容为空的文章");
+                this.time || this.$message("请选择发布日期");
+                this.name || this.$message("请输入著作的名字");
+                result = await addBook({
+                    name:this.name,
+                    time: this.time,
+                    content: this.content,
+                });
+                const { code, msg } = result.data;
+
+                if (code === 200) {
+                    this.$message({
+                        message: msg,
+                        type: "success"
+                    });
+                } else {
+                    this.$message({
+                        message: msg,
+                        type: "error"
+                    });
+                }
             },
+
             handleRemove(file, fileList) {
                 console.log(file, fileList);
             },
@@ -92,9 +121,6 @@
                 return this.$refs.myTextEditor.quillEditor
             },
 
-            ...mapState([
-                'userInfo'
-            ])
         },
         mounted() {
 

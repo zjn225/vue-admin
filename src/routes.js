@@ -12,6 +12,8 @@ import editArticle from './views/nav2/editArticle.vue'
 import writeBook from './views/nav2/writeBook.vue'
 import Article from './views/nav2/Article.vue'
 import Book from './views/nav2/Book.vue'
+import addPerson from './views/nav2/addPerson.vue'
+import addBook from './views/nav2/addBook.vue'
 
 import Basic from './views/nav3/Basic.vue'
 import friendLink from './views/nav3/friendLink.vue'
@@ -53,6 +55,8 @@ let routes = [
             {path: '/editArticle', component: editArticle, name: '修改文章'},
             {path: '/writePerson', component: writePerson, name: '修改专家团队'},
             {path: '/writeBook', component: writeBook, name: '修改著作'},
+            {path: '/addPerson', component: addPerson, name: '新增专家团队'},
+            {path: '/addBook', component: addBook, name: '新增著作'},
         ]
     },
     {
