@@ -29,7 +29,6 @@ export const postArticle = params => {
     return instance.post(`/data/article`,params);
 };
 export const getCatalog = params => {
-    console.log("sss")
     return instance.get(`/data/catalog`, {params: params});
 };
 
@@ -45,7 +44,7 @@ export const deleteArticle = params => {
 
 
 export const editArticle = params => {
-    return instance.patch(`/data/article`, {params: params});
+    return instance.post(`/data/editarticle`, params);
 };
 
 

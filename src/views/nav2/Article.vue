@@ -217,7 +217,8 @@
                     let sort = this.selectedOptions[0];
                     deleteArticle({article,sort}).then((res) => {
                         this.listLoading = false;
-                        let {code, msg} = res;
+                        let {code, msg} = res.data;
+                        console.log(res);
                         if (code ===200){
                             this.$message({
                                 message: '删除成功',
@@ -240,9 +241,20 @@
                 var id = this.articles[index].id;
                 var type = this.articles[index].type;
                 var sort = this.selectedOptions[0];
-                const result = await getArticle ({ type, sort,id})
-                this.SAVE_ARTICLEINFO(result.data.data);
-                this.$router.push({path: '/writeArticle'})
+                const result = await getArticle ({ type, sort,id});
+                const {data,code,msg} = result.data;
+                if (code ===200){
+                            data.selectedOptions = this.selectedOptions
+                            this.SAVE_ARTICLEINFO(data);
+                            this.$router.push({path: '/editArticle'})
+                           
+                        }else{
+                            this.$message({
+                                message: msg,
+                                type: 'error'
+                            });
+                        }
+               
             },
             //批量删除
             batchRemove: function () {
@@ -255,8 +267,8 @@
                     //NProgress.start();
                      deleteArticle({article, sort}).then((res) => {
                         this.listLoading = false;
-                        let{code,msg} = res;
-                        if (codes ===200){
+                        let{code,msg} = res.data;
+                        if (code ===200){
                             this.$message({
                                 message: '删除成功',
                                 type: 'success'

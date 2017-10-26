@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="left">
-            <el-input class="title" v-model="title" placeholder="请输入标题"></el-input>
+            <el-input class="title" v-model="article.title" placeholder="请输入标题"></el-input>
             <quill-editor ref="myTextEditor"
-                          v-model="content"
+                          v-model="article.content"
                           :options="editorOption"
                           @blur="onEditorBlur($event)"
                           @focus="onEditorFocus($event)"
@@ -14,7 +14,7 @@
             <!--作者-->
             <div class="author">
                 <h3>作者</h3>
-                <el-input class="right_input" v-model="author" placeholder="作者"></el-input>
+                <el-input class="right_input" v-model="article.author" placeholder="作者"></el-input>
             </div>
             <!--发布日期-->
             <div class="date">
@@ -22,7 +22,7 @@
                 <div class="block">
                     <span class="demonstration"></span>
                     <el-date-picker
-                            v-model="time"
+                            v-model="article.time"
                             type="date"
                             format="yyyy/MM/dd"
                             placeholder="选择日期"
@@ -36,17 +36,17 @@
                 <el-cascader
                         expand-trigger="hover"
                         :options="options"
-                        v-model="selectedOptions"
+                        v-model="article.selectedOptions"
                         @change="handleChange">
                 </el-cascader>
             </div>
             <!--分类-->
             <h3>文章来源</h3>
-            <el-input class="source" v-model="source" placeholder="文章来源"></el-input>
+            <el-input class="source" v-model="article.source" placeholder="文章来源"></el-input>
 
             <h3>是否将该文章列为首页轮播图</h3>
             <el-switch
-                    v-model="isBanner"
+                    v-model="article.isBanner"
                     on-color="#13ce66"
                     on-text="是"
                     off-text="否">
@@ -60,7 +60,8 @@
 
 <script>
 import { quillEditor } from "vue-quill-editor";
-import { postArticle } from "../../api/xh_api";
+import { mapState } from "vuex";
+import { editArticle } from "../../api/xh_api";
 
 export default {
   data() {
@@ -70,13 +71,6 @@ export default {
           return time.getTime() < Date.now() - 8.64e7;
         }
       },
-      time: "", //发表时间
-      title: "默认标题", //标题
-      author: "admin", //作者
-      source: "baidu.com", //文章来源
-      content: "I am Example", // 编辑器的内容
-      selectedOptions: [], //级联选择器
-      isBanner: false, //是否列为首页banner
       editorOption: {
         // 编辑器的配置
         // something config
@@ -211,38 +205,23 @@ export default {
       //                console.log('editor ready!', editor)
     },
     async onEditorChange() {
-      if (
-        this.title &&
-        this.author &&
-        this.time &&
-        this.selectedOptions &&
-        this.source
-      ) {
-        console.log(this.title);
-        console.log(this.content);
-        console.log(this.author);
-        console.log(this.time);
-        console.log(this.selectedOptions);
-        console.log(this.source);
-        console.log(this.isBanner);
-        this.$message.success("提交成功！");
-      }
-      this.content || this.$message("请不要发表内容为空的文章");
-      this.title || this.$message("请输入标题");
-      this.author || this.$message("请标明作者");
-      this.time || this.$message("请选择发布日期");
-      this.selectedOptions.length !== 0 || this.$message("请选择分类");
-      this.source || this.$message("请输入文章来源");
-      result = await postArticle({
-        title: this.title,
-        author: this.author,
-        content: this.content,
-        source: this.source,
-        time: this.time,
-        selectedOptions: this.selectedOptions,
+      this.article.content || this.$message("请不要发表内容为空的文章");
+      this.article.title || this.$message("请输入标题");
+      this.article.author || this.$message("请标明作者");
+      this.article.time || this.$message("请选择发布日期");
+      this.article.selectedOptions.length !== 0 || this.$message("请选择分类");
+      this.article.source || this.$message("请输入文章来源");
+       console.log(this.article.content) 
+      const result = await editArticle({
+        title: this.article.title,
+        id: this.article.id,
+        author: this.article.author,
+        content: this.article.content,
+        source: this.article.source,
+        time: this.article.time,
+        selectedOptions: this.article.selectedOptions,
         isBanner: this.isBanner
       });
-
       const { code, msg } = result.data;
 
       if (code === 200) {
@@ -250,6 +229,7 @@ export default {
           message: msg,
           type: "success"
         });
+        this.$router.push({ path: "/article" });
       } else {
         this.$message({
           message: msg,
@@ -263,7 +243,8 @@ export default {
   computed: {
     editor() {
       return this.$refs.myTextEditor.quillEditor;
-    }
+    },
+    ...mapState(["article"])
   },
   mounted() {
     // you can use current editor object to do something(editor methods)
