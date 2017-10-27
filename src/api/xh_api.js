@@ -49,7 +49,7 @@ export const editArticle = params => {
 
 /*专家团队模块*/
 export const getTeamList = params => {
-    return instance.get(`/data/team`, {params: params});
+    return instance.get(`/data/team/catalog`, {params: params});
 };
 export const getTeamOne = params => {
     return instance.get(`/data/team/person`, {params: params});
@@ -61,6 +61,9 @@ export const addPerson = params => {
 
 export const deletePerson = params => {
     return instance.post(`/data/team/delete`, params);
+};
+export const editPerson = params => {
+    return instance.post(`/data/team/edit`, params);
 };
 /*栏目模块*/
 export const getColumnListPage = params => {
