@@ -8,20 +8,22 @@ export default {
             state.userInfo[attr] = userInfo[attr];
         }
     },
+    [types.SAVE_TEAMONE](state, person){
+
+        for(let attr in person){
+            state.person[attr] = person[attr];
+        }
+    },
     [types.SAVE_ARTICLEINFO](state, article){
-        console.log(state.article)
 
         for(let attr in article){
             state.article[attr] = article[attr];
         }
-        console.log(state.article)
     },
     [types.SAVE_BOOKINFO](state, book){
-        console.log(state.book)
 
         for(let attr in book){
             state.book[attr] = book[attr];
         }
-        console.log(state.book)
     },
 }

@@ -41,106 +41,104 @@ export const deleteArticle = params => {
     return instance.post(`/data/deletearticle`,params);
 };
 
-
-
 export const editArticle = params => {
     return instance.post(`/data/editarticle`, params);
 };
 
 
-/*专家模块*/
-export const getUserCatalog = params => {
-    return instance.get(`/data/teamall`, params).then(res => res.data);
+
+/*专家团队模块*/
+export const getTeamList = params => {
+    return instance.get(`/data/team`, {params: params});
 };
-export const getUser = params => {
-    return instance.get(`/article/getUser`, {params}).then(res => res.data);
+export const getTeamOne = params => {
+    return instance.get(`/data/team/person`, {params: params});
+};
+
+export const addPerson = params => {
+    return instance.post(`/data/team/person`, params);
+};
+
+export const deletePerson = params => {
+    return instance.post(`/data/team/delete`, params);
 };
 /*栏目模块*/
 export const getColumnListPage = params => {
-    return axios.get(`/tt`, {params: params});
+    return instance.get(`/tt`, {params: params});
 };
 
 export const removeColumn = params => {
-    return axios.get(`/user/remove`, {params: params});
+    return instance.get(`/user/remove`, {params: params});
 };
 
 export const getColumnList = params => {
-    return axios.get(`/user/list`, {params: params});
+    return instance.get(`/user/list`, {params: params});
 };
 
 export const batchRemoveColumn = params => {
-    return axios.get(`/user/batchremove`, {params: params});
+    return instance.get(`/user/batchremove`, {params: params});
 };
 
 export const addColumn = params => {
-    return axios.get(`/user/add`, {params: params});
+    return instance.get(`/user/add`, {params: params});
 };
+
+
+
+
 
 /*著作模块*/
 export const getBookListPage = params => {
-    return axios.get(`/tt`, {params: params});
+    return instance.get(`/tt`, {params: params});
 };
 
 export const removeBook = params => {
-    return axios.get(`/user/remove`, {params: params});
+    return instance.get(`/user/remove`, {params: params});
 };
 
 export const getBookList = params => {
-    return axios.get(`/user/list`, {params: params});
+    return instance.get(`/user/list`, {params: params});
 };
 
 export const batchRemoveBook = params => {
-    return axios.get(`/user/batchremove`, {params: params});
+    return instance.get(`/user/batchremove`, {params: params});
 };
 
 export const addBook = params => {
-    return axios.get(`/user/add`, {params: params});
+    return instance.get(`/user/add`, {params: params});
 };
 
 
-/*用户模块*/
-export const getList = params => {
-    return axios.get(`/user/list`, {params: params});
-};
 
-export const getUserListPage = params => {
-    return axios.get(`/user/listpage`, {params: params});
-};
 
-export const removeUser = params => {
-    return axios.get(`/user/remove`, {params: params});
-};
 
-export const batchRemoveUser = params => {
-    return axios.get(`/user/batchremove`, {params: params});
-};
 
 export const editUser = params => {
-    return axios.get(`/user/edit`, {params: params});
+    return instance.get(`/user/edit`, {params: params});
 };
 
 export const addUser = params => {
-    return axios.get(`/user/add`, {params: params});
+    return instance.get(`/user/add`, {params: params});
 };
 
 /*友情链接*/
 export const getLinkListPage = params => {
-    return axios.get(`/tt`, {params: params});
+    return instance.get(`/tt`, {params: params});
 };
 
 export const removeLink = params => {
-    return axios.get(`/user/remove`, {params: params});
+    return instance.get(`/user/remove`, {params: params});
 };
 
 export const getLinkList = params => {
-    return axios.get(`/user/list`, {params: params});
+    return instance.get(`/user/list`, {params: params});
 };
 
 export const batchRemoveLink = params => {
-    return axios.get(`/user/batchremove`, {params: params});
+    return instance.get(`/user/batchremove`, {params: params});
 };
 
 export const addLink = params => {
-    return axios.get(`/user/add`, {params: params});
+    return instance.get(`/user/add`, {params: params});
 };
 

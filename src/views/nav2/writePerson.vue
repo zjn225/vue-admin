@@ -2,7 +2,7 @@
     <div>
         <div class="left">
             <quill-editor ref="myTextEditor"
-                          v-model="userInfo.content"
+                          v-model="person.content"
                           :options="editorOption"
                           @blur="onEditorBlur($event)"
                           @focus="onEditorFocus($event)"
@@ -13,18 +13,19 @@
             <!--作者-->
             <div class="author">
                 <h3>专家名字</h3>
-                <el-input class="right_input" v-model="userInfo.name" placeholder=""></el-input>
+                <el-input class="right_input" v-model="person.name" placeholder=""></el-input>
             </div>
 
             <h3>职位</h3>
-            <el-input class="right_input" v-model="userInfo.job" placeholder=""></el-input>
+            <el-input class="right_input" v-model="person.position" placeholder=""></el-input>
 
             <h3>头像</h3>
             <el-upload
-                    action="https://jsonplaceholder.typicode.com/posts/"
+                    :action='avatarURL'
                     list-type="picture-card"
                     :on-preview="handlePictureCardPreview"
-                    :on-remove="handleRemove" class="upl">
+                    :on-remove="handleRemove" 
+                    class="upl">
                 <i class="el-icon-plus"></i>
             </el-upload>
             <el-dialog v-model="dialogVisible" size="tiny">
@@ -33,7 +34,7 @@
 
         </div>
         <div class="btn">
-            <el-button type="primary" class="btn" id="submit" @click="onEditorChange()">更新数据</el-button>
+            <el-button type="primary" class="btn" id="submit" @click="onEditorChange()" >更新数据</el-button>
         </div>
     </div>
 </template>
@@ -45,7 +46,9 @@
     export default {
         data() {
             return {
+                avatarURL : `http:${process.env.API_ROOT}/data/avatar`,
                 dialogImageUrl: '',
+                avatarID :false,
                 dialogVisible: false,
                 pickerOptions0: {
                     disabledDate(time) {
@@ -63,6 +66,7 @@
         },
         // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
         methods: {
+           
             handleChange(value) {
 //                console.log(value);
             },
@@ -76,7 +80,7 @@
 //                console.log('editor ready!', editor)
             },
             onEditorChange() {
-                console.log(this.$store.state.userInfo);
+                
             },
             handleRemove(file, fileList) {
                 console.log(file, fileList);
@@ -93,7 +97,7 @@
             },
 
             ...mapState([
-                'userInfo'
+                'person'
             ])
         },
         mounted() {

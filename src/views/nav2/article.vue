@@ -193,10 +193,7 @@
                 const start = this.statr;
                 const result = await getCatalog({sort, type, start});
 
-                // let para = {
-                //     page: this.page,
-                //     title: this.filters.title
-                // };
+               
                 this.listLoading = true;
                 this.articles = result.data.data;
                 this.total = result.data.pageCount;

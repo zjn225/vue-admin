@@ -24,7 +24,7 @@
             </el-table-column>
             <el-table-column prop="name" label="姓名" width="120" sortable>
             </el-table-column>
-            <el-table-column prop="job" label="职称" width="100" sortable>
+            <el-table-column prop="position" label="职称" width="100" sortable>
             </el-table-column>
             <el-table-column prop="content" label="内容" min-width="160" sortable>
             </el-table-column>
@@ -49,10 +49,10 @@
 
 <script>
     import util from '../../common/js/util'
-    import {getUserListPage, removeUser, batchRemoveUser, addUser} from '../../api/api';
-
-
     import {mapMutations} from 'vuex'
+    import {getTeamList, removeUser, batchRemoveUser, addUser,getTeamOne, deletePerson} from '../../api/xh_api';
+
+
 
     export default {
         data() {
@@ -84,6 +84,9 @@
             }
         },
         methods: {
+             ...mapMutations([
+                'SAVE_TEAMONE',
+            ]),
             handleCurrentChange(val) {
                 this.page = val;
                 const result = this.getUsers();
@@ -93,12 +96,11 @@
             getUsers() {
                 let para = {
                     page: this.page,
-                    name: this.filters.name
                 };
                 this.listLoading = true;
-                getUserListPage(para).then((res) => {
-                    this.total = res.data.total;
-                    this.users = res.data.users;
+                getTeamList(para).then((res) => {
+                    this.total = res.data.pageCount;
+                    this.users = res.data.person;
                     this.listLoading = false;
                 });
             },
@@ -108,10 +110,10 @@
                     type: 'warning'
                 }).then(() => {
                     this.listLoading = true;
-                    let para = {id: row.id};
-                    removeUser(para).then((res) => {
+                    let person = [{id: row.id}];
+                    deletePerson({person}).then((res) => {
                         this.listLoading = false;
-                        let {code, msg} = res;
+                        let {code, msg} = res.data;
                         if (code === 200) {
                             this.$message({
                                 message: '删除成功',
@@ -132,15 +134,24 @@
             },
 
             //显示编辑界面
-            handleEdit: function (index, row) {
-                var name = this.users[index].name;
-                var job = this.users[index].job;
-                var content = this.users[index].content;
-                // this.$store.commit('changeName', name)
-                // this.$store.commit('changeContent', content)
-                this.$store.dispatch('getUserInfo', {name, job, content});
+            handleEdit: async function (index, row) {
 
-                this.$router.push({path: '/writePerson'})
+               
+                const id = this.users[index].id;
+                
+                const result = await getTeamOne({id});
+                const {data,code,msg} = result.data;
+                 if (code ===200){
+                            this.SAVE_TEAMONE(data[0]);
+                            this.$router.push({path: '/writePerson'})
+                           
+                        }else{
+                            this.$message({
+                                message: msg,
+                                type: 'error'
+                            });
+                        }
+
             },
             //新增
             handleAdd: function () {
@@ -151,14 +162,13 @@
             },
             //批量删除
             batchRemove: function () {
-                var ids = this.sels.map(item => item.id).toString();
+                var person = this.sels.map(item => ({id: item.id}));
                 this.$confirm('确认删除选中记录吗？', '提示', {
                     type: 'warning'
                 }).then(() => {
                     this.listLoading = true;
                     //NProgress.start();
-                    let para = {ids: ids};
-                    batchRemoveUser(para).then((res) => {
+                    batchRemoveUser({person}).then((res) => {
                         this.listLoading = false;
                         let {code, msg} = res;
                         if(code ===200){
@@ -166,7 +176,7 @@
                                 message: '删除成功',
                                 type: 'success'
                             });
-                            this.getUsers();
+                            // this.getUsers();
                         }else{
                             this.$message({
                                 message: msg,
@@ -180,7 +190,7 @@
             }
         },
         mounted() {
-            this.getUsers();
+            this.getUsers()
         }
     }
 

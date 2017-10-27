@@ -12,16 +12,12 @@ const state = {
     source: '',//文章来源
     selectedOptions: [],  //级联选择器
     isBanner: true,  //是否列为首页banner
-    name: 'vuex_name',
-    sex: '1',
-    age: '',
-    addr: '',
+   
     content: '',// 编辑器的内容
-    userInfo:{
-        name: 'vuex_name',
-        sex: '1',
-        age: '',
-        addr: '',
+    person:{
+        name: '',
+        position: '',
+        avatar:'',
         content:'',
     },
     article:{
