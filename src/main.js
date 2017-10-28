@@ -2,7 +2,7 @@ import babelpolyfill from 'babel-polyfill'
 import Vue from 'vue'
 import App from './App'
 import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-default/index.css'  //引入饿了么样式
+import 'element-ui/lib/theme-chalk/index.css'  //引入饿了么样式
 import 'font-awesome/css/font-awesome.min.css'  //引入font-awesome样式
 //import './assets/theme/theme-green/index.css'
 import VueRouter from 'vue-router'

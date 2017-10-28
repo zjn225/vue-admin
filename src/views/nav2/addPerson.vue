@@ -20,18 +20,20 @@
             <el-input class="right_input" v-model="position" placeholder=""></el-input>
 
             <h3>头像</h3>
-            <el-upload
-                    :action='avatarURL'
-                    list-type="picture-card"
-                    :on-preview="handlePictureCardPreview"
-                    :on-remove="handleRemove" 
-                    :before-upload='getAvatarID'
-                    class="upl">
-                <i class="el-icon-plus"></i>
-            </el-upload>
-            <el-dialog v-model="dialogVisible" size="tiny">
-                <img width="100%" :src="dialogImageUrl" alt="">
-            </el-dialog>
+              <el-button type="primary"  @click="toggleShow" class='setAvatar'>设置头像</el-button>
+	            <my-upload field="img"
+              @crop-success="cropSuccess"
+              @crop-upload-success="cropUploadSuccess"
+              @crop-upload-fail="cropUploadFail"
+              v-model="show"
+		          :width="300"
+		          :height="300"
+		          :url="avatarURL"
+		          :params="params"
+		          :headers="headers"
+		          img-format="png"></my-upload>
+	          
+              <img  :src="dialogImageUrl" alt="" class='avatar'>
 
         </div>
         <div class="btn">
@@ -43,7 +45,7 @@
 <script>
 import { quillEditor } from "vue-quill-editor";
 import { addPerson } from "../../api/xh_api";
-
+import myUpload from "vue-image-crop-upload";
 export default {
   data() {
     return {
@@ -51,6 +53,8 @@ export default {
       name: "",
       position: "",
       content: "",
+      show: false,
+      avatar: "",
       dialogImageUrl: "",
       dialogVisible: false,
       editorOption: {
@@ -60,26 +64,11 @@ export default {
     };
   },
   components: {
-    quillEditor
+    quillEditor,
+    "my-upload": myUpload
   },
   // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
   methods: {
-    tranrTobase(file) {
-      return new Promise((resolve, reject) => {
-          console.log('sdf')  
-          
-        var reader = new FileReader();
-        reader.readAsDataURL(file);
-        let avatar = null;
-        reader.onload = function() {
-          resolve(this.result);
-        };
-      });
-    },
-    async getAvatarID(file) {
-        
-      this.avatar = await this.tranrTobase(file);
-    },
     handleChange(value) {
       //                console.log(value);
     },
@@ -93,14 +82,12 @@ export default {
       //                console.log('editor ready!', editor)
     },
     async onEditorChange() {
-      if (this.name && this.position && this.content) {
-        console.log(this.name);
-        console.log(this.content);
-        this.$message.success("提交成功！");
+      if (!this.name && !this.position && !this.content) {
+        this.content || this.$message("请不要发表内容为空的文章");
+        this.name || this.$message("请输入该专家的名字");
+        this.position || this.$message("请输入该专家的职位");
+        retrun;
       }
-      this.content || this.$message("请不要发表内容为空的文章");
-      this.name || this.$message("请输入该专家的名字");
-      this.position || this.$message("请输入该专家的职位");
 
       let result = await addPerson({
         name: this.name,
@@ -108,7 +95,7 @@ export default {
         content: this.content,
         avatar: this.avatar
       });
-      console.log(result);
+
       const { code, msg } = result.data;
 
       if (code === 200) {
@@ -116,9 +103,8 @@ export default {
           message: msg,
           type: "success"
         });
-        
-        this.$router.push({ path: "/user" });
 
+        this.$router.push({ path: "/user" });
       } else {
         this.$message({
           message: msg,
@@ -126,13 +112,44 @@ export default {
         });
       }
     },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
+
+    toggleShow() {
+      this.show = !this.show;
     },
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
+    /**
+			 * crop success
+			 *
+			 * [param] imgDataUrl
+			 * [param] field
+			 */
+    cropSuccess(imgDataUrl, field) {
+      console.log("-------- crop success --------");
+      this.dialogImageUrl = imgDataUrl;
       console.log(this.dialogImageUrl);
       this.dialogVisible = true;
+    },
+    /**
+			 * upload success
+			 *
+			 * [param] jsonData   服务器返回数据，已进行json转码
+			 * [param] field
+			 */
+    cropUploadSuccess(jsonData, field) {
+      console.log("-------- upload success --------");
+      this.avatar = jsonData.path;
+      
+    },
+    /**
+			 * upload fail
+			 *
+			 * [param] status    server api return error status, like 500
+			 * [param] field
+			 */
+    cropUploadFail(status, field) {
+      console.log("-------- upload fail --------");
+      console.log(status);
+      console.log("field: " + field);
+      
     }
   },
 
@@ -186,5 +203,13 @@ div {
   .upl {
     margin: 10px 0px;
   }
+}
+.setAvatar{
+  margin-top: 40px;
+}
+.avatar{
+  margin-top: 40px;
+  
+  width: 280px;
 }
 </style>
