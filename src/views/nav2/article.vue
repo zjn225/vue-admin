@@ -188,13 +188,13 @@ export default {
     };
   },
   methods: {
-    async handleCurrentChange(currentPage) {
+    handleCurrentChange(currentPage) {
       const start = (currentPage - 1) * 14 + currentPage - 1;
 
       if (this.isReacher) {
-        handleReacher(start);
+        this.handleReacher(start);
       } else {
-        getArticleList(start);
+        this.getArticleList(start);
       }
     },
     selectArticle(selection, row) {
@@ -215,7 +215,7 @@ export default {
       getCatalog({ sort, type, start }).then(res => {
         this.listLoading = false;
         let { code, msg, data, pageCount } = res.data;
-      
+        console.log(code)
         if (code === 200) {
           this.articles = data;
           this.isReacher = true;

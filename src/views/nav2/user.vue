@@ -16,7 +16,7 @@
         </el-col>
 
         <!--列表-->
-        <el-table :data="users" highlight-current-row v-loading="listLoading" @selection-change="selsChange"
+        <el-table :data="persons" highlight-current-row v-loading="isLoading" @selection-change="selsChange"
                   style="width: 100%;">
             <el-table-column type="selection" width="55">
             </el-table-column>
@@ -48,152 +48,173 @@
 </template>
 
 <script>
-    import util from '../../common/js/util'
-    import {mapMutations} from 'vuex'
-    import {getTeamList, removeUser, batchRemoveUser, addUser,getTeamOne, deletePerson} from '../../api/xh_api';
+import util from "../../common/js/util";
+import { mapMutations } from "vuex";
+import {
+  getTeamList,
+  removeUser,
+  batchRemoveUser,
+  addUser,
+  getTeamOne,
+  deletePerson,
+  reacherPerson
+} from "../../api/xh_api";
 
+export default {
+  data() {
+    return {
+      filters: {
+        name: ""
+      },
+      persons: [],
+      total: 0,
+      page: 1,
+      isLoading: false,
+      sels: [], //列表选中列
+      isReacher: "",
+      editFormVisible: false, //编辑界面是否显示
+      editLoading: false,
+      editFormRules: {
+        name: [{ required: true, message: "请输入姓名", trigger: "blur" }]
+      },
 
+      addFormVisible: false, //新增界面是否显示
+      addLoading: false,
+      addFormRules: {
+        name: [{ required: true, message: "请输入姓名", trigger: "blur" }]
+      }
+    };
+  },
+  methods: {
+    ...mapMutations(["SAVE_TEAMONE"]),
+    handleCurrentChange(currentPage) {
+      const start = (currentPage - 1) * 20 + currentPage - 1;
 
-    export default {
-        data() {
-            return {
-                filters: {
-                    name: ''
-                },
-                users: [],
-                total: 0,
-                page: 1,
-                listLoading: false,
-                sels: [],//列表选中列
+      if (this.isReacher) {
+        handleReacher(start);
+      } else {
+        getUsers(start);
+      }
+    },
+    //获取用户列表
+    getUsers(start = 0) {
+      this.isLoading = true;
+      getTeamList(start).then(res => {
+  
+        this.total = res.data.pageCount;
+        this.persons = res.data.person;
+        this.isLoading = false;
+        this.isReacher = false;
+      });
+    },
+    //搜索专家
+    handleReacher(start = 0) {
+      const name = this.filters.name;
 
-                editFormVisible: false,//编辑界面是否显示
-                editLoading: false,
-                editFormRules: {
-                    name: [
-                        {required: true, message: '请输入姓名', trigger: 'blur'}
-                    ]
-                },
+      this.isLoading = true;
 
-                addFormVisible: false,//新增界面是否显示
-                addLoading: false,
-                addFormRules: {
-                    name: [
-                        {required: true, message: '请输入姓名', trigger: 'blur'}
-                    ]
-                },
-            }
-        },
-        methods: {
-             ...mapMutations([
-                'SAVE_TEAMONE',
-            ]),
-            handleCurrentChange(val) {
-                this.page = val;
-                const result = this.getUsers();
-                this.users = result.data.users;
-            },
-            //获取用户列表
-            getUsers() {
-                let para = {
-                    page: this.page,
-                };
-                this.listLoading = true;
-                getTeamList(para).then((res) => {
-                    this.total = res.data.pageCount;
-                    this.users = res.data.person;
-                    this.listLoading = false;
-                });
-            },
-            //删除
-            handleDel: function (index, row) {
-                this.$confirm('确认删除该记录吗?', '提示', {
-                    type: 'warning'
-                }).then(() => {
-                    this.listLoading = true;
-                    let person = [{id: row.id}];
-                    deletePerson({person}).then((res) => {
-                        this.listLoading = false;
-                        let {code, msg} = res.data;
-                        if (code === 200) {
-                            this.$message({
-                                message: '删除成功',
-                                type: 'success'
-                            });
-                            this.getUsers();
-                        } else {
-                            this.$message({
-                                message: msg,
-                                type: 'error'
-                            });
-                        }
+      reacherPerson({ name, start }).then(res => {
+        this.isLoading = false;
+        let { code, msg, data, pageCount } = res.data;
 
-                    });
-                }).catch(() => {
+        if (code === 200) {
+          this.person = data;
+          this.isReacher = true;
+          this.total = pageCount;
 
-                });
-            },
-
-            //显示编辑界面
-            handleEdit: async function (index, row) {
-
-               
-                const id = this.users[index].id;
-                
-                const result = await getTeamOne({id});
-                const {data,code,msg} = result.data;
-                 if (code ===200){
-                            this.SAVE_TEAMONE(data[0]);
-                            this.$router.push({path: '/writePerson'})
-                           
-                        }else{
-                            this.$message({
-                                message: msg,
-                                type: 'error'
-                            });
-                        }
-
-            },
-            //新增
-            handleAdd: function () {
-                this.$router.push({path: '/addPerson'})
-            },
-            selsChange: function (sels) {
-                this.sels = sels;
-            },
-            //批量删除
-            batchRemove: function () {
-                var person = this.sels.map(item => ({id: item.id}));
-                this.$confirm('确认删除选中记录吗？', '提示', {
-                    type: 'warning'
-                }).then(() => {
-                    this.listLoading = true;
-                    //NProgress.start();
-                    batchRemoveUser({person}).then((res) => {
-                        this.listLoading = false;
-                        let {code, msg} = res;
-                        if(code ===200){
-                            this.$message({
-                                message: '删除成功',
-                                type: 'success'
-                            });
-                            // this.getUsers();
-                        }else{
-                            this.$message({
-                                message: msg,
-                                type: 'error'
-                            });
-                        }
-                    });
-                }).catch(() => {
-
-                });
-            }
-        },
-        mounted() {
-            this.getUsers()
+          console.log(this.articles.length);
+        } else {
+          this.$message({
+            message: msg,
+            type: "error"
+          });
         }
-    }
+      });
+    },
+    //删除
+    handleDel: function(index, row) {
+      this.$confirm("确认删除该记录吗?", "提示", {
+        type: "warning"
+      })
+        .then(() => {
+          this.isLoading = true;
+          let person = [{ id: row.id }];
+          deletePerson({ person }).then(res => {
+            this.isLoading = false;
+            let { code, msg } = res.data;
+            if (code === 200) {
+              this.$message({
+                message: "删除成功",
+                type: "success"
+              });
+              this.getUsers();
+            } else {
+              this.$message({
+                message: msg,
+                type: "error"
+              });
+            }
+          });
+        })
+        .catch(() => {});
+    },
 
+    //显示编辑界面
+    handleEdit: async function(index, row) {
+      const id = this.persons[index].id;
+
+      const result = await getTeamOne({ id });
+      const { data, code, msg } = result.data;
+      if (code === 200) {
+        this.SAVE_TEAMONE(data[0]);
+        this.$router.push({ path: "/writePerson" });
+      } else {
+        this.$message({
+          message: msg,
+          type: "error"
+        });
+      }
+    },
+    //新增
+    handleAdd: function() {
+      this.$router.push({ path: "/addPerson" });
+    },
+    selsChange: function(sels) {
+      this.sels = sels;
+    },
+    //批量删除
+    batchRemove: function() {
+      var person = this.sels.map(item => ({ id: item.id }));
+      this.$confirm("确认删除选中记录吗？", "提示", {
+        type: "warning"
+      })
+        .then(() => {
+          this.isLoading = true;
+          //NProgress.start();
+          batchRemoveUser({ person }).then(res => {
+            this.isLoading = false;
+            let { code, msg } = res;
+            if (code === 200) {
+              this.$message({
+                message: "删除成功",
+                type: "success"
+              });
+              // this.getUsers();
+            } else {
+              this.$message({
+                message: msg,
+                type: "error"
+              });
+            }
+          });
+        })
+        .catch(() => {});
+    }
+  },
+  mounted() {
+    this.getUsers();
+  }
+};
 </script>
 
 <style scoped>

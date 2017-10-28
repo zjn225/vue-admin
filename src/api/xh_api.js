@@ -67,6 +67,9 @@ export const deletePerson = params => {
 export const editPerson = params => {
     return instance.post(`/data/team/edit`, params);
 };
+export const reacherPerson = params => {
+    return instance.get(`/data/team/reacher`,{params: params});
+};
 /*栏目模块*/
 export const getColumnListPage = params => {
     return instance.get(`/tt`, {params: params});
