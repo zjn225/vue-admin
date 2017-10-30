@@ -59,7 +59,7 @@ import {
   deleteArticle,
   editArticle,
   getArticle,
-  reacherArticle
+  searchArticle
 } from "../../api/xh_api";
 
 export default {
@@ -240,7 +240,7 @@ export default {
 
       this.listLoading = true;
       console.log("sss");
-      reacherArticle({ sort, type, title, start }).then(res => {
+      searchArticle({ sort, type, title, start }).then(res => {
         this.listLoading = false;
         let { code, msg, data, pageCount } = res.data;
         console.log(res.data);

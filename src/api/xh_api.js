@@ -35,8 +35,8 @@ export const getCatalog = params => {
 export const getArticle = params => {
     return instance.get(`/data/article`, {params: params});
 };
-export const reacherArticle = params => {
-    return instance.get(`/data/reacherArticle`, {params: params});
+export const searchArticle = params => {
+    return instance.get(`/data/searchArticle`, {params: params});
 };
 
 export const deleteArticle = params => {
