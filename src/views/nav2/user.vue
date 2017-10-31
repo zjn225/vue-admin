@@ -17,21 +17,19 @@
 
         <!--列表-->
         <el-table :data="persons" highlight-current-row v-loading="isLoading" @selection-change="selsChange"
-                  style="width: 100%;">
-            <el-table-column type="selection" width="55">
+                  style="width: 100%;" id='mytable'>
+            <el-table-column type="selection" >
             </el-table-column>
-            <el-table-column type="index" width="100" label="序号">
+            <el-table-column type="index"  label="序号">
             </el-table-column>
-            <el-table-column prop="name" label="姓名" width="120" sortable>
+            <el-table-column prop="name" label="姓名"  sortable>
             </el-table-column>
-            <el-table-column prop="position" label="职称" width="100" sortable>
+            <el-table-column prop="position" label="职称"  sortable>
             </el-table-column>
-            <el-table-column prop="content" label="内容" min-width="160" sortable>
-            </el-table-column>
-            <el-table-column label="操作" width="250">
+            <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button type="primary" size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                    <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+                    <el-button type="primary" size="small" @click="handleEdit(scope.$index, scope.row)" >编辑</el-button>
+                    <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)" >删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -218,5 +216,6 @@ export default {
 </script>
 
 <style scoped>
-
+.my{
+}
 </style>
