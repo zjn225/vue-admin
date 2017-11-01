@@ -71,7 +71,7 @@
                                     type: "success"
                                 });
                                 sessionStorage.setItem('status', 1);
-                                this.$router.push({path: '/Safety'});
+                                this.$router.push({path: '/Main'});
                             }
                         });
                     } else {
