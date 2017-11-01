@@ -1,3 +1,9 @@
+const Main = (resolve) => {
+    import('./views/nav1/main.vue').then((module) => {
+        resolve(module)
+    })
+}
+
 const Login = (resolve) => {
     import('./views/Login.vue').then((module) => {
         resolve(module)
@@ -111,6 +117,7 @@ let routes = [
         name: '控制台',
         iconCls: 'el-icon-setting',//图标样式class
         children: [
+            {path: '/main', component: Main, name: '首页'},
             {path: '/safety', component: Safety, name: '账户安全'},
         ]
     },
