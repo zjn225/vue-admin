@@ -22,6 +22,9 @@ let instance = axios.create({
 export const requestLogin = params => {
     return instance.post(`/user/login`, params).then(res => res.data);
 };
+export const changePass = params => {
+    return instance.post(`/user/changePassword`, params).then(res => res.data);
+};
 
 
 /*文章模块*/
@@ -70,28 +73,31 @@ export const editPerson = params => {
 export const reacherPerson = params => {
     return instance.get(`/data/team/reacher`,{params: params});
 };
-/*栏目模块*/
-export const getColumnListPage = params => {
-    return instance.get(`/tt`, {params: params});
+/*友情链接模块*/
+export const getLinkList = () => {
+    return instance.get(`/data/friendLinks/catalog`);
+};
+export const getLinkOne = (params) => {
+    return instance.get(`/data/friendLinks/one`,{params: params});
+};
+export const addLink = params => {
+    return instance.post(`/data/friendLinks/post`, params);
+};
+export const editLink = params => {
+    return instance.post(`/data/friendLinks/edit`, params);
 };
 
-export const removeColumn = params => {
-    return instance.get(`/user/remove`, {params: params});
+
+
+export const  deleteLinks = params => {
+    return instance.post(`/data/friendLinks/delete`, params);
 };
 
-export const getColumnList = params => {
-    return instance.get(`/user/list`, {params: params});
-};
 
-export const batchRemoveColumn = params => {
+
+export const batchRemoveLink = params => {
     return instance.get(`/user/batchremove`, {params: params});
 };
-
-export const addColumn = params => {
-    return instance.get(`/user/add`, {params: params});
-};
-
-
 
 
 
@@ -129,24 +135,6 @@ export const addUser = params => {
     return instance.get(`/user/add`, {params: params});
 };
 
-/*友情链接*/
-export const getLinkListPage = params => {
-    return instance.get(`/tt`, {params: params});
-};
 
-export const removeLink = params => {
-    return instance.get(`/user/remove`, {params: params});
-};
 
-export const getLinkList = params => {
-    return instance.get(`/user/list`, {params: params});
-};
-
-export const batchRemoveLink = params => {
-    return instance.get(`/user/batchremove`, {params: params});
-};
-
-export const addLink = params => {
-    return instance.get(`/user/add`, {params: params});
-};
 

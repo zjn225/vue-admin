@@ -80,7 +80,7 @@ const addFriendLink = (resolve) => {
     })
 }
 const editLink = (resolve) => {
-    import('./views/nav2/addFriendLink.vue').then((module) => {
+    import('./views/nav2/editLink.vue').then((module) => {
         resolve(module)
     })
 }

@@ -5,7 +5,7 @@
         <h3>网站链接</h3>
         <el-input class=" " v-model="friendLink.link" placeholder=""></el-input>
         <div class="btn">
-            <el-button type="primary" class="btn" id="submit" @click="onEditorChange()">发表文章</el-button>
+            <el-button type="primary" class="btn" id="submit" @click="onEditorChange()">更新链接</el-button>
         </div>
     </div>
 </template>
@@ -20,9 +20,7 @@
 
             };
         },
-        components: {
-            quillEditor
-        },
+       
         // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
         methods: {
             async onEditorChange() {
@@ -30,6 +28,7 @@
                 this.name || this.$message("请输入网站名称");
                 const result = await editLink({
                     name: this.friendLink.name,
+                    id: this.friendLink.id,
                     link: this.friendLink.link,
                 });
                 const { code, msg } = result.data;
@@ -77,7 +76,7 @@
                 color: #444444;
                 font-weight: 600;
             }
-        }
+        
 
         .btn {
             width: 100px;

@@ -16,7 +16,7 @@
         </el-col>
 
         <!--列表-->
-        <el-table :data="links" highlight-current-row  @selection-change="" style="width: 100%;">
+        <el-table :data="links" highlight-current-row  @selection-change="selectLinks" style="width: 100%;">
             <!-- 加入接口后补充 v-loading="listLoading"  -->
             <el-table-column type="selection" width="55">
             </el-table-column>
@@ -26,7 +26,7 @@
             </el-table-column>
             <el-table-column prop="link" label="网站链接" max-width="220" sortable>
             </el-table-column>
-            <el-table-column label="操作" width="150">
+            <el-table-column label="操作" width="350">
                 <template slot-scope="scope">
                     <el-button type="primary" size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                     <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
@@ -46,99 +46,143 @@
 </template>
 
 <script>
-    import util from '../../common/js/util'
-    import { getLinkListPage, removeLink, batchRemoveLink, editLink, addLink } from '../../api/api';
+import util from "../../common/js/util";
+import { getLinkList , getLinkOne, deleteLinks} from "../../api/xh_api";
+import { mapMutations } from "vuex";
 
-    export default {
-        data() {
-            return {
-                filters: {
-                    name: ''
-                },
-                links: [],
-                total: 0,
-                page: 1,
-                listLoading: false,
-                sels: [],//列表选中列
-            }
-        },
-        methods: {
-            handleCurrentChange(val) {
-                this.page = val;
-                this.getLinkList();
-            },
-            getLinkList() {
-                let para = {
-                    page: this.page,
-                    title: this.filters.title
-                };
-                this.listLoading = true;
-                //NProgress.start();
-                getLinkListPage(para).then((res) => {
-                    this.total = res.data.total;
-                    this.links = res.data.links;
-                    this.listLoading = false;
-                    //NProgress.done();
-                });
-            },
-            //删除
-            handleDel: function (index, row) {
-                this.$confirm('确认删除该记录吗?', '提示', {
-                    type: 'warning'
-                }).then(() => {
-                    this.listLoading = true;
-                    //NProgress.start();
-                    let para = { id: row.id };
-                    removeLink(para).then((res) => {
-                        this.listLoading = false;
-                        //NProgress.done();
-                        this.$message({
-                            message: '删除成功',
-                            type: 'success'
-                        });
-                        this.getLinkList();
-                    });
-                }).catch(() => {
+export default {
+  data() {
+    return {
+      filters: {
+        name: ""
+      },
+      links: [],
+      total: 0,
+      page: 1,
+      listLoading: false,
+      sels: [] //列表选中列
+    };
+  },
+  methods: {
 
-                });
-            },
-            //显示编辑界面
-            handleEdit: function (index, row) {
-                this.$router.push({ path: "/editLink" });
-            },
-
-            //新增
-            handleAdd: function () {
-                this.$router.push({ path: "/addFriendLink" });
-            },
-
-            //批量删除
-            batchRemove: function () {
-                var ids = this.sels.map(item => item.id).toString();
-                this.$confirm('确认删除选中记录吗？', '提示', {
-                    type: 'warning'
-                }).then(() => {
-                    this.listLoading = true;
-                    let para = { ids: ids };
-                    batchRemoveLink(para).then((res) => {
-                        this.listLoading = false;
-                        //NProgress.done();
-                        this.$message({
-                            message: '删除成功',
-                            type: 'success'
-                        });
-                        this.getLinkList();
-                    });
-                }).catch(() => {
-
-                });
-            }
-        },
-        mounted() {
-            this.getLinkList();
+    ...mapMutations(["SAVE_FRIENDLINK"]),
+  
+    handleCurrentChange(val) {
+      this.page = val;
+      this.getLinkList();
+    },
+   
+    selectLinks(selection, row) {
+      this.sels.push(selection[selection.length - 1]);
+    },
+    getLinkList() {
+      this.listLoading = true;
+      getLinkList().then(res => {
+        let { links,  code, msg } = res.data;
+        if (code === 200) {
+          this.total = links.length;
+          this.links = links;
+        } else {
+          this.$message({
+            message: msg,
+            type: "error"
+          });
         }
-    }
+        this.listLoading = false;
 
+        //NProgress.done();
+      });
+    },
+    //删除
+     handleDel: function(index, row) {
+      this.$confirm("确认删除该记录吗?", "提示", {
+        type: "warning"
+      })
+        .then(() => {
+          this.listLoading = true;
+
+          //NProgress.start();
+          let links = [
+            { id: this.links[index].id}
+          ];
+        
+          deleteLinks({links}).then(res => {
+            this.listLoading = false;
+            let { code, msg } = res.data;
+            if (code === 200) {
+              this.$message({
+                message: "删除成功",
+                type: "success"
+              });
+              this.getLinkList();
+            } else {
+              this.$message({
+                message: msg,
+                type: "error"
+              });
+            }
+          });
+        })
+        .catch(() => {});
+    },
+    //显示编辑界面
+     handleEdit: async function(index, row) {
+      const id = this.links[index].id;
+      const result = await getLinkOne({ id });
+      const { data, code, msg } = result.data;
+      if (code === 200) {
+        this.SAVE_FRIENDLINK(data[0]);
+        this.$router.push({ path: "/editLink" });
+      } else {
+        this.$message({
+          message: msg,
+          type: "error"
+        });
+      }
+
+    },
+
+    //新增
+    handleAdd: function() {
+      this.$router.push({ path: "/addFriendLink" });
+    },
+
+    //批量删除
+    batchRemove: function() {
+
+      var links = this.sels.map(item => ({ id: item.id}));
+      
+      this.$confirm("确认删除选中记录吗？", "提示", {
+        type: "warning"
+      })
+        .then(() => {
+          this.listLoading = true;
+          //NProgress.start();
+          deleteLinks({ links }).then(res => {
+            this.listLoading = false;
+            let { code, msg } = res.data;
+            if (code === 200) {
+              this.$message({
+                message: "删除成功",
+                type: "success"
+              });
+              this.getLinkList();
+            } else {
+              this.$message({
+                message: msg,
+                type: "error"
+              });
+            }
+          });
+        })
+        .catch(() => {});
+    }  
+     
+  },
+  mounted() {
+    this.getLinkList();
+  }
+};
 </script>
 
 <style scoped>
