@@ -285,6 +285,7 @@
         .el-menu-item:nth-child(6),
         .el-menu-item:nth-child(7),
         .el-menu-item:nth-child(8),
+        .el-menu-item:nth-child(10),
         .el-menu-item:nth-child(9){
         display: none;
     }
@@ -295,6 +296,7 @@
         .liItem:nth-child(6),
         .liItem:nth-child(7),
         .liItem:nth-child(8),
+        .liItem:nth-child(10),
         .liItem:nth-child(9) {
             display: none;
         }
