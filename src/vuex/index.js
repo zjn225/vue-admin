@@ -34,6 +34,7 @@ const state = {
         content:''
     },
     friendLink:{
+        id:'',
         name:'',
         link:''
     }

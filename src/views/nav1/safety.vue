@@ -19,6 +19,8 @@
 </template>
 
 <script>
+import {changePass} from "../../api/xh_api";
+
     export default {
         data() {
             var validatePass = (rule, value, callback) => {
@@ -60,7 +62,21 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        changePass({oldPass:this.ruleForm2.oldPass,pass:this.ruleForm2.pass}).then(data=>{
+                           
+                            const {code,msg} = data;
+                            if(code === 200){
+                                  this.$message({
+                                    message: msg,
+                                    type: "success"
+                                });
+                            }else{
+                                this.$message({
+                                    message: msg,
+                                    type: "error"
+                                });
+                            }
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;

@@ -20,7 +20,7 @@
 </template>
 
 <script>
-    import {requestLogin} from '../api/api';
+    import {requestLogin} from '../api/xh_api';
 
     export default {
         data() {
@@ -56,16 +56,20 @@
                     if (valid) {
                         this.logining = true;
                         var loginParams = {account: this.ruleForm2.account, password: this.ruleForm2.checkPass};
-                        console.log("2")
                         requestLogin(loginParams).then(data => {
-                            this.logining = false;
                             let {code, msg} = data;
                             if (code !== 200) {
                                 this.$message({
                                     message: msg,
                                     type: 'error'
                                 });
+                                this.logining = false;   
+                                
                             } else {
+                                this.$message({
+                                    message: msg,
+                                    type: "success"
+                                });
                                 sessionStorage.setItem('status', 1);
                                 this.$router.push({path: '/Main'});
                             }

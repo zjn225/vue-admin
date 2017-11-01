@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import {addLink} from "../../api/xh_api";
 
     export default {
         data() {
@@ -21,17 +22,10 @@
         // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
         methods: {
             async onEditorChange() {
-                if (
-                    this.name &&
-                    this.link
-                ) {
-                    console.log(this.name);
-                    console.log(this.link);
-                    this.$message.success("提交成功！");
-                }
+              
                 this.link || this.$message("请输入网站链接");
                 this.name || this.$message("请输入网站名称");
-                result = await addLink({
+                let result = await addLink({
                     name: this.name,
                     link: this.link,
                 });
@@ -42,6 +36,8 @@
                         message: msg,
                         type: "success"
                     });
+                    this.$router.push({ path: "/friendLink" });
+
                 } else {
                     this.$message({
                         message: msg,

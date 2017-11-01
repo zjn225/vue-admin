@@ -275,7 +275,6 @@ export default {
           deleteArticle({ article, sort }).then(res => {
             this.listLoading = false;
             let { code, msg } = res.data;
-            console.log(res);
             if (code === 200) {
               this.$message({
                 message: "删除成功",
