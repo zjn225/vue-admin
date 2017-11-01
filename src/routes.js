@@ -1,22 +1,87 @@
-import Login from './views/Login.vue'
-import NotFound from './views/404.vue'
-import Home from './views/Home.vue'
+const Login = (resolve) => {
+    import('./views/Login.vue').then((module) => {
+        resolve(module)
+    })
+}
 
-import Safety from './views/nav1/Safety.vue'
-import Main from './views/nav1/Main.vue'
+const NotFound = (resolve) => {
+    import('./views/404.vue').then((module) => {
+        resolve(module)
+    })
+}
 
-import user from './views/nav2/user.vue'
-import Write from './views/nav2/Write.vue'
-import writePerson from './views/nav2/writePerson.vue'
-import editArticle from './views/nav2/editArticle.vue'
-import writeBook from './views/nav2/writeBook.vue'
-import Article from './views/nav2/Article.vue'
-import Book from './views/nav2/Book.vue'
-import addPerson from './views/nav2/addPerson.vue'
-import addBook from './views/nav2/addBook.vue'
+const Home = (resolve) => {
+    import('./views/Home.vue').then((module) => {
+        resolve(module)
+    })
+}
 
-import Basic from './views/nav3/Basic.vue'
-import friendLink from './views/nav3/friendLink.vue'
+const Safety = (resolve) => {
+    import('./views/nav1/Safety.vue').then((module) => {
+        resolve(module)
+    })
+}
+const Main = (resolve) => {
+    import('./views/nav1/Main.vue').then((module) => {
+        resolve(module)
+    })
+}
+const user = (resolve) => {
+    import('./views/nav2/user.vue').then((module) => {
+        resolve(module)
+    })
+}
+const Write = (resolve) => {
+    import('./views/nav2/Write.vue').then((module) => {
+        resolve(module)
+    })
+}
+
+const writePerson = (resolve) => {
+    import('./views/nav2/writePerson.vue').then((module) => {
+        resolve(module)
+    })
+}
+const editArticle = (resolve) => {
+    import('./views/nav2/editArticle.vue').then((module) => {
+        resolve(module)
+    })
+}
+const writeBook = (resolve) => {
+    import('./views/nav2/writeBook.vue').then((module) => {
+        resolve(module)
+    })
+}
+const Article = (resolve) => {
+    import('./views/nav2/Article.vue').then((module) => {
+        resolve(module)
+    })
+}
+const Book = (resolve) => {
+    import('./views/nav2/Book.vue').then((module) => {
+        resolve(module)
+    })
+}
+const addPerson = (resolve) => {
+    import('./views/nav2/addPerson.vue').then((module) => {
+        resolve(module)
+    })
+}
+const addBook = (resolve) => {
+    import('./views/nav2/addBook.vue').then((module) => {
+        resolve(module)
+    })
+}
+const Basic = (resolve) => {
+    import('./views/nav3/Basic.vue').then((module) => {
+        resolve(module)
+    })
+}
+const friendLink = (resolve) => {
+    import('./views/nav3/friendLink.vue').then((module) => {
+        resolve(module)
+    })
+}
 
 let routes = [
     {
