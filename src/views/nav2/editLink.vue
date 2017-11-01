@@ -1,0 +1,89 @@
+<template>
+    <div>
+        <h3>网站名称</h3>
+        <el-input class=" " v-model="friendLink.name" placeholder=""></el-input>
+        <h3>网站链接</h3>
+        <el-input class=" " v-model="friendLink.link" placeholder=""></el-input>
+        <div class="btn">
+            <el-button type="primary" class="btn" id="submit" @click="onEditorChange()">发表文章</el-button>
+        </div>
+    </div>
+</template>
+
+<script>
+    import { mapState } from "vuex";
+    import { editLink } from "../../api/xh_api";
+
+    export default {
+        data() {
+            return {
+
+            };
+        },
+        components: {
+            quillEditor
+        },
+        // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
+        methods: {
+            async onEditorChange() {
+                this.link || this.$message("请输入网站链接");
+                this.name || this.$message("请输入网站名称");
+                const result = await editLink({
+                    name: this.friendLink.name,
+                    link: this.friendLink.link,
+                });
+                const { code, msg } = result.data;
+                if (code === 200) {
+                    this.$message({
+                        message: msg,
+                        type: "success"
+                    });
+                    this.$router.push({ path: "/friendLink" });
+                } else {
+                    this.$message({
+                        message: msg,
+                        type: "error"
+                    });
+                }
+            }
+        },
+        computed: {
+            ...mapState(["friendLink"])
+        },
+        mounted() {
+
+        }
+    };
+</script>
+
+<style lang="scss" scoped>
+    div {
+        width: 100%;
+        .left {
+            width: 77%;
+            height: auto;
+            .title {
+                margin-top: 20px;
+            }
+            .source {
+                position: relative;
+                top: 90px;
+            }
+        }
+
+
+            h3 {
+                font-size: 15px;
+                color: #444444;
+                font-weight: 600;
+            }
+        }
+
+        .btn {
+            width: 100px;
+            position: relative;
+            top: 50px;
+            left: 63%;
+        }
+    }
+</style>

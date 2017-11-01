@@ -67,7 +67,7 @@
                                 });
                             } else {
                                 sessionStorage.setItem('status', 1);
-                                this.$router.push({path: '/main'});
+                                this.$router.push({path: '/Safety'});
                             }
                         });
                     } else {

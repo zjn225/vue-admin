@@ -21,11 +21,7 @@ const Safety = (resolve) => {
         resolve(module)
     })
 }
-const Main = (resolve) => {
-    import('./views/nav1/Main.vue').then((module) => {
-        resolve(module)
-    })
-}
+
 const user = (resolve) => {
     import('./views/nav2/user.vue').then((module) => {
         resolve(module)
@@ -57,11 +53,7 @@ const Article = (resolve) => {
         resolve(module)
     })
 }
-const Book = (resolve) => {
-    import('./views/nav2/Book.vue').then((module) => {
-        resolve(module)
-    })
-}
+
 const addPerson = (resolve) => {
     import('./views/nav2/addPerson.vue').then((module) => {
         resolve(module)
@@ -82,8 +74,24 @@ const friendLink = (resolve) => {
         resolve(module)
     })
 }
+const addFriendLink = (resolve) => {
+    import('./views/nav2/addFriendLink.vue').then((module) => {
+        resolve(module)
+    })
+}
+const editLink = (resolve) => {
+    import('./views/nav2/addFriendLink.vue').then((module) => {
+        resolve(module)
+    })
+}
 
 let routes = [
+    {
+        path: '/',
+        component: Login,
+        name: '',
+        hidden: true
+    },
     {
         path: '/login',
         component: Login,
@@ -103,7 +111,6 @@ let routes = [
         name: '控制台',
         iconCls: 'el-icon-setting',//图标样式class
         children: [
-            {path: '/main', component: Main, name: '网站概要', hidden: false},
             {path: '/safety', component: Safety, name: '账户安全'},
         ]
     },
@@ -114,14 +121,15 @@ let routes = [
         iconCls: 'el-icon-menu',
         children: [
             {path: '/write', component: Write, name: '撰写文章'},
-            {path: '/article', component: Article, name: '文章管理'},
-            {path: '/book', component: Book, name: '著作管理'},
+            {path: '/article', component: Article, name: '文章著作管理'},
             {path: '/user', component: user, name: '专家团队管理'},
             {path: '/editArticle', component: editArticle, name: '修改文章'},
             {path: '/writePerson', component: writePerson, name: '修改专家团队'},
             {path: '/writeBook', component: writeBook, name: '修改著作'},
             {path: '/addPerson', component: addPerson, name: '新增专家团队'},
             {path: '/addBook', component: addBook, name: '新增著作'},
+            {path: '/addFriendLink', component: addFriendLink, name: '新增友情链接'},
+            {path: '/editLink', component: editLink, name: '修改友情链接'},
         ]
     },
     {

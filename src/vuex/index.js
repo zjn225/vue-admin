@@ -32,6 +32,10 @@ const state = {
         time:'',
         time:'',
         content:''
+    },
+    friendLink:{
+        name:'',
+        link:''
     }
 };
 export default new Vuex.Store({

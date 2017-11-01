@@ -13,7 +13,7 @@
             <!--用户信息-->
             <el-col :span="4" class="goOut">
                 <span class="el-dropdown-link" @click="logout">{{goOut}}</span>
-                <span class="el-dropdown-link">{{goSite}}</span>
+                <span class="el-dropdown-link" @click="jumpSite">{{goSite}}</span>
             </el-col>
 
         </el-col>
@@ -133,6 +133,9 @@
                 });
 
 
+            },
+            jumpSite:function () {
+              window.open("http://lococo.site");
             },
             //折叠导航栏
             collapse: function () {
@@ -272,10 +275,12 @@
                 }
             }
         }
+        .liItem:nth-child(4),
         .liItem:nth-child(5),
         .liItem:nth-child(6),
         .liItem:nth-child(7),
         .liItem:nth-child(8),
+        .liItem:nth-child(10),
         .liItem:nth-child(9) {
             display: none;
         }
