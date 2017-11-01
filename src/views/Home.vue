@@ -64,8 +64,10 @@
 </li>
 </ul>
 </aside>
+<!--右侧内容区-->
 <section class="content-container">
     <div>
+        <!--面包屑导航部分-->
         <el-col :span="24" class="breadcrumb-container">
             <strong class="title">{{$route.name}}</strong>
             <el-breadcrumb separator="/" class="breadcrumb-inner">
@@ -74,6 +76,7 @@
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </el-col>
+        <!--真正的组件渲染区-->
         <el-col :span="24" class="content-wrapper">
             <transition name="fade" mode="out-in">
                 <router-view></router-view>
@@ -275,12 +278,23 @@
                 }
             }
         }
+
+        /*折叠后*/
+        .el-menu-item:nth-child(4),
+        .el-menu-item:nth-child(5),
+        .el-menu-item:nth-child(6),
+        .el-menu-item:nth-child(7),
+        .el-menu-item:nth-child(8),
+        .el-menu-item:nth-child(9){
+        display: none;
+    }
+
+        /*未折叠*/
         .liItem:nth-child(4),
         .liItem:nth-child(5),
         .liItem:nth-child(6),
         .liItem:nth-child(7),
         .liItem:nth-child(8),
-        .liItem:nth-child(10),
         .liItem:nth-child(9) {
             display: none;
         }
