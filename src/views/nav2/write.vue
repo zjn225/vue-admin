@@ -225,33 +225,19 @@
 
             async onEditorChange() {
                 console.log(this.hasPic)
-                if (
-                    this.title &&
-                    this.author &&
-                    this.time &&
-                    this.selectedOptions &&
-                    this.source &&
-                    this.hasPic
-                ) {
-                    /* console.log(this.title);
-                     console.log(this.content);
-                     console.log(this.author);
-                     console.log(this.time);
-                     console.log(this.selectedOptions);
-                     console.log(this.source);
-                     console.log(this.isBanner);*/
-                    this.$message.success("提交成功！");
-                }else{
-                    this.$message.error("fail！");
-                }
+               
                 this.content || this.$message("请不要发表内容为空的文章");
                 this.title || this.$message("请输入标题");
                 this.author || this.$message("请标明作者");
                 this.time || this.$message("请选择发布日期");
                 this.selectedOptions.length !== 0 || this.$message("请选择分类");
                 this.source || this.$message("请输入文章来源");
-                this.hasPic || this.$message("内容没有图片，请不要设置为首页的轮播图");
-                result = await postArticle({
+                this.hasImg()
+                if(!this.hasPic && this.isBanner){
+                      this.$message("内容没有图片，请不要设置为首页的轮播图");
+                      return;
+                }
+                let result = await postArticle({
                     title: this.title,
                     author: this.author,
                     content: this.content,
