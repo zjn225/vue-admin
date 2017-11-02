@@ -82,12 +82,18 @@ export default {
       //                console.log('editor ready!', editor)
     },
     async onEditorChange() {
-      if (!this.name && !this.position && !this.content) {
-        this.content || this.$message("请不要发表内容为空的文章");
-        this.name || this.$message("请输入该专家的名字");
-        this.position || this.$message("请输入该专家的职位");
-        retrun;
-      }
+        if (!this.content){
+            this.$message("请不要发表内容为空的文章");
+            return;
+        }
+        if (!this.name){
+            this.$message("请输入该专家的名字");
+            return;
+        }
+        if (!this.position){
+            this.$message("请输入该专家的职位");
+            return;
+        }
 
       let result = await addPerson({
         name: this.name,

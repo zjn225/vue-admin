@@ -22,9 +22,14 @@ import {addLink} from "../../api/xh_api";
         // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
         methods: {
             async onEditorChange() {
-              
-                this.link || this.$message("请输入网站链接");
-                this.name || this.$message("请输入网站名称");
+              if (!this.link){
+                  this.$message("请输入网站链接");
+                  return;
+              }
+              if (!this.name){
+                  this.$message("请输入网站名称");
+                  return;
+              }
                 let result = await addLink({
                     name: this.name,
                     link: this.link,

@@ -49,7 +49,8 @@
                     v-model="article.isBanner"
                     on-color="#13ce66"
                     on-text="是"
-                    off-text="否">
+                    off-text="否"
+                    @change="hasImg">
             </el-switch>
         </div>
         <div class="btn">
@@ -59,243 +60,274 @@
 </template>
 
 <script>
-import { quillEditor } from "vue-quill-editor";
-import { mapState } from "vuex";
-import { editArticle } from "../../api/xh_api";
+    import {quillEditor} from "vue-quill-editor";
+    import {mapState} from "vuex";
+    import {editArticle} from "../../api/xh_api";
 
-export default {
-  data() {
-    return {
-      pickerOptions0: {
-        disabledDate(time) {
-          return time.getTime() < Date.now() - 8.64e7;
+    export default {
+        data() {
+            return {
+                hasPic: true,
+                pickerOptions0: {
+                    disabledDate(time) {
+                        return time.getTime() < Date.now() - 8.64e7;
+                    }
+                },
+                editorOption: {
+                    // 编辑器的配置
+                    // something config
+                },
+                options: [
+                    {
+                        value: "information",
+                        label: "科研资讯",
+                        children: [
+                            {
+                                value: "1",
+                                label: "流通所新闻"
+                            },
+                            {
+                                value: "2",
+                                label: "基地资讯"
+                            },
+                            {
+                                value: "3",
+                                label: "媒体报道"
+                            }
+                        ]
+                    },
+                    {
+                        value: "research",
+                        label: "科学研究",
+                        children: [
+                            {
+                                value: "1",
+                                label: "课题研究"
+                            },
+                            {
+                                value: "2",
+                                label: "课题招标"
+                            },
+                            {
+                                value: "3",
+                                label: "成果影响"
+                            }
+                        ]
+                    },
+                    {
+                        value: "achievement",
+                        label: "科研成果",
+                        children: [
+                            {
+                                value: "1",
+                                label: "学术论文"
+                            },
+                            {
+                                value: "2",
+                                label: "著作"
+                            },
+                            {
+                                value: "3",
+                                label: "研究报告"
+                            }
+                        ]
+                    },
+                    {
+                        value: "exchange",
+                        label: "学术交流",
+                        children: [
+                            {
+                                value: "1",
+                                label: "来访交流"
+                            },
+                            {
+                                value: "2",
+                                label: "调研考察"
+                            },
+                            {
+                                value: "3",
+                                label: "主办年会"
+                            },
+                            {
+                                value: "4",
+                                label: "流通论坛"
+                            }
+                        ]
+                    },
+                    {
+                        value: "train",
+                        label: "咨询培训",
+                        children: [
+                            {
+                                value: "1",
+                                label: "咨询顾问"
+                            },
+                            {
+                                value: "2",
+                                label: "企业策划"
+                            },
+                            {
+                                value: "3",
+                                label: "专家培训"
+                            }
+                        ]
+                    },
+                    {
+                        value: "construction",
+                        label: "智库建设",
+                        children: [
+                            {
+                                value: "1",
+                                label: "名家百人讲座"
+                            },
+                            {
+                                value: "2",
+                                label: "智库动态"
+                            }
+                        ]
+                    }
+                ]
+            };
+        },
+        components: {
+            quillEditor
+        },
+        // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
+        methods: {
+            handleChange(value) {
+                //                console.log(value);
+            },
+            onEditorBlur(editor) {
+                //                console.log('editor blur!', editor)
+            },
+            onEditorFocus(editor) {
+                //                console.log('editor focus!', editor)
+            },
+            onEditorReady(editor) {
+                //                console.log('editor ready!', editor)
+            },
+            hasImg() {
+                var reg = /<img src=/;
+                if (reg.test(this.content)) {  //有图片
+                    this.hasPic = true;
+                } else {                      //无图片
+                    this.hasPic = false;
+                }
+            },
+            async onEditorChange() {
+                this.hasImg();
+                if (!this.content) {
+                    this.$message("请不要发表内容为空的文章");
+                    return;
+                }
+                if (!this.author) {
+                    this.$message("请标明作者")
+                    return;
+                }
+                if (!this.title) {
+                    this.$message("请输入标题");
+                    return;
+                }
+                if (!this.time) {
+                    this.$message("请选择发布日期");
+                    return;
+                }
+                if (this.selectedOptions.length === 0) {
+                    this.$message("请选择分类");
+                    return;
+                }
+                if (!this.source) {
+                    this.$message("请输入文章来源");
+                    return;
+                }
+                if (!this.hasPic && this.isBanner) {
+                    this.$message("内容没有图片，请不要设置为首页的轮播图");
+                    return;
+                }
+                const result = await editArticle({
+                    title: this.article.title,
+                    id: this.article.id,
+                    author: this.article.author,
+                    content: this.article.content,
+                    source: this.article.source,
+                    time: this.article.time,
+                    selectedOptions: this.article.selectedOptions,
+                    isBanner: this.isBanner
+                });
+                const {code, msg} = result.data;
+
+                if (code === 200) {
+                    this.$message({
+                        message: msg,
+                        type: "success"
+                    });
+                    this.$router.push({path: "/article"});
+                } else {
+                    this.$message({
+                        message: msg,
+                        type: "error"
+                    });
+                }
+            }
+        },
+        // 如果你需要得到当前的editor对象来做一些事情，你可以像下面这样定义一个方法属性来获取当前的editor对象，
+        // 实际上这里的$refs对应的是当前组件内所有关联了ref属性的组件元素对象
+        computed: {
+            editor() {
+                return this.$refs.myTextEditor.quillEditor;
+            },
+            ...mapState(["article"])
+        },
+        mounted() {
+            // you can use current editor object to do something(editor methods)
+            //            console.log('this is my editor', this.editor)
+            // this.editor to do something...
         }
-      },
-      editorOption: {
-        // 编辑器的配置
-        // something config
-      },
-      options: [
-        {
-          value: "information",
-          label: "科研资讯",
-          children: [
-            {
-              value: "1",
-              label: "流通所新闻"
-            },
-            {
-              value: "2",
-              label: "基地资讯"
-            },
-            {
-              value: "3",
-              label: "媒体报道"
-            }
-          ]
-        },
-        {
-          value: "research",
-          label: "科学研究",
-          children: [
-            {
-              value: "1",
-              label: "课题研究"
-            },
-            {
-              value: "2",
-              label: "课题招标"
-            },
-            {
-              value: "3",
-              label: "成果影响"
-            }
-          ]
-        },
-        {
-          value: "achievement",
-          label: "科研成果",
-          children: [
-            {
-              value: "1",
-              label: "学术论文"
-            },
-            {
-              value: "2",
-              label: "著作"
-            },
-            {
-              value: "3",
-              label: "研究报告"
-            }
-          ]
-        },
-        {
-          value: "exchange",
-          label: "学术交流",
-          children: [
-            {
-              value: "1",
-              label: "来访交流"
-            },
-            {
-              value: "2",
-              label: "调研考察"
-            },
-            {
-              value: "3",
-              label: "主办年会"
-            },
-            {
-              value: "4",
-              label: "流通论坛"
-            }
-          ]
-        },
-        {
-          value: "train",
-          label: "咨询培训",
-          children: [
-            {
-              value: "1",
-              label: "咨询顾问"
-            },
-            {
-              value: "2",
-              label: "企业策划"
-            },
-            {
-              value: "3",
-              label: "专家培训"
-            }
-          ]
-        },
-        {
-          value: "construction",
-          label: "智库建设",
-          children: [
-            {
-              value: "1",
-              label: "名家百人讲座"
-            },
-            {
-              value: "2",
-              label: "智库动态"
-            }
-          ]
-        }
-      ]
     };
-  },
-  components: {
-    quillEditor
-  },
-  // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
-  methods: {
-    handleChange(value) {
-      //                console.log(value);
-    },
-    onEditorBlur(editor) {
-      //                console.log('editor blur!', editor)
-    },
-    onEditorFocus(editor) {
-      //                console.log('editor focus!', editor)
-    },
-    onEditorReady(editor) {
-      //                console.log('editor ready!', editor)
-    },
-    async onEditorChange() {
-      this.article.content || this.$message("请不要发表内容为空的文章");
-      this.article.title || this.$message("请输入标题");
-      this.article.author || this.$message("请标明作者");
-      this.article.time || this.$message("请选择发布日期");
-      this.article.selectedOptions.length !== 0 || this.$message("请选择分类");
-      this.article.source || this.$message("请输入文章来源");
-       console.log(this.article.content) 
-      const result = await editArticle({
-        title: this.article.title,
-        id: this.article.id,
-        author: this.article.author,
-        content: this.article.content,
-        source: this.article.source,
-        time: this.article.time,
-        selectedOptions: this.article.selectedOptions,
-        isBanner: this.isBanner
-      });
-      const { code, msg } = result.data;
-
-      if (code === 200) {
-        this.$message({
-          message: msg,
-          type: "success"
-        });
-        this.$router.push({ path: "/article" });
-      } else {
-        this.$message({
-          message: msg,
-          type: "error"
-        });
-      }
-    }
-  },
-  // 如果你需要得到当前的editor对象来做一些事情，你可以像下面这样定义一个方法属性来获取当前的editor对象，
-  // 实际上这里的$refs对应的是当前组件内所有关联了ref属性的组件元素对象
-  computed: {
-    editor() {
-      return this.$refs.myTextEditor.quillEditor;
-    },
-    ...mapState(["article"])
-  },
-  mounted() {
-    // you can use current editor object to do something(editor methods)
-    //            console.log('this is my editor', this.editor)
-    // this.editor to do something...
-  }
-};
 </script>
 
 <style lang="scss" scoped>
-div {
-  width: 100%;
-  .left {
-    width: 77%;
-    height: auto;
-    .title {
-      margin-top: 20px;
-    }
-    .quill-editor {
-      margin-top: 20px;
-      height: 590px;
-    }
-    .source {
-      position: relative;
-      top: 90px;
-    }
-  }
+    div {
+        width: 100%;
+        .left {
+            width: 77%;
+            height: auto;
+            .title {
+                margin-top: 20px;
+            }
+            .quill-editor {
+                margin-top: 20px;
+                height: 590px;
+            }
+            .source {
+                position: relative;
+                top: 90px;
+            }
+        }
 
-  .right {
-    position: relative;
-    bottom: 662px;
-    width: 20%;
-    float: right;
+        .right {
+            position: relative;
+            bottom: 662px;
+            width: 20%;
+            float: right;
 
-    .el-date-editor,
-    .el-cascader {
-      width: 100%;
+            .el-date-editor,
+            .el-cascader {
+                width: 100%;
+            }
+
+            h3 {
+                font-size: 15px;
+                color: #444444;
+                font-weight: 600;
+            }
+        }
+
+        .btn {
+            width: 100px;
+            position: relative;
+            top: 50px;
+            left: 63%;
+        }
     }
-
-    h3 {
-      font-size: 15px;
-      color: #444444;
-      font-weight: 600;
-    }
-  }
-
-  .btn {
-    width: 100px;
-    position: relative;
-    top: 50px;
-    left: 63%;
-  }
-}
 </style>
