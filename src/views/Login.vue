@@ -21,6 +21,7 @@
 
 <script>
     import {requestLogin} from '../api/xh_api';
+    import moment from 'moment';
 
     export default {
         data() {
@@ -49,15 +50,20 @@
             };
         },
         methods: {
+        
             handleSubmit2(ev) {
                 var _this = this;
                 this.$refs.ruleForm2.validate((valid) => {
                     console.log(this.$refs)//{ruleForm2: VueComponent}
                     if (valid) {
                         this.logining = true;
-                        var loginParams = {account: this.ruleForm2.account, password: this.ruleForm2.checkPass};
+                        const date = new Date();
+                        const time = `${date.getFullYear()}年${date.getMonth()}月${date.getDay()}日 ${date.getHours()}:${date.getMinutes()}`;
+
+                        console.log(time)
+                        var loginParams = {account: this.ruleForm2.account, password: this.ruleForm2.checkPass,time};
                         requestLogin(loginParams).then(data => {
-                            let {code, msg} = data;
+                            let {code, msg,time} = data;
                             if (code !== 200) {
                                 this.$message({
                                     message: msg,

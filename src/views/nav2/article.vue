@@ -8,7 +8,7 @@
                             expand-trigger="hover"
                             :options="options"
                             v-model="selectedOptions"
-                            @change="getArticleList()">
+                            @change="getArticleList(0)">
                     </el-cascader>
                 </el-form-item>
                 <el-form-item>
@@ -189,11 +189,13 @@ export default {
   },
   methods: {
     handleCurrentChange(currentPage) {
+      console.log(currentPage)
       const start = (currentPage - 1) * 14 + currentPage - 1;
-
+      
       if (this.isReacher) {
         this.handleReacher(start);
       } else {
+        console.log(start)
         this.getArticleList(start);
       }
     },
@@ -201,7 +203,7 @@ export default {
       this.sels.push(selection[selection.length - 1]);
     },
     //获取文章列表
-    getArticleList(start = 0) {
+    getArticleList(start) {
       if (this.selectedOptions.length === 0) {
         this.$confirm("请选择分类后进行文章管理，否则无数据显示。", "温馨提示", {
           type: "warning"
@@ -218,8 +220,11 @@ export default {
         console.log(code)
         if (code === 200) {
           this.articles = data;
+          console.log(data)
           this.isReacher = true;
-          this.total = pageCount;
+          if(this.total === 0) {
+            this.total = pageCount;
+          }
           this.listLoading = true;
           this.isReacher = false;
 
@@ -280,7 +285,7 @@ export default {
                 message: "删除成功",
                 type: "success"
               });
-              this.getArticleList();
+              this.getArticleList(40);
             } else {
               this.$message({
                 message: msg,
@@ -327,7 +332,7 @@ export default {
                 message: "删除成功",
                 type: "success"
               });
-              this.getArticleList();
+              this.getArticleList(50);
             } else {
               this.$message({
                 message: msg,
@@ -340,7 +345,7 @@ export default {
     }
   },
   mounted() {
-    this.getArticleList();
+    this.getArticleList(10);
   }
 };
 </script>
