@@ -224,18 +224,34 @@
             },
 
             async onEditorChange() {
-                console.log(this.hasPic)
-               
-                this.content || this.$message("请不要发表内容为空的文章");
-                this.title || this.$message("请输入标题");
-                this.author || this.$message("请标明作者");
-                this.time || this.$message("请选择发布日期");
-                this.selectedOptions.length !== 0 || this.$message("请选择分类");
-                this.source || this.$message("请输入文章来源");
-                this.hasImg()
-                if(!this.hasPic && this.isBanner){
-                      this.$message("内容没有图片，请不要设置为首页的轮播图");
-                      return;
+                this.hasImg();
+                if (!this.content) {
+                    this.$message("请不要发表内容为空的文章");
+                    return;
+                }
+                if (!this.author) {
+                    this.$message("请标明作者")
+                    return;
+                }
+                if (!this.title) {
+                    this.$message("请输入标题");
+                    return;
+                }
+                if (!this.time) {
+                    this.$message("请选择发布日期");
+                    return;
+                }
+                if (this.selectedOptions.length === 0) {
+                    this.$message("请选择分类");
+                    return;
+                }
+                if (!this.source) {
+                    this.$message("请输入文章来源");
+                    return;
+                }
+                if (!this.hasPic && this.isBanner) {
+                    this.$message("内容没有图片，请不要设置为首页的轮播图");
+                    return;
                 }
                 let result = await postArticle({
                     title: this.title,

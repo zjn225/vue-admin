@@ -11,33 +11,37 @@
 </template>
 
 <script>
-    import { mapState } from "vuex";
-    import { editLink } from "../../api/xh_api";
+    import {mapState} from "vuex";
+    import {editLink} from "../../api/xh_api";
 
     export default {
         data() {
-            return {
-
-            };
+            return {};
         },
-       
+
         // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
         methods: {
             async onEditorChange() {
-                this.link || this.$message("请输入网站链接");
-                this.name || this.$message("请输入网站名称");
+                if (!this.link) {
+                    this.$message("请输入网站链接");
+                    return;
+                }
+                if (!this.name) {
+                    this.$message("请输入网站名称");
+                    return;
+                }
                 const result = await editLink({
                     name: this.friendLink.name,
                     id: this.friendLink.id,
                     link: this.friendLink.link,
                 });
-                const { code, msg } = result.data;
+                const {code, msg} = result.data;
                 if (code === 200) {
                     this.$message({
                         message: msg,
                         type: "success"
                     });
-                    this.$router.push({ path: "/friendLink" });
+                    this.$router.push({path: "/friendLink"});
                 } else {
                     this.$message({
                         message: msg,
@@ -70,13 +74,11 @@
             }
         }
 
-
-            h3 {
-                font-size: 15px;
-                color: #444444;
-                font-weight: 600;
-            }
-        
+        h3 {
+            font-size: 15px;
+            color: #444444;
+            font-weight: 600;
+        }
 
         .btn {
             width: 100px;
