@@ -91,6 +91,12 @@ const editLink = (resolve) => {
     })
 }
 
+const feedBack = (resolve) => {
+    import('./views/nav2/feedBack.vue').then((module) => {
+        resolve(module)
+    })
+}
+
 let routes = [
     {
         path: '/',
@@ -130,6 +136,7 @@ let routes = [
             {path: '/write', component: Write, name: '撰写文章'},
             {path: '/article', component: Article, name: '文章著作管理'},
             {path: '/user', component: user, name: '专家团队管理'},
+            {path: '/feedBack', component: feedBack, name: '反馈管理'},
             {path: '/editArticle', component: editArticle, name: '修改文章'},
             {path: '/writePerson', component: writePerson, name: '修改专家团队'},
             {path: '/writeBook', component: writeBook, name: '修改著作'},

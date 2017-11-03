@@ -280,7 +280,7 @@
         }
 
         /*折叠后*/
-        .el-menu-item:nth-child(4),
+        .el-menu-item:nth-child(11),
         .el-menu-item:nth-child(5),
         .el-menu-item:nth-child(6),
         .el-menu-item:nth-child(7),
@@ -291,7 +291,7 @@
     }
 
         /*未折叠*/
-        .liItem:nth-child(4),
+        .liItem:nth-child(11),
         .liItem:nth-child(5),
         .liItem:nth-child(6),
         .liItem:nth-child(7),
