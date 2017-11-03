@@ -248,7 +248,6 @@ export default {
       searchArticle({ sort, type, title, start }).then(res => {
         this.listLoading = false;
         let { code, msg, data, pageCount } = res.data;
-        console.log(res.data);
 
         if (code === 200) {
           this.articles = data;
@@ -285,7 +284,7 @@ export default {
                 message: "删除成功",
                 type: "success"
               });
-              this.getArticleList(40);
+              this.getArticleList(0);
             } else {
               this.$message({
                 message: msg,
@@ -332,7 +331,7 @@ export default {
                 message: "删除成功",
                 type: "success"
               });
-              this.getArticleList(50);
+              this.getArticleList(0);
             } else {
               this.$message({
                 message: msg,
@@ -345,7 +344,7 @@ export default {
     }
   },
   mounted() {
-    this.getArticleList(10);
+    this.getArticleList(0);
   }
 };
 </script>
