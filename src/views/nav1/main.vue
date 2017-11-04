@@ -14,7 +14,7 @@
             <div class="bottom">
                 <div class="add">
                     <span>上次登录时间：</span>
-                    <span class="loginTime">{{loginTime}}</span>
+                    <span class="loginTime" v-once>{{loginTime}}</span>
                 </div>
                 <div class="time">
                     <span>上次登录地点：</span>
@@ -25,19 +25,31 @@
     </div>
 </template>
 
+
 <script>
     export default {
         data() {
             return {
                 content: '您好，欢迎访问广财流通所管理系统',
-                loginTime: '2017年11月1日21:31:44',
-                loginSite:'广东省广州市'
+                loginTime:'2017'
             };
+        },
+        computed: {
+            loginSite() {
+                return  returnCitySN["cname"]
+            }
+        },
+        mounted() {
+            const s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = 'http://pv.sohu.com/cityjson?ie=utf-8'; //引用搜狐接口
+            document.body.appendChild(s);
+            //返回值 var returnCitySN =
+            // {"cip": "183.6.137.86", "cid": "440100", "cname": "广东省广州市"};
         },
 
     }
 </script>
-
 
 <style lang="scss" scoped>
     div {
@@ -81,14 +93,14 @@
             .bottom {
                 display: block;
                 margin: -87px auto;
-                .add,.time {
-                    span{
+                .add, .time {
+                    span {
                         margin: 10px;
                         font-size: 16px;
                         color: #6E7987;
                     }
                 }
-                .add{
+                .add {
                     margin: 15px 0;
                 }
             }

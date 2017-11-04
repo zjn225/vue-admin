@@ -39,38 +39,49 @@
                 },
                 rules2: {
                     account: [
-                        {required: true,  message: '请输入账号', trigger: 'blur'},
-                        { min: 3, message: '账号长度在3个字符以上', trigger: 'blur' }
+                        {required: true, message: '请输入账号', trigger: 'blur'},
+                        {min: 3, message: '账号长度在3个字符以上', trigger: 'blur'}
                     ],
                     checkPass: [
                         {required: true, message: '请输入密码', trigger: 'blur'},
-                        { min: 5, message: '密码长度在5个字符以上', trigger: 'blur' }
+                        {min: 5, message: '密码长度在5个字符以上', trigger: 'blur'}
                     ]
                 },
             };
         },
         methods: {
-        
+
             handleSubmit2(ev) {
                 var _this = this;
                 this.$refs.ruleForm2.validate((valid) => {
                     console.log(this.$refs)//{ruleForm2: VueComponent}
                     if (valid) {
                         this.logining = true;
-                        const date = new Date();
-                        const time = `${date.getFullYear()}年${date.getMonth()}月${date.getDay()}日 ${date.getHours()}:${date.getMinutes()}`;
+                        let date = new Date(),
+                            year = date.getFullYear(),
+                            month = (date.getMonth() + 1),
+                            day = date.getDate(),
+                            hours = date.getHours(),
+                            minutes = date.getMinutes(),
+                            seconds = date.getSeconds();
+
+                        (hours < 10 ) && (hours = '0' + hours)
+                        (minutes < 10) && (minutes = '0' + minutes)
+                        (seconds < 10) && (seconds = '0' + seconds)
+
+                        const time = year + '年' + month + '月' + day + '日 ' + hours + ':' + minutes + ':' + seconds;
 
                         console.log(time)
-                        var loginParams = {account: this.ruleForm2.account, password: this.ruleForm2.checkPass,time};
+                        var loginParams = {account: this.ruleForm2.account, password: this.ruleForm2.checkPass, time};
                         requestLogin(loginParams).then(data => {
-                            let {code, msg,time} = data;
+                            let {code, msg, time} = data;
                             if (code !== 200) {
                                 this.$message({
                                     message: msg,
                                     type: 'error'
                                 });
-                                this.logining = false;   
-                                
+                                this.logining = false;
+
                             } else {
                                 this.$message({
                                     message: msg,
