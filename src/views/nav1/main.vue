@@ -35,9 +35,9 @@
             };
         },
         computed: {
-            loginSite() {
-                return  returnCitySN["cname"]
-            }
+            // loginSite() {
+            //     return  returnCitySN["cname"]
+            // }
         },
         mounted() {
             const s = document.createElement('script');

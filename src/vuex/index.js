@@ -28,7 +28,8 @@ const state = {
         author:'',
         source:'',
         time:'',
-        content:''
+        content:'',
+        isBanner:'',
     },
     books:{
         name:'',

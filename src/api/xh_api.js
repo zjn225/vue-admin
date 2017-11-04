@@ -54,7 +54,7 @@ export const editArticle = params => {
 
 /*专家团队模块*/
 export const getTeamList = params => {
-    return instance.get(`/data/team/catalog`, {params: params});
+    return instance.get(`/data/team/catalog`, {params: params}).then(res => res.data);
 };
 export const getTeamOne = params => {
     return instance.get(`/data/team/person`, {params: params});

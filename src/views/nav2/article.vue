@@ -254,7 +254,6 @@ export default {
           this.isReacher = true;
           this.total = pageCount;
 
-          console.log(this.articles.length);
         } else {
           this.$message({
             message: msg,
@@ -303,6 +302,7 @@ export default {
       const result = await getArticle({ type, sort, id });
       const { data, code, msg } = result.data;
       if (code === 200) {
+        console.log(data)
         data.selectedOptions = this.selectedOptions;
         this.SAVE_ARTICLEINFO(data);
         this.$router.push({ path: "/editArticle" });

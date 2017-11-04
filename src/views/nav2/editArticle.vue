@@ -50,6 +50,7 @@
                     on-color="#13ce66"
                     on-text="是"
                     off-text="否"
+                   
                     @change="hasImg">
             </el-switch>
         </div>
@@ -186,7 +187,8 @@
                             }
                         ]
                     }
-                ]
+                ],
+                isBanner :true
             };
         },
         components: {
@@ -216,31 +218,31 @@
             },
             async onEditorChange() {
                 this.hasImg();
-                if (!this.content) {
+                if (!this.article.content) {
                     this.$message("请不要发表内容为空的文章");
                     return;
                 }
-                if (!this.author) {
+                if (!this.article.author) {
                     this.$message("请标明作者")
                     return;
                 }
-                if (!this.title) {
+                if (!this.article.title) {
                     this.$message("请输入标题");
                     return;
                 }
-                if (!this.time) {
+                if (!this.article.time) {
                     this.$message("请选择发布日期");
                     return;
                 }
-                if (this.selectedOptions.length === 0) {
+                if (this.article.selectedOptions.length === 0) {
                     this.$message("请选择分类");
                     return;
                 }
-                if (!this.source) {
+                if (!this.article.source) {
                     this.$message("请输入文章来源");
                     return;
                 }
-                if (!this.hasPic && this.isBanner) {
+                if (!this.hasPic && this.article.isBanner) {
                     this.$message("内容没有图片，请不要设置为首页的轮播图");
                     return;
                 }
@@ -252,7 +254,7 @@
                     source: this.article.source,
                     time: this.article.time,
                     selectedOptions: this.article.selectedOptions,
-                    isBanner: this.isBanner
+                    isBanner: this.article.isBanner
                 });
                 const {code, msg} = result.data;
 

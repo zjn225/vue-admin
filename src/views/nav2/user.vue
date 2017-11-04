@@ -89,18 +89,20 @@ export default {
       const start = (currentPage - 1) * 20 + currentPage - 1;
 
       if (this.isReacher) {
-        handleReacher(start);
+        this.handleReacher(start);
       } else {
-        getUsers(start);
+        this.getUsers(start);
       }
     },
     //获取用户列表
     getUsers(start = 0) {
       this.isLoading = true;
-      getTeamList(start).then(res => {
-  
-        this.total = res.data.pageCount;
-        this.persons = res.data.person;
+      getTeamList(start).then(data => {
+        console.log(data)
+        if(this.total === 0) {
+           this.total = data.pageCount;
+        }
+        this.persons = data.person;
         this.isLoading = false;
         this.isReacher = false;
       });

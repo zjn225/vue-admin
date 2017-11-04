@@ -51,6 +51,8 @@
                     active-text="是"
                     inactive-text="否"
                     @change="hasImg"
+                     active-value = '1'
+                    inactive-value = '0'
             >
             </el-switch>
         </div>
@@ -249,7 +251,7 @@
                     this.$message("请输入文章来源");
                     return;
                 }
-                if (!this.hasPic && this.isBanner) {
+                if (!this.hasPic && this.isBanner === 1) {
                     this.$message("内容没有图片，请不要设置为首页的轮播图");
                     return;
                 }
