@@ -74,8 +74,8 @@ export const reacherPerson = params => {
     return instance.get(`/data/team/reacher`,{params: params});
 };
 /*友情链接模块*/
-export const getLinkList = () => {
-    return instance.get(`/data/friendLinks/catalog`);
+export const getLinkList = ( params = 0) => {
+    return instance.get(`/data/friendLinks/catalog`,{params: params});
 };
 export const getLinkOne = (params) => {
     return instance.get(`/data/friendLinks/one`,{params: params});
@@ -133,6 +133,14 @@ export const editUser = params => {
 
 export const addUser = params => {
     return instance.get(`/user/add`, {params: params});
+};
+
+
+export const  getReadFeedList = params => {
+    return instance.get(`/data/feedback/catalog`, {params: params}).then(res => res.data);
+};
+export const  getFeedOne = params => {
+    return instance.get(`/data/feedback/one`, {params: params}).then(res => res.data);
 };
 
 

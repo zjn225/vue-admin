@@ -3,6 +3,40 @@
         <el-tabs :tab-position="tabPosition" style="height: 200px;">
 
             <!--未读的-->
+            <el-tab-pane label="全部"> <!--列表-->
+                <el-table :data="Readfeeds" highlight-current-row v-loading="isLoading" @selection-change="selsChange"
+                          style="width: 100%;" id='mytable'>
+                    <el-table-column type="selection">
+                    </el-table-column>
+                    <el-table-column type="index" label="序号">
+                    </el-table-column>
+                    <el-table-column prop="title" label="标题" sortable>
+                    </el-table-column>
+                    <el-table-column prop="isread" label="状态" sortable>
+                    </el-table-column>
+                    <el-table-column prop="time" label="时间" sortable>
+                    </el-table-column>
+                    <el-table-column label="操作">
+                        <template slot-scope="scope">
+                            <el-button type="primary" size="small" @click="hasLook(scope.$index, scope.row)">已读
+                            </el-button>
+                            <el-button type="primary" size="small" @click="look(scope.$index, scope.row)">查看
+                            </el-button>
+                            <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <!--工具条-->
+                <el-col :span="24" class="toolbar">
+                    <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
+                    <el-pagination layout="prev, pager, next,jumper" @current-change="handleCurrentChange"
+                                   :page-size="20"
+                                   :unReadTotal="unReadTotal" style="float:right;">
+                    </el-pagination>
+                </el-col>
+            </el-tab-pane>
+            <!--未读的-->
             <el-tab-pane label="未读"> <!--列表-->
                 <el-table :data="unReadfeeds" highlight-current-row v-loading="isLoading" @selection-change="selsChange"
                           style="width: 100%;" id='mytable'>
@@ -12,7 +46,7 @@
                     </el-table-column>
                     <el-table-column prop="title" label="标题" sortable>
                     </el-table-column>
-                    <el-table-column prop="isRead" label="状态" sortable>
+                    <el-table-column prop="isread" label="状态" sortable>
                     </el-table-column>
                     <el-table-column prop="time" label="时间" sortable>
                     </el-table-column>
@@ -47,7 +81,7 @@
                     </el-table-column>
                     <el-table-column prop="title" label="标题" sortable>
                     </el-table-column>
-                    <el-table-column prop="isRead" label="状态" sortable>
+                    <el-table-column prop="isread" label="状态" sortable>
                     </el-table-column>
                     <el-table-column prop="time" label="时间" sortable>
                     </el-table-column>
@@ -90,8 +124,7 @@
     import util from "../../common/js/util";
     import {mapMutations} from "vuex";
     import {
-        getIsReadFeedList,
-        getUnReadFeedList,
+        getReadFeedList,
         removeFeeds,
         batchRemoveFeeds,
         addFeeds,
@@ -106,17 +139,17 @@
                 dialogVisible: false,
 
                 tabPosition: 'top',
+                Readfeeds:[],
                 isReadfeeds: [
-                    {id: 1, title: "测试已读", time: "2017年11月3日19:29:13", isRead: 'true'},
+                    
                 ],
                 unReadfeeds: [
-                    {id: 1, title: "测试未读", isRead: 'false', time: "2017年11月3日19:29:13",},
-                    {id: 2, title: "测试未读2", isRead: 'false', time: "2017年11月3日19:33:13",}
+                
                 ],
-                isRead: 'false',
                 isReadTotal: 0,
                 unReadTotal: 0,
                 page: 1,
+                content : '',
                 isLoading: false,
                 sels: [], //列表选中列
             };
@@ -135,24 +168,27 @@
             },
 
             //获取已读的反馈列表
-            getIsReadFeeds(start = 0) {
+            getReadFeeds(start = 0) {
                 this.isLoading = false; //记得修改为true
-                getIsReadFeedList(start).then(res => {
-
-                    this.isReadtotal = res.data.pageCount;
-                    this.isReadfeeds = res.data.feed;
+                getReadFeedList({start}).then(data => {
+                    this.isReadtotal = data.pageCount;
+                    this.Readfeeds = data.feedback;
                     this.isLoading = false;
+                    this.sortReadFeeds();
                 });
             },
-//            获取未读的反馈列表
-            getUnReadFeeds(start = 0) {
-                this.isLoading = false; //记得修改为true
-                getUnReadFeedList(start).then(res => {
-
-                    this.unReadtotal = res.data.pageCount;
-                    this.unReadfeeds = res.data.feed;
-                    this.isLoading = false;
-                });
+            //分未读和已读
+            sortReadFeeds(){
+                for(let i = 0, len = this.Readfeeds.length;i < len;i++){
+                    this.Readfeeds[i].index = i;
+                    
+                    if(this.Readfeeds[i].isread === 1){
+                        this.isReadfeeds.push(this.Readfeeds[i])
+                    }else{
+                        this.unReadfeeds.push(this.Readfeeds[i])
+                        
+                    }
+                }
             },
 
             //删除
@@ -189,14 +225,19 @@
 
             },
             //查看详情列表
-            look: function (row) {
+            look: function (index,row) {
 //                this.isLoading = true;
-                let feed = [{id: row.id}];
-                lookContent(feed).then(res => {
+                console.log(row)
+                this.Readfeeds[row.index].isread = 1;
+                this.sortReadFeeds();
+                let id = row.id;
+                console.log(id)
+                getFeedOne({id}).then(data => {
+                    console.log(data)
                     this.isLoading = false;
-                    let {data, code, msg} = res.data
+                    let {feed, code, msg} = data
                     if (code === 200) {
-                        feed.content = data[2];
+                        this.content = feed.content;
                         this.dialogVisible = true; //打开弹出框，里面是详情
                     } else {
                         this.$message({
@@ -245,8 +286,7 @@
             }
         },
         mounted() {
-            this.getIsReadFeeds();
-            this.getUnReadFeeds();
+            this.getReadFeeds(0);
         }
     };
 </script>

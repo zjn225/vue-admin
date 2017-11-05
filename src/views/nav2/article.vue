@@ -200,7 +200,8 @@ export default {
       }
     },
     selectArticle(selection, row) {
-      this.sels.push(selection[selection.length - 1]);
+      this.sels = selection;
+   
     },
     //获取文章列表
     getArticleList(start) {
@@ -217,10 +218,8 @@ export default {
       getCatalog({ sort, type, start }).then(res => {
         this.listLoading = false;
         let { code, msg, data, pageCount } = res.data;
-        console.log(code)
         if (code === 200) {
           this.articles = data;
-          console.log(data)
           this.isReacher = true;
           if(this.total === 0) {
             this.total = pageCount;
@@ -244,7 +243,6 @@ export default {
       const title = this.filters.title;
 
       this.listLoading = true;
-      console.log("sss");
       searchArticle({ sort, type, title, start }).then(res => {
         this.listLoading = false;
         let { code, msg, data, pageCount } = res.data;
@@ -317,6 +315,7 @@ export default {
     batchRemove: function() {
       var article = this.sels.map(item => ({ id: item.id, type: item.type }));
       var sort = this.selectedOptions[0];
+      console.log(article)
       this.$confirm("确认删除选中记录吗？", "提示", {
         type: "warning"
       })
@@ -340,7 +339,7 @@ export default {
             }
           });
         })
-        .catch(() => {});
+       
     }
   },
   mounted() {
