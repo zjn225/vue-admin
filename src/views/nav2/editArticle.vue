@@ -209,8 +209,8 @@
                 //                console.log('editor ready!', editor)
             },
             hasImg() {
-                var reg = /<img src=/;
-                if (reg.test(this.content)) {  //有图片
+                var reg =/<img [^>]*src=['"]([^'"]+)[^>]*>/gi;
+                if (reg.test(this.article.content)) {  //有图片
                     this.hasPic = true;
                 } else {                      //无图片
                     this.hasPic = false;
@@ -242,6 +242,7 @@
                     this.$message("请输入文章来源");
                     return;
                 }
+                console.log(this.hasPic)
                 if (!this.hasPic && this.article.isBanner) {
                     this.$message("内容没有图片，请不要设置为首页的轮播图");
                     return;
