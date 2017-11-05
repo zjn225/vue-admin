@@ -52,8 +52,7 @@
                     </el-table-column>
                     <el-table-column label="操作">
                         <template slot-scope="scope">
-                            <el-button type="primary" size="small" @click="hasLook(scope.$index, scope.row)">已读
-                            </el-button>
+                           
                             <el-button type="primary" size="small" @click="look(scope.$index, scope.row)">查看
                             </el-button>
                             <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除
@@ -181,10 +180,15 @@
             sortReadFeeds(){
                 for(let i = 0, len = this.Readfeeds.length;i < len;i++){
                     this.Readfeeds[i].index = i;
-                    
+                    this.isReadfeeds = [];
+                    this.unReadfeeds = [];
                     if(this.Readfeeds[i].isread === 1){
+                    this.Readfeeds[i].status = '已读';
+                        
                         this.isReadfeeds.push(this.Readfeeds[i])
                     }else{
+                    this.Readfeeds[i].status = '未读';
+                        
                         this.unReadfeeds.push(this.Readfeeds[i])
                         
                     }
@@ -220,14 +224,11 @@
                     });
             },
 
-            //点击已读
-            hasLook: function (index, row) {
-
-            },
+           
             //查看详情列表
             look: function (index,row) {
 //                this.isLoading = true;
-                console.log(row)
+                
                 this.Readfeeds[row.index].isread = 1;
                 this.sortReadFeeds();
                 let id = row.id;
