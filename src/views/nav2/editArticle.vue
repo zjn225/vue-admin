@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div v-loading="loading" element-loading-text="正在修改中，请稍后"
+         element-loading-spinner="el-icon-loading">
         <div class="left">
             <el-input class="title" v-model="article.title" placeholder="请输入标题"></el-input>
             <quill-editor ref="myTextEditor"
@@ -68,6 +69,7 @@
     export default {
         data() {
             return {
+                loading:false,
                 hasPic: true,
                 pickerOptions0: {
                     disabledDate(time) {
@@ -247,6 +249,8 @@
                     this.$message("内容没有图片，请不要设置为首页的轮播图");
                     return;
                 }
+
+                this.loading=true;
                 const result = await editArticle({
                     title: this.article.title,
                     id: this.article.id,
@@ -260,6 +264,7 @@
                 const {code, msg} = result.data;
 
                 if (code === 200) {
+                    this.loading=false;
                     this.$message({
                         message: msg,
                         type: "success"

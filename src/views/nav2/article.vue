@@ -19,8 +19,7 @@
         </el-col>
 
         <!--列表-->
-        <el-table :data="articles" highlight-current-row style="width: 100%;" @selection-change='selectArticle'>
-            <!-- 加入接口后补充 v-loading="listLoading"  -->
+        <el-table :data="articles" v-loading="listLoading" highlight-current-row style="width: 100%;" @selection-change='selectArticle'>
             <el-table-column type="selection" width="55">
             </el-table-column>
             <el-table-column type="index" label="序号" width="100">
@@ -206,9 +205,9 @@ export default {
     //获取文章列表
     getArticleList(start) {
       if (this.selectedOptions.length === 0) {
-        this.$confirm("请选择分类后进行文章管理，否则无数据显示。", "温馨提示", {
+     /*   this.$confirm("请选择分类后进行文章管理，否则无数据显示。", "温馨提示", {
           type: "warning"
-        });
+        });*/
         return;
       }
 
