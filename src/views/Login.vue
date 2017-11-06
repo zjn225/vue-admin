@@ -51,7 +51,6 @@
             };
         },
         methods: {
-
             handleSubmit2(ev) {
                 var _this = this;
                 this.$refs.ruleForm2.validate((valid) => {
@@ -66,12 +65,20 @@
                             minutes = date.getMinutes(),
                             seconds = date.getSeconds();
 
-                        (hours < 10 ) && (hours = '0' + hours)
-                        (minutes < 10) && (minutes = '0' + minutes)
-                        (seconds < 10) && (seconds = '0' + seconds)
+                        if (hours < 10) {
+                            hours = '0' + hours
+                        }
+
+                        if (minutes < 10) {
+                            minutes = '0' + minutes
+                        }
+
+                        if (seconds < 10) {
+                            seconds = '0' + seconds
+                        }
 
                         const time = year + '年' + month + '月' + day + '日 ' + hours + ':' + minutes + ':' + seconds;
-
+                        this.$store.state.loginTime = time;
                         console.log(time)
                         var loginParams = {account: this.ruleForm2.account, password: this.ruleForm2.checkPass, time};
                         requestLogin(loginParams).then(data => {
@@ -98,6 +105,15 @@
                     }
                 });
             }
+        },
+        mounted(){
+            const s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = 'http://pv.sohu.com/cityjson?ie=utf-8'; //引用搜狐接口
+            document.body.appendChild(s);
+            console.log(returnCitySN['cname'])
+            //返回值 var returnCitySN =
+            // {"cip": "183.6.137.86", "cid": "440100", "cname": "广东省广州市"};
         }
     }
 

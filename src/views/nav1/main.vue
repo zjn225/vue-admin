@@ -31,21 +31,19 @@
         data() {
             return {
                 content: '您好，欢迎访问广财流通所管理系统',
-                loginTime:'2017'
+
             };
         },
         computed: {
-            // loginSite() {
-            //     return  returnCitySN["cname"]
-            // }
+            loginTime() {
+                return this.$store.state.loginTime||'暂无数据';
+            },
+             loginSite() {
+                 return this.$store.state.loginSite||"暂无数据"
+             }
         },
         mounted() {
-            const s = document.createElement('script');
-            s.type = 'text/javascript';
-            s.src = 'http://pv.sohu.com/cityjson?ie=utf-8'; //引用搜狐接口
-            document.body.appendChild(s);
-            //返回值 var returnCitySN =
-            // {"cip": "183.6.137.86", "cid": "440100", "cname": "广东省广州市"};
+
         },
 
     }
