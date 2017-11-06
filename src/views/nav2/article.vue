@@ -19,7 +19,8 @@
         </el-col>
 
         <!--列表-->
-        <el-table :data="articles" v-loading="listLoading" highlight-current-row style="width: 100%;" @selection-change='selectArticle'>
+        <el-table :data="articles" v-loading="listLoading" highlight-current-row style="width: 100%;"
+                  @selection-change='selectArticle'>
             <el-table-column type="selection" width="55">
             </el-table-column>
             <el-table-column type="index" label="序号" width="100">
@@ -51,300 +52,302 @@
 </template>
 
 <script>
-import util from "../../common/js/util";
-import { mapMutations } from "vuex";
-import {
-  getCatalog,
-  deleteArticle,
-  editArticle,
-  getArticle,
-  searchArticle
-} from "../../api/xh_api";
+    import util from "../../common/js/util";
+    import {mapMutations} from "vuex";
+    import {
+        getCatalog,
+        deleteArticle,
+        editArticle,
+        getArticle,
+        searchArticle
+    } from "../../api/xh_api";
 
-export default {
-  data() {
-    return {
-      selectedOptions: [], //级联选择器
-      options: [
-        {
-          value: "information",
-          label: "科研资讯",
-          children: [
-            {
-              value: "1",
-              label: "流通所新闻"
-            },
-            {
-              value: "2",
-              label: "基地资讯"
-            },
-            {
-              value: "3",
-              label: "媒体报道"
-            }
-          ]
+    export default {
+        data() {
+            return {
+                selectedOptions: ["information","1"], //级联选择器
+                options: [
+                    {
+                        value: "information",
+                        label: "科研资讯",
+                        children: [
+                            {
+                                value: "1",
+                                label: "流通所新闻"
+                            },
+                            {
+                                value: "2",
+                                label: "基地资讯"
+                            },
+                            {
+                                value: "3",
+                                label: "媒体报道"
+                            }
+                        ]
+                    },
+                    {
+                        value: "research",
+                        label: "科学研究",
+                        children: [
+                            {
+                                value: "1",
+                                label: "课题研究"
+                            },
+                            {
+                                value: "2",
+                                label: "课题招标"
+                            },
+                            {
+                                value: "3",
+                                label: "成果影响"
+                            }
+                        ]
+                    },
+                    {
+                        value: "achievement",
+                        label: "科研成果",
+                        children: [
+                            {
+                                value: "1",
+                                label: "学术论文"
+                            },
+                            {
+                                value: "2",
+                                label: "著作"
+                            },
+                            {
+                                value: "3",
+                                label: "研究报告"
+                            }
+                        ]
+                    },
+                    {
+                        value: "exchange",
+                        label: "学术交流",
+                        children: [
+                            {
+                                value: "1",
+                                label: "来访交流"
+                            },
+                            {
+                                value: "2",
+                                label: "调研考察"
+                            },
+                            {
+                                value: "3",
+                                label: "主办年会"
+                            },
+                            {
+                                value: "4",
+                                label: "流通论坛"
+                            }
+                        ]
+                    },
+                    {
+                        value: "train",
+                        label: "咨询培训",
+                        children: [
+                            {
+                                value: "1",
+                                label: "咨询顾问"
+                            },
+                            {
+                                value: "2",
+                                label: "企业策划"
+                            },
+                            {
+                                value: "3",
+                                label: "专家培训"
+                            }
+                        ]
+                    },
+                    {
+                        value: "construction",
+                        label: "智库建设",
+                        children: [
+                            {
+                                value: "1",
+                                label: "名家百人讲座"
+                            },
+                            {
+                                value: "2",
+                                label: "智库动态"
+                            }
+                        ]
+                    }
+                ],
+                filters: {
+                    title: ""
+                },
+                isReacher: false,
+                articles: [],
+                total: 0,
+                page: 1,
+                listLoading: false,
+                sels: [] //列表选中列
+            };
         },
-        {
-          value: "research",
-          label: "科学研究",
-          children: [
-            {
-              value: "1",
-              label: "课题研究"
+        methods: {
+            handleCurrentChange(currentPage) {
+                console.log(currentPage)
+                const start = (currentPage - 1) * 14 + currentPage - 1;
+
+                if (this.isReacher) {
+                    this.handleReacher(start);
+                } else {
+                    console.log(start)
+                    this.getArticleList(start);
+                }
             },
-            {
-              value: "2",
-              label: "课题招标"
+            selectArticle(selection, row) {
+                this.sels = selection;
+
             },
-            {
-              value: "3",
-              label: "成果影响"
+            //获取文章列表
+            getArticleList(start) {
+                if (this.selectedOptions.length === 0) {
+                    /*   this.$confirm("请选择分类后进行文章管理，否则无数据显示。", "温馨提示", {
+                         type: "warning"
+                       });*/
+                    return;
+                }
+
+                const sort = this.selectedOptions[0];
+                const type = this.selectedOptions[1];
+
+                getCatalog({sort, type, start}).then(res => {
+                    this.listLoading = false;
+                    let {code, msg, data, pageCount} = res.data;
+                    if (code === 200) {
+                        this.articles = data;
+                        this.isReacher = true;
+                        if (this.total === 0) {
+                            this.total = pageCount;
+                        }
+                        this.listLoading = true;
+                        this.isReacher = false;
+
+                    } else {
+                        this.$message({
+                            message: msg,
+                            type: "error"
+                        });
+                    }
+                });
+            },
+            ...mapMutations(["SAVE_ARTICLEINFO"]),
+
+            handleReacher(start = 0) {
+                console.log(this.selectedOptions);
+                const sort = this.selectedOptions[0];
+                const type = this.selectedOptions[1];
+                const title = this.filters.title;
+
+                this.listLoading = true;
+                searchArticle({sort, type, title, start}).then(res => {
+                    this.listLoading = false;
+                    let {code, msg, data, pageCount} = res.data;
+
+                    if (code === 200) {
+                        this.articles = data;
+                        this.isReacher = true;
+                        this.total = pageCount;
+
+                    } else {
+                        this.$message({
+                            message: msg,
+                            type: "error"
+                        });
+                    }
+                });
+            },
+            //删除
+            handleDel: function (index, row) {
+                this.$confirm("确认删除该记录吗?", "提示", {
+                    type: "warning"
+                })
+                    .then(() => {
+                        this.listLoading = true;
+
+                        //NProgress.start();
+                        let article = [
+                            {id: this.articles[index].id, type: this.articles[index].type}
+                        ];
+                        let sort = this.selectedOptions[0];
+                        deleteArticle({article, sort}).then(res => {
+                            this.listLoading = false;
+                            let {code, msg} = res.data;
+                            if (code === 200) {
+                                this.$message({
+                                    message: "删除成功",
+                                    type: "success"
+                                });
+                                this.getArticleList(0);
+                            } else {
+                                this.$message({
+                                    message: msg,
+                                    type: "error"
+                                });
+                            }
+                        });
+                    })
+                    .catch(() => {
+                    });
+            },
+            //显示编辑界面
+            async handleEdit(index, row) {
+                var id = this.articles[index].id;
+                var type = this.articles[index].type;
+                var sort = this.selectedOptions[0];
+                const result = await getArticle({type, sort, id});
+                const {data, code, msg} = result.data;
+                if (code === 200) {
+                    console.log(typeof data.isBanner)
+                    data.selectedOptions = this.selectedOptions;
+                    this.SAVE_ARTICLEINFO(data);
+                    this.$router.push({path: "/editArticle"});
+                } else {
+                    this.$message({
+                        message: msg,
+                        type: "error"
+                    });
+                }
+            },
+            //批量删除
+            batchRemove: function () {
+                var article = this.sels.map(item => ({id: item.id, type: item.type}));
+                var sort = this.selectedOptions[0];
+
+                this.$confirm("确认删除选中记录吗？", "提示", {
+                    type: "warning"
+                })
+                    .then(() => {
+                        this.listLoading = true;
+                        //NProgress.start();
+                        deleteArticle({article, sort}).then(res => {
+                            this.listLoading = false;
+                            let {code, msg} = res.data;
+                            if (code === 200) {
+                                this.$message({
+                                    message: "删除成功",
+                                    type: "success"
+                                });
+                                this.getArticleList(0);
+                            } else {
+                                this.$message({
+                                    message: msg,
+                                    type: "error"
+                                });
+                            }
+                        });
+                    })
+
             }
-          ]
         },
-        {
-          value: "achievement",
-          label: "科研成果",
-          children: [
-            {
-              value: "1",
-              label: "学术论文"
-            },
-            {
-              value: "2",
-              label: "著作"
-            },
-            {
-              value: "3",
-              label: "研究报告"
-            }
-          ]
-        },
-        {
-          value: "exchange",
-          label: "学术交流",
-          children: [
-            {
-              value: "1",
-              label: "来访交流"
-            },
-            {
-              value: "2",
-              label: "调研考察"
-            },
-            {
-              value: "3",
-              label: "主办年会"
-            },
-            {
-              value: "4",
-              label: "流通论坛"
-            }
-          ]
-        },
-        {
-          value: "train",
-          label: "咨询培训",
-          children: [
-            {
-              value: "1",
-              label: "咨询顾问"
-            },
-            {
-              value: "2",
-              label: "企业策划"
-            },
-            {
-              value: "3",
-              label: "专家培训"
-            }
-          ]
-        },
-        {
-          value: "construction",
-          label: "智库建设",
-          children: [
-            {
-              value: "1",
-              label: "名家百人讲座"
-            },
-            {
-              value: "2",
-              label: "智库动态"
-            }
-          ]
+        mounted() {
+            this.getArticleList(0);
         }
-      ],
-      filters: {
-        title: ""
-      },
-      isReacher: false,
-      articles: [],
-      total: 0,
-      page: 1,
-      listLoading: false,
-      sels: [] //列表选中列
     };
-  },
-  methods: {
-    handleCurrentChange(currentPage) {
-      console.log(currentPage)
-      const start = (currentPage - 1) * 14 + currentPage - 1;
-      
-      if (this.isReacher) {
-        this.handleReacher(start);
-      } else {
-        console.log(start)
-        this.getArticleList(start);
-      }
-    },
-    selectArticle(selection, row) {
-      this.sels = selection;
-   
-    },
-    //获取文章列表
-    getArticleList(start) {
-      if (this.selectedOptions.length === 0) {
-     /*   this.$confirm("请选择分类后进行文章管理，否则无数据显示。", "温馨提示", {
-          type: "warning"
-        });*/
-        return;
-      }
-
-      const sort = this.selectedOptions[0];
-      const type = this.selectedOptions[1];
-
-      getCatalog({ sort, type, start }).then(res => {
-        this.listLoading = false;
-        let { code, msg, data, pageCount } = res.data;
-        if (code === 200) {
-          this.articles = data;
-          this.isReacher = true;
-          if(this.total === 0) {
-            this.total = pageCount;
-          }
-          this.listLoading = true;
-          this.isReacher = false;
-
-        } else {
-          this.$message({
-            message: msg,
-            type: "error"
-          });
-        }
-      });
-    },
-    ...mapMutations(["SAVE_ARTICLEINFO"]),
-
-    handleReacher(start = 0) {
-      const sort = this.selectedOptions[0];
-      const type = this.selectedOptions[1];
-      const title = this.filters.title;
-
-      this.listLoading = true;
-      searchArticle({ sort, type, title, start }).then(res => {
-        this.listLoading = false;
-        let { code, msg, data, pageCount } = res.data;
-
-        if (code === 200) {
-          this.articles = data;
-          this.isReacher = true;
-          this.total = pageCount;
-
-        } else {
-          this.$message({
-            message: msg,
-            type: "error"
-          });
-        }
-      });
-    },
-    //删除
-    handleDel: function(index, row) {
-      this.$confirm("确认删除该记录吗?", "提示", {
-        type: "warning"
-      })
-        .then(() => {
-          this.listLoading = true;
-
-          //NProgress.start();
-          let article = [
-            { id: this.articles[index].id, type: this.articles[index].type }
-          ];
-          let sort = this.selectedOptions[0];
-          deleteArticle({ article, sort }).then(res => {
-            this.listLoading = false;
-            let { code, msg } = res.data;
-            if (code === 200) {
-              this.$message({
-                message: "删除成功",
-                type: "success"
-              });
-              this.getArticleList(0);
-            } else {
-              this.$message({
-                message: msg,
-                type: "error"
-              });
-            }
-          });
-        })
-        .catch(() => {});
-    },
-    //显示编辑界面
-    async handleEdit(index, row) {
-      var id = this.articles[index].id;
-      var type = this.articles[index].type;
-      var sort = this.selectedOptions[0];
-      const result = await getArticle({ type, sort, id });
-      const { data, code, msg } = result.data;
-      if (code === 200) {
-        console.log(typeof data.isBanner)
-        data.selectedOptions = this.selectedOptions;
-        this.SAVE_ARTICLEINFO(data);
-        this.$router.push({ path: "/editArticle" });
-      } else {
-        this.$message({
-          message: msg,
-          type: "error"
-        });
-      }
-    },
-    //批量删除
-    batchRemove: function() {
-      var article = this.sels.map(item => ({ id: item.id, type: item.type }));
-      var sort = this.selectedOptions[0];
-     
-      this.$confirm("确认删除选中记录吗？", "提示", {
-        type: "warning"
-      })
-        .then(() => {
-          this.listLoading = true;
-          //NProgress.start();
-          deleteArticle({ article, sort }).then(res => {
-            this.listLoading = false;
-            let { code, msg } = res.data;
-            if (code === 200) {
-              this.$message({
-                message: "删除成功",
-                type: "success"
-              });
-              this.getArticleList(0);
-            } else {
-              this.$message({
-                message: msg,
-                type: "error"
-              });
-            }
-          });
-        })
-       
-    }
-  },
-  mounted() {
-    this.getArticleList(0);
-  }
-};
 </script>
 
 <style scoped>
