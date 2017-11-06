@@ -30,6 +30,7 @@ const state = {
         time:'',
         content:'',
         isbanner:'',
+        selectedOptions:''
     },
     books:{
         name:'',
