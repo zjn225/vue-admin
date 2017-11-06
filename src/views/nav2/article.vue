@@ -347,7 +347,7 @@
         mounted() {
             this.getArticleList(0);
             console.log(this.article)
-            this.selectedOptions = this.article.title;
+            this.selectedOptions = this.article.title||["information","1"];
         }
     };
 </script>
