@@ -46,11 +46,12 @@
 
             <h3>是否将该文章列为首页轮播图</h3>
             <el-switch
-                    v-model="article.isBanner"
+                    v-model="article.isbanner"
                     on-color="#13ce66"
                     on-text="是"
                     off-text="否"
-                   
+                     :active-value='1'
+                   :inactive-value='0'
                     @change="hasImg">
             </el-switch>
         </div>
@@ -243,7 +244,7 @@
                     return;
                 }
                 console.log(this.hasPic)
-                if (!this.hasPic && this.article.isBanner) {
+                if (!this.hasPic && this.article.isbanner) {
                     this.$message("内容没有图片，请不要设置为首页的轮播图");
                     return;
                 }
@@ -255,7 +256,7 @@
                     source: this.article.source,
                     time: this.article.time,
                     selectedOptions: this.article.selectedOptions,
-                    isBanner: this.article.isBanner
+                    isbanner: this.article.isbanner
                 });
                 const {code, msg} = result.data;
 

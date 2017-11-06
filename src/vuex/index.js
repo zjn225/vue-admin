@@ -29,7 +29,7 @@ const state = {
         source:'',
         time:'',
         content:'',
-        isBanner:'',
+        isbanner:'',
     },
     books:{
         name:'',

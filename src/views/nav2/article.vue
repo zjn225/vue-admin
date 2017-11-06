@@ -270,8 +270,9 @@ export default {
 
           //NProgress.start();
           let article = [
-            { id: this.articles[index].id, type: this.articles[index].type }
+            { id: this.articles[index].id, type: this.articles[index].type,isbanner: this.articles[index].isbanner }
           ];
+          console.log(article)
           let sort = this.selectedOptions[0];
           deleteArticle({ article, sort }).then(res => {
             this.listLoading = false;
@@ -300,7 +301,7 @@ export default {
       const result = await getArticle({ type, sort, id });
       const { data, code, msg } = result.data;
       if (code === 200) {
-        console.log(typeof data.isBanner)
+        console.log(data)
         data.selectedOptions = this.selectedOptions;
         this.SAVE_ARTICLEINFO(data);
         this.$router.push({ path: "/editArticle" });
@@ -313,7 +314,7 @@ export default {
     },
     //批量删除
     batchRemove: function() {
-      var article = this.sels.map(item => ({ id: item.id, type: item.type }));
+      var article = this.sels.map(item => ({ id: item.id, type: item.type ,isbanner:item.isbanner}));
       var sort = this.selectedOptions[0];
      
       this.$confirm("确认删除选中记录吗？", "提示", {

@@ -104,26 +104,29 @@
 
 <style lang="scss" scoped>
     .wrap {
-        position: absolute;
         width: 100%;
         height: 100%;
         /*background-color: #2D3A4B;*/
         background-image: url('../assets/bg2.jpg');
         background-size: cover;
+        background-position: center;
+        position: relative;
     }
 
     .login-container {
-        /*box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);*/
+        box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);
         -webkit-border-radius: 5px;
         border-radius: 5px;
         -moz-border-radius: 5px;
         background-clip: padding-box;
-        margin: 180px auto;
-        width: 350px;
-        padding: 35px 35px 15px 35px;
         background: #fff;
-        border: 1px solid #eaeaea;
-        box-shadow: 0 0 5px #cac6c6;
+        padding: 35px 35px 15px 35px;
+
+        position: absolute;
+        right: 160px;
+        top: 50%;
+        transform: translateY(-60%);
+        width: 300px;
         .title {
             margin: 0px auto 40px auto;
             text-align: center;

@@ -122,7 +122,7 @@ export default {
           this.isReacher = true;
           this.total = pageCount;
 
-          console.log(this.articles.length);
+    
         } else {
           this.$message({
             message: msg,
