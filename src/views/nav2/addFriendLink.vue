@@ -1,5 +1,6 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper" v-loading="loading" element-loading-text="正在新增中，请稍后"
+         element-loading-spinner="el-icon-loading">
         <h3>网站名称</h3>
         <el-input class=" " v-model="name" placeholder=""></el-input>
         <h3>网站链接</h3>
@@ -14,6 +15,7 @@ import {addLink} from "../../api/xh_api";
     export default {
         data() {
             return {
+                loading:false,
                 name: '',
                 link: ''
             };
@@ -30,6 +32,8 @@ import {addLink} from "../../api/xh_api";
                   this.$message("请输入网站名称");
                   return;
               }
+
+              this.loading=true
                 let result = await addLink({
                     name: this.name,
                     link: this.link,
@@ -37,6 +41,7 @@ import {addLink} from "../../api/xh_api";
                 const {code, msg} = result.data;
 
                 if (code === 200) {
+                    this.loading=false
                     this.$message({
                         message: msg,
                         type: "success"

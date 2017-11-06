@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div v-loading="loading" element-loading-text="正在发表，请稍后"
+         element-loading-spinner="el-icon-loading">
         <div class="left">
             <el-input class="title" v-model="title" placeholder="请输入标题"></el-input>
             <quill-editor ref="myTextEditor"
@@ -70,6 +71,7 @@
     export default {
         data() {
             return {
+                loading:false,
                 pickerOptions0: {
                     disabledDate(time) {
                         return time.getTime() < Date.now() - 8.64e7;
@@ -256,6 +258,9 @@
                     this.$message("内容没有图片，请不要设置为首页的轮播图");
                     return;
                 }
+
+                this.loading=true;
+
                 let result = await postArticle({
                     title: this.title,
                     author: this.author,
@@ -266,9 +271,11 @@
                     isbanner: this.isBanner
                 });
 
+
                 const {code, msg} = result.data;
 
                 if (code === 200) {
+                    this.loading=false;
                     this.$message({
                         message: msg,
                         type: "success"

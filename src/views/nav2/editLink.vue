@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div v-loading="loading" element-loading-text="正在修改中，请稍后"
+         element-loading-spinner="el-icon-loading">
         <h3>网站名称</h3>
         <el-input class=" " v-model="friendLink.name" placeholder=""></el-input>
         <h3>网站链接</h3>
@@ -16,7 +17,9 @@
 
     export default {
         data() {
-            return {};
+            return {
+                loading:false
+            };
         },
 
         // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
@@ -30,6 +33,7 @@
                     this.$message("请输入网站名称");
                     return;
                 }
+                this.loading=true;
                 const result = await editLink({
                     name: this.friendLink.name,
                     id: this.friendLink.id,
@@ -37,6 +41,7 @@
                 });
                 const {code, msg} = result.data;
                 if (code === 200) {
+                    this.loading=false;
                     this.$message({
                         message: msg,
                         type: "success"

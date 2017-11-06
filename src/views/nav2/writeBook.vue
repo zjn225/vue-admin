@@ -1,5 +1,7 @@
+<!--
 <template>
-    <div>
+    <div v-loading="loading" element-loading-text="正在新增中，请稍后"
+         element-loading-spinner="el-icon-loading">
         <div class="left">
             <quill-editor ref="myTextEditor"
                           v-model="bookInfo.content"
@@ -10,7 +12,7 @@
             </quill-editor>
         </div>
         <div class="right">
-            <!--作者-->
+            &lt;!&ndash;作者&ndash;&gt;
             <div class="author">
                 <h3>著作名称</h3>
                 <el-input class="right_input" v-model="bookInfo.name" placeholder=""></el-input>
@@ -33,6 +35,7 @@
     export default {
         data() {
             return {
+                loading:false,
                 pickerOptions0: {
                     disabledDate(time) {
                         return time.getTime() < Date.now() - 8.64e7;
@@ -121,4 +124,4 @@
     }
 
 
-</style>
+</style>-->

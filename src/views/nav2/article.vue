@@ -270,9 +270,8 @@ export default {
 
           //NProgress.start();
           let article = [
-            { id: this.articles[index].id, type: this.articles[index].type,isbanner: this.articles[index].isbanner }
+            { id: this.articles[index].id, type: this.articles[index].type,isbanner :  this.articles[index].isbanner}
           ];
-          console.log(article)
           let sort = this.selectedOptions[0];
           deleteArticle({ article, sort }).then(res => {
             this.listLoading = false;

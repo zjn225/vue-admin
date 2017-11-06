@@ -3,6 +3,7 @@
         <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px"
                  class="demo-ruleForm login-container">
             <h2 class="title">广财流通所后台管理系统</h2>
+            <div class="line"></div>
             <el-form-item prop="account">
                 <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="账号"></el-input>
             </el-form-item>
@@ -118,15 +119,14 @@
         -webkit-border-radius: 5px;
         border-radius: 5px;
         -moz-border-radius: 5px;
-        background-clip: padding-box;
         background: #fff;
-        padding: 35px 35px 15px 35px;
-
+        padding: 23px 31px 0px 34px;
         position: absolute;
         right: 160px;
         top: 50%;
         transform: translateY(-60%);
         width: 300px;
+        height: 280px;
         .title {
             margin: 0px auto 40px auto;
             text-align: center;
