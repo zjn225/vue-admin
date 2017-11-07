@@ -81,9 +81,12 @@
                         }
 
                         const time = year + '年' + month + '月' + day + '日 ' + hours + ':' + minutes + ':' + seconds;
+
+                        /*登录时间，加入localStorage防止刷新的时候无法正常显示*/
                         this.loginTime = time;
                         this.$store.state.loginTime = this.loginTime;
-                        console.log(time)
+                        localStorage.loginTime =  this.loginTime
+
                         var loginParams = {account: this.ruleForm2.account, password: this.ruleForm2.checkPass, time};
                         requestLogin(loginParams).then(data => {
                             let {code, msg, time} = data;
@@ -108,11 +111,15 @@
                         return false;
                     }
                 });
-                console.log(returnCitySN['cname'] + returnCitySN['cip'])
+                /*登录地点*/
                 this.loginSite = returnCitySN['cname']
-                this.loginCip = returnCitySN['cip']
                 this.$store.state.loginSite = this.loginSite;
+                localStorage.loginSite = this.loginSite
+
+                /*登录IP*/
+                this.loginCip = returnCitySN['cip']
                 this.$store.state.loginCip = this.loginCip;
+                localStorage.loginCip = this.loginCip
             }
         },
         mounted() {

@@ -40,13 +40,13 @@
         },
         computed: {
             loginTime() {
-                return this.$store.state.loginTime || '暂无数据';
+                return this.$store.state.loginTime || localStorage.loginTime || '暂无数据';
             },
             loginSite() {
-                return this.$store.state.loginSite || "暂无数据"
+                return this.$store.state.loginSite || localStorage.loginSite || "暂无数据"
             },
-            loginCip(){
-                return this.$store.state.loginCip || "暂无数据"
+            loginCip() {
+                return this.$store.state.loginCip || localStorage.loginCip || "暂无数据"
             }
         },
         mounted() {
@@ -98,18 +98,18 @@
             .bottom {
                 display: block;
                 margin: -87px auto;
-                .add, .time ,.cip{
+                .add, .time, .cip {
                     span {
                         margin: 10px;
                         font-size: 16px;
                         color: #6E7987;
                     }
                 }
-                .add ,.time{
+                .add, .time {
                     margin: 15px 0;
                 }
             }
-            .loginCip{
+            .loginCip {
                 padding-left: 16px;
             }
         }
