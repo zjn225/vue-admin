@@ -21,7 +21,7 @@
 </template>
 
 <script>
-    import {requestLogin} from '../api/api';
+    import {requestLogin} from '../api/xh_api';
     import moment from 'moment';
 
     export default {
@@ -66,13 +66,12 @@
                             minutes = date.getMinutes(),
                             seconds = date.getSeconds();
 
-                        (hours < 10 ) && (hours = '0' + hours)
-                        (minutes < 10) && (minutes = '0' + minutes)
-                        (seconds < 10) && (seconds = '0' + seconds)
+                        hours < 10  && (hours = '0' + hours);
+                        minutes < 10 && (minutes = '0' + minutes);
+                        seconds < 10 && (seconds = '0' + seconds);
 
                         const time = year + '年' + month + '月' + day + '日 ' + hours + ':' + minutes + ':' + seconds;
 
-                        console.log(time)
                         var loginParams = {account: this.ruleForm2.account, password: this.ruleForm2.checkPass, time};
                         requestLogin(loginParams).then(data => {
                             let {code, msg, time} = data;

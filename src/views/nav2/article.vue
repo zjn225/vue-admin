@@ -214,9 +214,9 @@ export default {
 
       const sort = this.selectedOptions[0];
       const type = this.selectedOptions[1];
+          this.listLoading = true;
 
       getCatalog({ sort, type, start }).then(res => {
-        this.listLoading = false;
         let { code, msg, data, pageCount } = res.data;
         if (code === 200) {
           this.articles = data;
@@ -224,7 +224,8 @@ export default {
           if(this.total === 0) {
             this.total = pageCount;
           }
-          this.listLoading = true;
+      this.listLoading = false;
+          
           this.isReacher = false;
 
         } else {
