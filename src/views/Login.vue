@@ -79,15 +79,14 @@
                             seconds = '0' + seconds
                         }
 
-                        const time = year + '年' + month + '月' + day + '日 ' + hours + ':' + minutes + ':' + seconds;
+                        const loginTime = year + '年' + month + '月' + day + '日 ' + hours + ':' + minutes + ':' + seconds;
 
                         /*登录时间，加入localStorage防止刷新的时候无法正常显示*/
-                        this.loginTime = time;
-                        this.$store.state.loginTime = this.loginTime;
-
-                        var loginParams = {account: this.ruleForm2.account, password: this.ruleForm2.checkPass, time};
+                        this.loginTime = loginTime;
+                        this.loginSite = returnCitySN['cname'];
+                        var loginParams = {account: this.ruleForm2.account, password: this.ruleForm2.checkPass, loginTime:this.loginTime,loginSite:this.loginSite};
                         requestLogin(loginParams).then(data => {
-                            let {code, msg, time} = data;
+                            let {code, msg, loginTime,loginSite} = data;
                             if (code !== 200) {
                                 this.$message({
                                     message: msg,
@@ -100,10 +99,13 @@
                                     message: msg,
                                     type: "success"
                                 });
-                                 console.log(time)
                                 this.logining = false;
-                                this.$store.state.loginTime = time;
-                                localStorage.loginTime =  time;
+
+                                this.$store.state.loginTime = loginTime;
+                                localStorage.loginTime =  loginTime;
+                                this.$store.state.loginSite = loginSite;
+                                localStorage.loginSite = loginSite
+
                                 sessionStorage.setItem('status', 1);
                                 this.$router.push({path: '/Main'});
                             }
@@ -118,10 +120,7 @@
                 this.$store.state.loginSite = this.loginSite;
                 localStorage.loginSite = this.loginSite
 
-                /*登录IP*/
-                this.loginCip = returnCitySN['cip']
-                this.$store.state.loginCip = this.loginCip;
-                localStorage.loginCip = this.loginCip
+              
             }
         },
         mounted() {

@@ -13,15 +13,12 @@
             <div class="line"></div>
             <div class="bottom">
                 <div class="add">
-                    <span>登录时间：</span>
+                    <span>上次登录时间：</span>
                     <span class="loginTime" v-once>{{loginTime}}</span>
                 </div>
-                <div class="cip">
-                    <span>登录IP：</span>
-                    <span class="loginCip">{{loginCip}}</span>
-                </div>
+                
                 <div class="time">
-                    <span>登录地点：</span>
+                    <span>上次登录地点：</span>
                     <span class="loginSite">{{loginSite}}</span>
                 </div>
             </div>
@@ -44,9 +41,6 @@
             },
             loginSite() {
                 return this.$store.state.loginSite || localStorage.loginSite || "暂无数据"
-            },
-            loginCip() {
-                return this.$store.state.loginCip || localStorage.loginCip || "暂无数据"
             }
         },
         mounted() {
