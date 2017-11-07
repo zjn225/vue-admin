@@ -18,8 +18,7 @@
                     </el-table-column>
                     <el-table-column label="操作">
                         <template slot-scope="scope">
-                            <el-button type="primary" size="small" @click="hasLook(scope.$index, scope.row)">已读
-                            </el-button>
+                           
                             <el-button type="primary" size="small" @click="look(scope.$index, scope.row)">查看
                             </el-button>
                             <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除
@@ -128,7 +127,7 @@
         batchRemoveFeeds,
         addFeeds,
         getFeedOne,
-        deleteFeeds,
+        deleteFeed,
         lookContent
     } from "../../api/xh_api";
 
@@ -166,11 +165,12 @@
                 getUnReadFeeds(start);
             },
 
-            //获取已读的反馈列表
-            getReadFeeds(start = 0) {
+            //获取反馈列表
+            getFeeds(start = 0) {
                 this.isLoading = false; //记得修改为true
                 getReadFeedList({start}).then(data => {
                     this.isReadtotal = data.pageCount;
+                    console.log(data.feedback)
                     this.Readfeeds = data.feedback;
                     this.isLoading = false;
                     this.sortReadFeeds();
@@ -178,11 +178,13 @@
             },
             //分未读和已读
             sortReadFeeds(){
+                 this.isReadfeeds = [];
+                this.unReadfeeds = [];
                 for(let i = 0, len = this.Readfeeds.length;i < len;i++){
                     this.Readfeeds[i].index = i;
-                    this.isReadfeeds = [];
-                    this.unReadfeeds = [];
-                    if(this.Readfeeds[i].isread === 1){
+                   
+                    console.log(this.Readfeeds[i])
+                    if(this.Readfeeds[i].isread == 1){
                     this.Readfeeds[i].status = '已读';
                         
                         this.isReadfeeds.push(this.Readfeeds[i])
@@ -203,15 +205,15 @@
                     .then(() => {
                         this.isLoading = true;
                         let feed = [{id: row.id}];
-                        deleteFeeds({feed}).then(res => {
+                        deleteFeed({feed}).then(data => {
                             this.isLoading = false;
-                            let {code, msg} = res.data;
+                            let {code, msg} = data;
                             if (code === 200) {
                                 this.$message({
                                     message: "删除成功",
                                     type: "success"
                                 });
-                                this.getIsReadFeeds();
+                                this.getFeeds(0);
                             } else {
                                 this.$message({
                                     message: msg,
@@ -227,14 +229,14 @@
            
             //查看详情列表
             look: function (index,row) {
-//                this.isLoading = true;
+               this.isLoading = true;
                 
                 this.Readfeeds[row.index].isread = 1;
                 this.sortReadFeeds();
                 let id = row.id;
-                console.log(id)
+              
                 getFeedOne({id}).then(data => {
-                    console.log(data)
+           
                     this.isLoading = false;
                     let {feed, code, msg} = data
                     if (code === 200) {
@@ -264,8 +266,8 @@
                 })
                     .then(() => {
                         this.isLoading = true;
-                        //NProgress.start();
-                        batchRemoveFeeds({feed}).then(res => {
+                      
+                        deleteFeed({feed}).then(res => {
                             this.isLoading = false;
                             let {code, msg} = res;
                             if (code === 200) {
@@ -273,7 +275,7 @@
                                     message: "删除成功",
                                     type: "success"
                                 });
-                                // this.getIsReadFeeds();
+                            this.getFeeds(0);
                             } else {
                                 this.$message({
                                     message: msg,
@@ -287,7 +289,7 @@
             }
         },
         mounted() {
-            this.getReadFeeds(0);
+            this.getFeeds(0);
         }
     };
 </script>

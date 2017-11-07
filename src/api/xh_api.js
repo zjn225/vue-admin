@@ -142,6 +142,9 @@ export const  getReadFeedList = params => {
 export const  getFeedOne = params => {
     return instance.get(`/data/feedback/one`, {params: params}).then(res => res.data);
 };
+export const  deleteFeed = params => {
+    return instance.post(`/data/feedback/delete`, params).then(res => res.data);
+};
 
 
 

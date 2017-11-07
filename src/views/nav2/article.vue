@@ -316,8 +316,8 @@
             },
             //批量删除
             batchRemove: function () {
-                var article = this.sels.map(item => ({id: item.id, type: item.type,isbanner:item.isbanner}));
-                var sort = this.selectedOptions[0];
+                const article = this.sels.map(item => ({id: item.id, type: item.type,isbanner:item.isbanner}));
+                const sort = this.selectedOptions[0];
 
                 this.$confirm("确认删除选中记录吗？", "提示", {
                     type: "warning"
