@@ -51,8 +51,8 @@
                     on-color="#13ce66"
                     on-text="是"
                     off-text="否"
-                     :active-value='1'
-                   :inactive-value='0'
+                    :active-value='1'
+                    :inactive-value='0'
                     @change="hasImg">
             </el-switch>
         </div>
@@ -70,7 +70,7 @@
     export default {
         data() {
             return {
-                loading:false,
+                loading: false,
                 hasPic: true,
                 pickerOptions0: {
                     disabledDate(time) {
@@ -191,7 +191,7 @@
                         ]
                     }
                 ],
-                isBanner :true
+                isBanner: true
             };
         },
         components: {
@@ -212,7 +212,7 @@
                 //                console.log('editor ready!', editor)
             },
             hasImg() {
-                var reg =/<img [^>]*src=['"]([^'"]+)[^>]*>/gi;
+                var reg = /<img [^>]*src=['"]([^'"]+)[^>]*>/gi;
                 if (reg.test(this.article.content)) {  //有图片
                     this.hasPic = true;
                 } else {                      //无图片
@@ -251,7 +251,7 @@
                     return;
                 }
 
-                this.loading=true;
+                this.loading = true;
                 const result = await editArticle({
                     title: this.article.title,
                     id: this.article.id,
@@ -265,7 +265,7 @@
                 const {code, msg} = result.data;
 
                 if (code === 200) {
-                    this.loading=false;
+                    this.loading = false;
                     this.$message({
                         message: msg,
                         type: "success"
@@ -288,9 +288,14 @@
             ...mapState(["article"])
         },
         mounted() {
-            // you can use current editor object to do something(editor methods)
-            //            console.log('this is my editor', this.editor)
-            // this.editor to do something...
+            const arr = ["information", "research", "achievement", "exchange", "train", "construction"];
+            let nowItem = this.article.selectedOptions[0].value;  //当前分类的名称
+//            let testItem = "exchange";
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i]!==nowItem){
+                    this.options[i].disabled = true;
+                }
+            }
         }
     };
 </script>
