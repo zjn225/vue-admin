@@ -8,6 +8,7 @@ Vue.use(Vuex);
 const state = {
     loginTime: '',
     loginSite:'',
+    loginCip:'',
     user: {
         time: ''
     },

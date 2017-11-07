@@ -33,6 +33,9 @@
 
             };
             return {
+                loginSite: '',
+                loginTime: '',
+                loginCip: '',
                 logining: false,
                 ruleForm2: {
                     account: 'admin',
@@ -78,7 +81,8 @@
                         }
 
                         const time = year + '年' + month + '月' + day + '日 ' + hours + ':' + minutes + ':' + seconds;
-                        this.$store.state.loginTime = time;
+                        this.loginTime = time;
+                        this.$store.state.loginTime = this.loginTime;
                         console.log(time)
                         var loginParams = {account: this.ruleForm2.account, password: this.ruleForm2.checkPass, time};
                         requestLogin(loginParams).then(data => {
@@ -104,14 +108,18 @@
                         return false;
                     }
                 });
+                console.log(returnCitySN['cname'] + returnCitySN['cip'])
+                this.loginSite = returnCitySN['cname']
+                this.loginCip = returnCitySN['cip']
+                this.$store.state.loginSite = this.loginSite;
+                this.$store.state.loginCip = this.loginCip;
             }
         },
-        mounted(){
+        mounted() {
             const s = document.createElement('script');
             s.type = 'text/javascript';
             s.src = 'http://pv.sohu.com/cityjson?ie=utf-8'; //引用搜狐接口
             document.body.appendChild(s);
-            console.log(returnCitySN['cname'])
             //返回值 var returnCitySN =
             // {"cip": "183.6.137.86", "cid": "440100", "cname": "广东省广州市"};
         }

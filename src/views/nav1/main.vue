@@ -13,11 +13,15 @@
             <div class="line"></div>
             <div class="bottom">
                 <div class="add">
-                    <span>上次登录时间：</span>
+                    <span>登录时间：</span>
                     <span class="loginTime" v-once>{{loginTime}}</span>
                 </div>
+                <div class="cip">
+                    <span>登录IP：</span>
+                    <span class="loginCip">{{loginCip}}</span>
+                </div>
                 <div class="time">
-                    <span>上次登录地点：</span>
+                    <span>登录地点：</span>
                     <span class="loginSite">{{loginSite}}</span>
                 </div>
             </div>
@@ -36,11 +40,14 @@
         },
         computed: {
             loginTime() {
-                return this.$store.state.loginTime||'暂无数据';
+                return this.$store.state.loginTime || '暂无数据';
             },
-             loginSite() {
-                 return this.$store.state.loginSite||"暂无数据"
-             }
+            loginSite() {
+                return this.$store.state.loginSite || "暂无数据"
+            },
+            loginCip(){
+                return this.$store.state.loginCip || "暂无数据"
+            }
         },
         mounted() {
 
@@ -53,7 +60,7 @@
     div {
         .box-card {
             margin: 20px;
-            height: 236px;
+            height: 276px;
             width: 600px;
             .top {
                 display: block;
@@ -91,18 +98,20 @@
             .bottom {
                 display: block;
                 margin: -87px auto;
-                .add, .time {
+                .add, .time ,.cip{
                     span {
                         margin: 10px;
                         font-size: 16px;
                         color: #6E7987;
                     }
                 }
-                .add {
+                .add ,.time{
                     margin: 15px 0;
                 }
             }
-
+            .loginCip{
+                padding-left: 16px;
+            }
         }
 
     }
