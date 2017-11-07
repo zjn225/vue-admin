@@ -13,11 +13,15 @@
             <div class="line"></div>
             <div class="bottom">
                 <div class="add">
-                    <span>上次登录时间：</span>
+                    <span>登录时间：</span>
                     <span class="loginTime" v-once>{{loginTime}}</span>
                 </div>
+                <div class="cip">
+                    <span>登录IP：</span>
+                    <span class="loginCip">{{loginCip}}</span>
+                </div>
                 <div class="time">
-                    <span>上次登录地点：</span>
+                    <span>登录地点：</span>
                     <span class="loginSite">{{loginSite}}</span>
                 </div>
             </div>
@@ -31,21 +35,22 @@
         data() {
             return {
                 content: '您好，欢迎访问广财流通所管理系统',
-                loginTime:'2017'
+
             };
         },
         computed: {
-            // loginSite() {
-            //     return  returnCitySN["cname"]
-            // }
+            loginTime() {
+                return this.$store.state.loginTime || localStorage.loginTime || '暂无数据';
+            },
+            loginSite() {
+                return this.$store.state.loginSite || localStorage.loginSite || "暂无数据"
+            },
+            loginCip() {
+                return this.$store.state.loginCip || localStorage.loginCip || "暂无数据"
+            }
         },
         mounted() {
-            const s = document.createElement('script');
-            s.type = 'text/javascript';
-            s.src = 'http://pv.sohu.com/cityjson?ie=utf-8'; //引用搜狐接口
-            document.body.appendChild(s);
-            //返回值 var returnCitySN =
-            // {"cip": "183.6.137.86", "cid": "440100", "cname": "广东省广州市"};
+
         },
 
     }
@@ -55,7 +60,7 @@
     div {
         .box-card {
             margin: 20px;
-            height: 236px;
+            height: 276px;
             width: 600px;
             .top {
                 display: block;
@@ -93,18 +98,20 @@
             .bottom {
                 display: block;
                 margin: -87px auto;
-                .add, .time {
+                .add, .time, .cip {
                     span {
                         margin: 10px;
                         font-size: 16px;
                         color: #6E7987;
                     }
                 }
-                .add {
+                .add, .time {
                     margin: 15px 0;
                 }
             }
-
+            .loginCip {
+                padding-left: 16px;
+            }
         }
 
     }

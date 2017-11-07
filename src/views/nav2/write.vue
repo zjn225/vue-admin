@@ -52,9 +52,9 @@
                     active-text="是"
                     inactive-text="否"
                     @change="hasImg"
-                   :active-value='1'
-                   :inactive-value='0'
-                   
+                    :active-value='1'
+                    :inactive-value='0'
+
             >
             </el-switch>
         </div>
@@ -280,8 +280,8 @@
                         message: msg,
                         type: "success"
                     });
-                
-                this.$router.push({path: '/article'});
+
+                    this.$router.push({path: '/article'});
 
                 } else {
                     this.$message({

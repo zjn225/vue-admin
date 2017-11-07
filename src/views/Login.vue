@@ -33,6 +33,9 @@
 
             };
             return {
+                loginSite: '',
+                loginTime: '',
+                loginCip: '',
                 logining: false,
                 ruleForm2: {
                     account: 'admin',
@@ -51,11 +54,9 @@
             };
         },
         methods: {
-
             handleSubmit2(ev) {
                 var _this = this;
                 this.$refs.ruleForm2.validate((valid) => {
-                    console.log(this.$refs)//{ruleForm2: VueComponent}
                     if (valid) {
                         this.logining = true;
                         let date = new Date(),
@@ -66,11 +67,23 @@
                             minutes = date.getMinutes(),
                             seconds = date.getSeconds();
 
-                        hours < 10  && (hours = '0' + hours);
-                        minutes < 10 && (minutes = '0' + minutes);
-                        seconds < 10 && (seconds = '0' + seconds);
+                        if (hours < 10) {
+                            hours = '0' + hours
+                        }
+
+                        if (minutes < 10) {
+                            minutes = '0' + minutes
+                        }
+
+                        if (seconds < 10) {
+                            seconds = '0' + seconds
+                        }
 
                         const time = year + '年' + month + '月' + day + '日 ' + hours + ':' + minutes + ':' + seconds;
+
+                        /*登录时间，加入localStorage防止刷新的时候无法正常显示*/
+                        this.loginTime = time;
+                        this.$store.state.loginTime = this.loginTime;
 
                         var loginParams = {account: this.ruleForm2.account, password: this.ruleForm2.checkPass, time};
                         requestLogin(loginParams).then(data => {
@@ -80,13 +93,17 @@
                                     message: msg,
                                     type: 'error'
                                 });
-                                this.logining = false;
-
+                               
+                                
                             } else {
                                 this.$message({
                                     message: msg,
                                     type: "success"
                                 });
+                                 console.log(time)
+                                this.logining = false;
+                                this.$store.state.loginTime = time;
+                                localStorage.loginTime =  time;
                                 sessionStorage.setItem('status', 1);
                                 this.$router.push({path: '/Main'});
                             }
@@ -96,7 +113,24 @@
                         return false;
                     }
                 });
+                /*登录地点*/
+                this.loginSite = returnCitySN['cname']
+                this.$store.state.loginSite = this.loginSite;
+                localStorage.loginSite = this.loginSite
+
+                /*登录IP*/
+                this.loginCip = returnCitySN['cip']
+                this.$store.state.loginCip = this.loginCip;
+                localStorage.loginCip = this.loginCip
             }
+        },
+        mounted() {
+            const s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = 'http://pv.sohu.com/cityjson?ie=utf-8'; //引用搜狐接口
+            document.body.appendChild(s);
+            //返回值 var returnCitySN =
+            // {"cip": "183.6.137.86", "cid": "440100", "cname": "广东省广州市"};
         }
     }
 
