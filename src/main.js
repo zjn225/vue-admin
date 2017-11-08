@@ -3,6 +3,7 @@ import Vue from 'vue'
 import App from './App'
 // import ElementUI from 'element-ui'
 import {
+    TabPane,
     Pagination,
     Dialog,
     Menu,
@@ -96,6 +97,7 @@ Vue.use(Row)
 Vue.use(Col)
 Vue.use(Upload)
 Vue.use(Card)
+Vue.use(TabPane)
 
 Vue.use(Collapse)
 Vue.use(CollapseItem)
