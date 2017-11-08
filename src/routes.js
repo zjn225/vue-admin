@@ -153,7 +153,7 @@ let routes = [
         iconCls: 'fa fa-telegram',
         // leaf: true,//只有一个节点
         children: [
-            {path: '/basic', component: Basic, name: '基本设置'},
+            // {path: '/basic', component: Basic, name: '基本设置'},
             //机构简介，机构设置
             {path: '/friendLink', component: friendLink, name: '友情链接'}
         ]

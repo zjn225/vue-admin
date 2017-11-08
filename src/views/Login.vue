@@ -93,6 +93,7 @@
                                     type: 'error'
                                 });
                                
+                                this.logining = false;
                                 
                             } else {
                                 this.$message({
