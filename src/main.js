@@ -1,7 +1,51 @@
 import babelpolyfill from 'babel-polyfill'
 import Vue from 'vue'
 import App from './App'
-import ElementUI from 'element-ui'
+// import ElementUI from 'element-ui'
+import {
+    Pagination,
+    Dialog,
+    Menu,
+    Submenu,
+    MenuItem,
+    MenuItemGroup,
+    Input,
+    Radio,
+    RadioGroup,
+    RadioButton,
+    Switch,
+    Select,
+    Option,
+    Button,
+    Table,
+    TableColumn,
+    DatePicker,
+    TimeSelect,
+    Breadcrumb,
+    BreadcrumbItem,
+    Form,
+    FormItem,
+    Tabs,
+    Alert,
+    Slider,
+    Icon,
+    Row,
+    Col,
+    Upload,
+    Card,
+    Rate,
+    Collapse,
+    CollapseItem,
+    Cascader,
+    Transfer,
+    Container,
+    Header,
+    Main,
+    Loading,
+    MessageBox,
+    Message,
+    Notification
+} from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'  //引入饿了么样式
 import 'font-awesome/css/font-awesome.min.css'  //引入font-awesome样式
 //import './assets/theme/theme-green/index.css'
@@ -17,10 +61,58 @@ Vue.config.productionTip = false
 
 Mock.bootstrap();  //初始化mock
 
-Vue.use(ElementUI);
+// Vue.use(ElementUI);
 Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(VueQuillEditor);
+
+Vue.use(Pagination)
+Vue.use(Dialog)
+Vue.use(Menu)
+Vue.use(Submenu)
+Vue.use(MenuItem)
+Vue.use(MenuItemGroup)
+Vue.use(Input)
+Vue.use(Radio)
+Vue.use(RadioGroup)
+Vue.use(RadioButton)
+Vue.use(Switch)
+Vue.use(Select)
+Vue.use(Option)
+Vue.use(Button)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(DatePicker)
+Vue.use(TimeSelect)
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
+Vue.use(Form)
+Vue.use(FormItem)
+Vue.use(Tabs)
+Vue.use(Alert)
+Vue.use(Slider)
+Vue.use(Icon)
+Vue.use(Row)
+Vue.use(Col)
+Vue.use(Upload)
+Vue.use(Card)
+
+Vue.use(Collapse)
+Vue.use(CollapseItem)
+Vue.use(Cascader)
+Vue.use(Container)
+Vue.use(Header)
+Vue.use(Main)
+
+Vue.use(Loading.directive)
+
+Vue.prototype.$loading = Loading.service
+Vue.prototype.$msgbox = MessageBox
+Vue.prototype.$alert = MessageBox.alert
+Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$prompt = MessageBox.prompt
+Vue.prototype.$notify = Notification
+Vue.prototype.$message = Message
 
 const router = new VueRouter({
     routes

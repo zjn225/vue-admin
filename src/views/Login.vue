@@ -21,7 +21,7 @@
 </template>
 
 <script>
-    import {requestLogin} from '../api/xh_api';
+    import {requestLogin} from '../api/api';
     import moment from 'moment';
 
     export default {
@@ -84,16 +84,20 @@
                         /*登录时间，加入localStorage防止刷新的时候无法正常显示*/
                         this.loginTime = loginTime;
                         this.loginSite = returnCitySN['cname'];
-                        var loginParams = {account: this.ruleForm2.account, password: this.ruleForm2.checkPass, loginTime:this.loginTime,loginSite:this.loginSite};
+                        var loginParams = {
+                            account: this.ruleForm2.account,
+                            password: this.ruleForm2.checkPass,
+                            loginTime: this.loginTime,
+                            loginSite: this.loginSite
+                        };
                         requestLogin(loginParams).then(data => {
-                            let {code, msg, loginTime,loginSite} = data;
+                            let {code, msg, loginTime, loginSite} = data;
                             if (code !== 200) {
                                 this.$message({
                                     message: msg,
                                     type: 'error'
                                 });
-                               
-                                
+                                this.logining = false;
                             } else {
                                 this.$message({
                                     message: msg,
@@ -102,14 +106,20 @@
                                 this.logining = false;
 
                                 this.$store.state.loginTime = loginTime;
-                                localStorage.loginTime =  loginTime;
+                                localStorage.loginTime = loginTime;
                                 this.$store.state.loginSite = loginSite;
                                 localStorage.loginSite = loginSite
 
                                 sessionStorage.setItem('status', 1);
                                 this.$router.push({path: '/Main'});
                             }
-                        });
+                        }, () => {
+                            this.$message({
+                                message: "请求失败",
+                                type: "error"
+                            });
+                            this.logining = false;
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -120,7 +130,7 @@
                 this.$store.state.loginSite = this.loginSite;
                 localStorage.loginSite = this.loginSite
 
-              
+
             }
         },
         mounted() {
