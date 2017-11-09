@@ -288,14 +288,13 @@
             ...mapState(["article"])
         },
         mounted() {
-            const arr = ["information", "research", "achievement", "exchange", "train", "construction"];
+    /*        const arr = ["information", "research", "achievement", "exchange", "train", "construction"];
             let nowItem = this.article.selectedOptions[0].value;  //当前分类的名称
-//            let testItem = "exchange";
             for (var i = 0; i < arr.length; i++) {
                 if (arr[i]!==nowItem){
                     this.options[i].disabled = true;
                 }
-            }
+            }*/
         }
     };
 </script>

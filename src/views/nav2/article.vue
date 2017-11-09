@@ -56,7 +56,7 @@
                     expand-trigger="hover"
                     :options="optionsNEW"
                     v-model="column"
-                    >
+            >
             </el-cascader>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -482,19 +482,26 @@
             },
 
             /*显示批量移动界面*/
-            showColumn:function () {
+            showColumn: function () {
                 this.dialogFormVisible = true;
             },
 
             /*批量移动界面里的确定触发此方法*/
             batchMove: function () {
                 const article = this.sels.map(item => ({id: item.id}));
-                console.log(this.sels)
                 const column = this.column;
                 const sort = this.selectedOptions[0];
                 const type = this.selectedOptions[1];
-                
-                moveArticle({article, sort, type,column}).then(data => {
+
+                if (column[0] === this.selectedOptions[0] && column[1] === this.selectedOptions[1]) {
+                    this.$message({
+                        message: '当前文章已在您选择的这个分类，请不要重复移动',
+                        type: "error"
+                    })
+                    return;
+                }
+
+                moveArticle({article, sort, type, column}).then(data => {
                     let {code, msg} = data;
                     if (code === 200) {
                         this.dialogFormVisible = false;
