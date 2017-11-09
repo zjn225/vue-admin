@@ -97,6 +97,12 @@ const feedBack = (resolve) => {
     })
 }
 
+const brief = (resolve) => {
+    import('./views/nav2/brief.vue').then((module) => {
+        resolve(module)
+    })
+}
+
 let routes = [
     {
         path: '/',
@@ -144,6 +150,7 @@ let routes = [
             {path: '/addBook', component: addBook, name: '新增著作'},
             {path: '/addFriendLink', component: addFriendLink, name: '新增友情链接'},
             {path: '/editLink', component: editLink, name: '修改友情链接'},
+            {path: '/brief', component: brief, name: '简介修改'},
         ]
     },
     {
