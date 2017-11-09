@@ -202,7 +202,7 @@
                     title: ""
                 },
                 isReacher: false,
-                articles: [{"index": "1", title: 'hello'}, {"index": "2", title: 'hello2'}],
+                articles: [],
                 total: 0,
                 page: 1,
                 listLoading: false,
