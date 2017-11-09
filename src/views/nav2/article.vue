@@ -44,10 +44,26 @@
         <!--工具条-->
         <el-col :span="24" class="toolbar">
             <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
+            <el-button type="primary" @click="showColumn" :disabled="this.sels.length===0">批量移动</el-button>
             <!--换页-->
             <el-pagination @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
             </el-pagination>
         </el-col>
+
+        <!--移动分类时候的弹窗-->
+        <el-dialog title="请选择要移动到的分类" :visible.sync="dialogFormVisible">
+            <el-cascader
+                    expand-trigger="hover"
+                    :options="options"
+                    v-model="column"
+                    @change="getArticleList(0)">
+            </el-cascader>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="batchMove">确 定</el-button>
+            </div>
+        </el-dialog>
+
     </section>
 </template>
 
@@ -61,12 +77,15 @@
         deleteArticle,
         editArticle,
         getArticle,
-        searchArticle
+        searchArticle,
+        MoveArticle
     } from "../../api/xh_api";
 
     export default {
         data() {
             return {
+                column: [],
+                dialogFormVisible: false,
                 selectedOptions: ["information", "1"], //级联选择器
 //                selectedOptions: '',
                 options: [
@@ -183,7 +202,7 @@
                     title: ""
                 },
                 isReacher: false,
-                articles: [],
+                articles: [{"index": "1", title: 'hello'}, {"index": "2", title: 'hello2'}],
                 total: 0,
                 page: 1,
                 listLoading: false,
@@ -217,7 +236,7 @@
 
                 const sort = this.selectedOptions[0];
                 const type = this.selectedOptions[1];
-                this.listLoading = true;
+                this.listLoading = false;
 
                 getCatalog({sort, type, start}).then(res => {
                     this.listLoading = false;
@@ -350,7 +369,37 @@
                         });
                     })
 
-            }
+            },
+
+            /*显示批量移动界面*/
+            showColumn:function () {
+                this.dialogFormVisible = true;
+            },
+
+            /*批量移动界面里的确定触发此方法*/
+            batchMove: function () {
+                const article = this.sels.map(item => ({id: item.id, type: item.type, isbanner: item.isbanner}));
+                const column = this.column;
+                const sort = this.column[0];
+                MoveArticle({article, sort, column}).then(res => {
+                    let {code, msg} = res.data;
+                    if (code === 200) {
+                        this.dialogFormVisible = false;
+                        this.$message({
+                            message: "移动成功",
+                            type: "success"
+                        });
+                        this.getArticleList(0);
+                    } else {
+                        this.dialogFormVisible = false;
+                        this.$message({
+                            message: msg,
+                            type: "error"
+                        });
+                    }
+                });
+            },
+
         },
         mounted() {
             this.getArticleList(0);
