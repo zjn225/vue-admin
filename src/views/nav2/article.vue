@@ -54,6 +54,8 @@
 <script>
     import util from "../../common/js/util";
     import {mapMutations} from "vuex";
+    import {mapState} from "vuex";
+
     import {
         getCatalog,
         deleteArticle,
@@ -65,7 +67,8 @@
     export default {
         data() {
             return {
-                selectedOptions: ["information","1"], //级联选择器
+                selectedOptions: ["information", "1"], //级联选择器
+//                selectedOptions: '',
                 options: [
                     {
                         value: "information",
@@ -206,15 +209,15 @@
             //获取文章列表
             getArticleList(start) {
                 if (this.selectedOptions.length === 0) {
-                       this.$confirm("请选择分类后进行文章管理，否则无数据显示。", "温馨提示", {
-                         type: "warning"
-                       });
+                    /*  this.$confirm("请选择分类后进行文章管理，否则无数据显示。", "温馨提示", {
+                          type: "warning"
+                      });*/
                     return;
                 }
 
                 const sort = this.selectedOptions[0];
                 const type = this.selectedOptions[1];
-          this.listLoading = true;
+                this.listLoading = true;
 
                 getCatalog({sort, type, start}).then(res => {
                     this.listLoading = false;
@@ -273,7 +276,11 @@
 
                         //NProgress.start();
                         let article = [
-                            {id: this.articles[index].id, type: this.articles[index].type,isbanner :  this.articles[index].isbanner}
+                            {
+                                id: this.articles[index].id,
+                                type: this.articles[index].type,
+                                isbanner: this.articles[index].isbanner
+                            }
                         ];
                         let sort = this.selectedOptions[0];
                         deleteArticle({article, sort}).then(res => {
@@ -316,7 +323,7 @@
             },
             //批量删除
             batchRemove: function () {
-                const article = this.sels.map(item => ({id: item.id, type: item.type,isbanner:item.isbanner}));
+                const article = this.sels.map(item => ({id: item.id, type: item.type, isbanner: item.isbanner}));
                 const sort = this.selectedOptions[0];
 
                 this.$confirm("确认删除选中记录吗？", "提示", {
@@ -347,6 +354,8 @@
         },
         mounted() {
             this.getArticleList(0);
+            console.log(this.article)
+            this.selectedOptions = this.article.selectedOptions;
         }
     };
 </script>
