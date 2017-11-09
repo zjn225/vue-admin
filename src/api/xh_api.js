@@ -49,6 +49,9 @@ export const deleteArticle = params => {
 export const editArticle = params => {
     return instance.post(`/data/editarticle`, params);
 };
+export const moveArticle = params => {
+    return instance.post(`/data/article/batchMove`, params).then(res => res.data);
+};
 
 
 

@@ -54,9 +54,9 @@
         <el-dialog title="请选择要移动到的分类" :visible.sync="dialogFormVisible">
             <el-cascader
                     expand-trigger="hover"
-                    :options="options"
+                    :options="optionsNEW"
                     v-model="column"
-                    @change="getArticleList(0)">
+                    >
             </el-cascader>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -78,7 +78,7 @@
         editArticle,
         getArticle,
         searchArticle,
-        MoveArticle
+        moveArticle
     } from "../../api/xh_api";
 
     export default {
@@ -89,6 +89,116 @@
                 selectedOptions: ["information", "1"], //级联选择器
 //                selectedOptions: '',
                 options: [
+                    {
+                        value: "information",
+                        label: "科研资讯",
+                        children: [
+                            {
+                                value: "1",
+                                label: "流通所新闻"
+                            },
+                            {
+                                value: "2",
+                                label: "基地资讯"
+                            },
+                            {
+                                value: "3",
+                                label: "媒体报道"
+                            }
+                        ]
+                    },
+                    {
+                        value: "research",
+                        label: "科学研究",
+                        children: [
+                            {
+                                value: "1",
+                                label: "课题研究"
+                            },
+                            {
+                                value: "2",
+                                label: "课题招标"
+                            },
+                            {
+                                value: "3",
+                                label: "成果影响"
+                            }
+                        ]
+                    },
+                    {
+                        value: "achievement",
+                        label: "科研成果",
+                        children: [
+                            {
+                                value: "1",
+                                label: "学术论文"
+                            },
+                            {
+                                value: "2",
+                                label: "著作"
+                            },
+                            {
+                                value: "3",
+                                label: "研究报告"
+                            }
+                        ]
+                    },
+                    {
+                        value: "exchange",
+                        label: "学术交流",
+                        children: [
+                            {
+                                value: "1",
+                                label: "来访交流"
+                            },
+                            {
+                                value: "2",
+                                label: "调研考察"
+                            },
+                            {
+                                value: "3",
+                                label: "主办年会"
+                            },
+                            {
+                                value: "4",
+                                label: "流通论坛"
+                            }
+                        ]
+                    },
+                    {
+                        value: "train",
+                        label: "咨询培训",
+                        children: [
+                            {
+                                value: "1",
+                                label: "咨询顾问"
+                            },
+                            {
+                                value: "2",
+                                label: "企业策划"
+                            },
+                            {
+                                value: "3",
+                                label: "专家培训"
+                            }
+                        ]
+                    },
+                    {
+                        value: "construction",
+                        label: "智库建设",
+                        children: [
+                            {
+                                value: "1",
+                                label: "名家百人讲座"
+                            },
+                            {
+                                value: "2",
+                                label: "智库动态"
+                            }
+                        ]
+                    }
+                ],
+                optionsNEW: [
                     {
                         value: "information",
                         label: "科研资讯",
@@ -378,11 +488,14 @@
 
             /*批量移动界面里的确定触发此方法*/
             batchMove: function () {
-                const article = this.sels.map(item => ({id: item.id, type: item.type, isbanner: item.isbanner}));
+                const article = this.sels.map(item => ({id: item.id}));
+                console.log(this.sels)
                 const column = this.column;
-                const sort = this.column[0];
-                MoveArticle({article, sort, column}).then(res => {
-                    let {code, msg} = res.data;
+                const sort = this.selectedOptions[0];
+                const type = this.selectedOptions[1];
+                
+                moveArticle({article, sort, type,column}).then(data => {
+                    let {code, msg} = data;
                     if (code === 200) {
                         this.dialogFormVisible = false;
                         this.$message({
