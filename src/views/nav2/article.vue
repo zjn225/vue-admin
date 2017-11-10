@@ -86,7 +86,7 @@
             return {
                 column: [],
                 dialogFormVisible: false,
-                selectedOptions: ["information", "1"], //级联选择器
+                selectedOptions: [], //级联选择器
 //                selectedOptions: '',
                 options: [
                     {
@@ -95,14 +95,10 @@
                         children: [
                             {
                                 value: "1",
-                                label: "流通所新闻"
+                                label: "科研简讯"
                             },
                             {
                                 value: "2",
-                                label: "基地资讯"
-                            },
-                            {
-                                value: "3",
                                 label: "媒体报道"
                             }
                         ]
@@ -117,12 +113,8 @@
                             },
                             {
                                 value: "2",
-                                label: "课题招标"
+                                label: "调研考察"
                             },
-                            {
-                                value: "3",
-                                label: "成果影响"
-                            }
                         ]
                     },
                     {
@@ -131,11 +123,11 @@
                         children: [
                             {
                                 value: "1",
-                                label: "学术论文"
+                                label: "著作"
                             },
                             {
                                 value: "2",
-                                label: "著作"
+                                label: "学术论文"
                             },
                             {
                                 value: "3",
@@ -149,54 +141,36 @@
                         children: [
                             {
                                 value: "1",
-                                label: "来访交流"
+                                label: "学术年会"
                             },
                             {
                                 value: "2",
-                                label: "调研考察"
+                                label: "流通论坛"
                             },
                             {
                                 value: "3",
-                                label: "主办年会"
+                                label: "来访交流"
                             },
-                            {
-                                value: "4",
-                                label: "流通论坛"
-                            }
                         ]
                     },
                     {
-                        value: "train",
+                        value: "introduction",
                         label: "咨询培训",
                         children: [
                             {
                                 value: "1",
-                                label: "咨询顾问"
+                                label: "简介"
                             },
                             {
                                 value: "2",
-                                label: "企业策划"
+                                label: "研究方向"
                             },
                             {
                                 value: "3",
-                                label: "专家培训"
+                                label: "专家团队"
                             }
                         ]
                     },
-                    {
-                        value: "construction",
-                        label: "智库建设",
-                        children: [
-                            {
-                                value: "1",
-                                label: "名家百人讲座"
-                            },
-                            {
-                                value: "2",
-                                label: "智库动态"
-                            }
-                        ]
-                    }
                 ],
                 optionsNEW: [
                     {
@@ -205,14 +179,10 @@
                         children: [
                             {
                                 value: "1",
-                                label: "流通所新闻"
+                                label: "科研简讯"
                             },
                             {
                                 value: "2",
-                                label: "基地资讯"
-                            },
-                            {
-                                value: "3",
                                 label: "媒体报道"
                             }
                         ]
@@ -227,12 +197,8 @@
                             },
                             {
                                 value: "2",
-                                label: "课题招标"
+                                label: "调研考察"
                             },
-                            {
-                                value: "3",
-                                label: "成果影响"
-                            }
                         ]
                     },
                     {
@@ -241,11 +207,11 @@
                         children: [
                             {
                                 value: "1",
-                                label: "学术论文"
+                                label: "著作"
                             },
                             {
                                 value: "2",
-                                label: "著作"
+                                label: "学术论文"
                             },
                             {
                                 value: "3",
@@ -259,54 +225,36 @@
                         children: [
                             {
                                 value: "1",
-                                label: "来访交流"
+                                label: "学术年会"
                             },
                             {
                                 value: "2",
-                                label: "调研考察"
+                                label: "流通论坛"
                             },
                             {
                                 value: "3",
-                                label: "主办年会"
+                                label: "来访交流"
                             },
-                            {
-                                value: "4",
-                                label: "流通论坛"
-                            }
                         ]
                     },
                     {
-                        value: "train",
+                        value: "introduction",
                         label: "咨询培训",
                         children: [
                             {
                                 value: "1",
-                                label: "咨询顾问"
+                                label: "简介"
                             },
                             {
                                 value: "2",
-                                label: "企业策划"
+                                label: "研究方向"
                             },
                             {
                                 value: "3",
-                                label: "专家培训"
+                                label: "专家团队"
                             }
                         ]
                     },
-                    {
-                        value: "construction",
-                        label: "智库建设",
-                        children: [
-                            {
-                                value: "1",
-                                label: "名家百人讲座"
-                            },
-                            {
-                                value: "2",
-                                label: "智库动态"
-                            }
-                        ]
-                    }
                 ],
                 filters: {
                     title: ""
@@ -519,12 +467,16 @@
                     }
                 });
             },
-
+        },
+        computed: {
+            ...mapState(["article"])
         },
         mounted() {
-            this.getArticleList(0);
+            this.selectedOptions = this.article.selectedOptions || ["information", "1"];
+            console.log(this.selectedOptions)
+            console.log(this.article.selectedOptions)
             console.log(this.article)
-            this.selectedOptions = this.article.selectedOptions;
+            this.getArticleList(0);
         }
     };
 </script>

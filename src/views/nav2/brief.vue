@@ -43,7 +43,6 @@
             onEditorBlur(editor) {
             },
             onEditorFocus(editor) {
-                this.hasImg();
             },
             onEditorReady(editor) {
             },
