@@ -151,4 +151,10 @@ export const  deleteFeed = params => {
 
 
 
-
+//网站介绍
+export const  getIntro = params => {
+    return instance.get(`/data/Intro`).then(res => res.data);
+};
+export const  updateIntro = params => {
+    return instance.post(`/data/Intro`, params).then(res => res.data);
+};
