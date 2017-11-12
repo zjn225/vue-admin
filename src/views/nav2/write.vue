@@ -59,7 +59,7 @@
             </el-switch>
         </div>
         <div class="btn">
-            <el-button type="primary" class="btn" id="submit" @click="onEditorChange()">发表文章</el-button>
+            <el-button type="primary" class="btn" size='medium' id="submit" @click="onEditorChange()" icon="el-icon-upload">发表文章</el-button>
         </div>
     </div>
 </template>
@@ -67,11 +67,12 @@
 <script>
     import {quillEditor} from "vue-quill-editor";
     import {postArticle} from "../../api/xh_api";
+    import {mapMutations} from "vuex";
 
     export default {
         data() {
             return {
-                loading:false,
+                loading: false,
                 pickerOptions0: {
                     disabledDate(time) {
                         return time.getTime() < Date.now() - 8.64e7;
@@ -96,14 +97,10 @@
                         children: [
                             {
                                 value: "1",
-                                label: "流通所新闻"
+                                label: "科研简讯"
                             },
                             {
                                 value: "2",
-                                label: "基地资讯"
-                            },
-                            {
-                                value: "3",
                                 label: "媒体报道"
                             }
                         ]
@@ -118,12 +115,8 @@
                             },
                             {
                                 value: "2",
-                                label: "课题招标"
+                                label: "调研考察"
                             },
-                            {
-                                value: "3",
-                                label: "成果影响"
-                            }
                         ]
                     },
                     {
@@ -132,11 +125,11 @@
                         children: [
                             {
                                 value: "1",
-                                label: "学术论文"
+                                label: "著作"
                             },
                             {
                                 value: "2",
-                                label: "著作"
+                                label: "学术论文"
                             },
                             {
                                 value: "3",
@@ -150,52 +143,16 @@
                         children: [
                             {
                                 value: "1",
+                                label: "学术年会"
+                            },
+                            {
+                                value: "2",
+                                label: "流通论坛"
+                            },
+                            {
+                                value: "3",
                                 label: "来访交流"
                             },
-                            {
-                                value: "2",
-                                label: "调研考察"
-                            },
-                            {
-                                value: "3",
-                                label: "主办年会"
-                            },
-                            {
-                                value: "4",
-                                label: "流通论坛"
-                            }
-                        ]
-                    },
-                    {
-                        value: "train",
-                        label: "咨询培训",
-                        children: [
-                            {
-                                value: "1",
-                                label: "咨询顾问"
-                            },
-                            {
-                                value: "2",
-                                label: "企业策划"
-                            },
-                            {
-                                value: "3",
-                                label: "专家培训"
-                            }
-                        ]
-                    },
-                    {
-                        value: "construction",
-                        label: "智库建设",
-                        children: [
-                            {
-                                value: "1",
-                                label: "名家百人讲座"
-                            },
-                            {
-                                value: "2",
-                                label: "智库动态"
-                            }
                         ]
                     }
                 ]
@@ -206,6 +163,7 @@
         },
         // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
         methods: {
+
             handleChange(value) {
                 //                console.log(value);
             },
@@ -259,7 +217,7 @@
                     return;
                 }
 
-                this.loading=true;
+                this.loading = true;
 
                 let result = await postArticle({
                     title: this.title,
@@ -275,7 +233,7 @@
                 const {code, msg} = result.data;
 
                 if (code === 200) {
-                    this.loading=false;
+                    this.loading = false;
                     this.$message({
                         message: msg,
                         type: "success"
@@ -289,19 +247,17 @@
                         type: "error"
                     });
                 }
-            }
+            },
+            ...mapMutations(["SAVE_ARTICLEINFO"]),
+
         },
-        // 如果你需要得到当前的editor对象来做一些事情，你可以像下面这样定义一个方法属性来获取当前的editor对象，
-        // 实际上这里的$refs对应的是当前组件内所有关联了ref属性的组件元素对象
         computed: {
             editor() {
                 return this.$refs.myTextEditor.quillEditor;
             }
         },
         mounted() {
-            // you can use current editor object to do something(editor methods)
-            //            console.log('this is my editor', this.editor)
-            // this.editor to do something...
+
         }
     };
 </script>
@@ -344,7 +300,7 @@
         }
 
         .btn {
-            width: 100px;
+            width: 120px;
             position: relative;
             top: 50px;
             left: 63%;

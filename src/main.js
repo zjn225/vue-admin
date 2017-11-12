@@ -60,7 +60,7 @@ import store from './vuex/index'
 
 Vue.config.productionTip = false
 
-Mock.bootstrap();  //初始化mock
+// Mock.bootstrap();  //初始化mock
 
 // Vue.use(ElementUI);
 Vue.use(VueRouter);

@@ -1,5 +1,5 @@
 <template>
-    <div class="wrap">
+    <div class="wrap" id="wrap">
         <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px"
                  class="demo-ruleForm login-container">
             <h2 class="title">广财流通所后台管理系统</h2>
@@ -129,15 +129,47 @@
                 this.loginSite = returnCitySN['cname']
                 this.$store.state.loginSite = this.loginSite;
                 localStorage.loginSite = this.loginSite
-
-
-            }
+            },
+            /*随机更换图片*/
+            randomImg() {
+                var wrap = document.getElementById('wrap');
+                var body = document.getElementsByTagName('body')[0];
+                var rand = Math.ceil(Math.random() * 5);
+                var url = "http://o835i1293.bkt.clouddn.com/lts" + rand + ".jpg"
+                console.log(url)
+                var value = "url(" + "'" + url + "'" + ")"
+                this.setCss(wrap, 'background-image', value)
+                this.setCss(wrap, 'background-size', "cover")
+                this.setCss(wrap, 'background-position', "center")
+                this.setCss(wrap, 'position', "relative")
+            },
+            setCss: function (curEle, attr, value) {
+                if (attr === "float") {
+                    curEle["style"]["cssFloat"] = value;
+                    curEle["style"]["styleFloat"] = value;
+                    return;
+                }
+                if (attr === "opacity") {
+                    curEle["style"]["opacity"] = value;
+                    curEle["style"]["filter"] = "alpha(opacity=" + value * 100 + ")";
+                    return;
+                }
+                var reg = null;
+                reg = /^(width|height|top|bottom|left|right|((margin|padding)(Top|Bottom|Left|Right)?))$/;
+                if (reg.test(attr)) {
+                    if (!isNaN(value)) { //是有效数字，即是不带单位的
+                        value += "px";
+                    }
+                }
+                curEle["style"][attr] = value;
+            },
         },
         mounted() {
             const s = document.createElement('script');
             s.type = 'text/javascript';
             s.src = 'http://pv.sohu.com/cityjson?ie=utf-8'; //引用搜狐接口
             document.body.appendChild(s);
+            this.randomImg();
             //返回值 var returnCitySN =
             // {"cip": "183.6.137.86", "cid": "440100", "cname": "广东省广州市"};
         }
@@ -149,11 +181,11 @@
     .wrap {
         width: 100%;
         height: 100%;
-        /*background-color: #2D3A4B;*/
-        background-image: url('../assets/bg2.jpg');
-        background-size: cover;
-        background-position: center;
-        position: relative;
+        /* background-color: #2D3A4B;
+         background-image: url('../assets/bg2.jpg');
+          background-size: cover;
+          background-position: center;
+          position: relative;*/
     }
 
     .login-container {

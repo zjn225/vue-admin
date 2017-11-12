@@ -57,7 +57,7 @@
             </el-switch>
         </div>
         <div class="btn">
-            <el-button type="primary" class="btn" id="submit" @click="onEditorChange()">发表文章</el-button>
+            <el-button type="primary" class="btn" id="submit" @click="onEditorChange()" icon="el-icon-upload">发表文章</el-button>
         </div>
     </div>
 </template>
@@ -286,15 +286,6 @@
                 return this.$refs.myTextEditor.quillEditor;
             },
             ...mapState(["article"])
-        },
-        mounted() {
-    /*        const arr = ["information", "research", "achievement", "exchange", "train", "construction"];
-            let nowItem = this.article.selectedOptions[0].value;  //当前分类的名称
-            for (var i = 0; i < arr.length; i++) {
-                if (arr[i]!==nowItem){
-                    this.options[i].disabled = true;
-                }
-            }*/
         }
     };
 </script>
@@ -337,7 +328,7 @@
         }
 
         .btn {
-            width: 100px;
+            width: 120px;
             position: relative;
             top: 50px;
             left: 63%;

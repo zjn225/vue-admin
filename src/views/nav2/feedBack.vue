@@ -87,7 +87,7 @@
                         <template slot-scope="scope">
                             <el-button type="primary" size="small" @click="look(scope.$index, scope.row)">查看
                             </el-button>
-                            <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除
+                            <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)" icon="el-icon-delete">删除
                             </el-button>
                         </template>
                     </el-table-column>
