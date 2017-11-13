@@ -143,7 +143,7 @@
                         children: [
                             {
                                 value: "1",
-                                label: "学术年会"
+                                label: "学术学会"
                             },
                             {
                                 value: "2",

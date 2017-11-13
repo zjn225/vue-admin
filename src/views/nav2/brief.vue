@@ -11,7 +11,7 @@
             </quill-editor>
         </div>
         <div class="btn">
-            <el-button type="primary" class="btn" id="submit" @click="updateContent()">修改</el-button>
+            <el-button type="primary" class="btn" id="submit" @click="updateContent()">保存</el-button>
         </div>
     </div>
 </template>

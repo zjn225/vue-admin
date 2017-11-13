@@ -158,3 +158,11 @@ export const  getIntro = params => {
 export const  updateIntro = params => {
     return instance.post(`/data/Intro`, params).then(res => res.data);
 };
+
+//研究方向
+export const  getDirec = params => {
+    return instance.get(`/data/Direc`).then(res => res.data);
+};
+export const  updateDirec = params => {
+    return instance.post(`/data/Direc`, params).then(res => res.data);
+};
