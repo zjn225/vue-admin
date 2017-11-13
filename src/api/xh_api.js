@@ -3,7 +3,7 @@ import Qs from 'qs';
 let ipath = process.env.API_ROOT;
 
 let instance = axios.create({
-    baseURL: ipath,
+    baseURL: 'http://120.78.73.55:3000/admin',
     headers: {
         "Content-Type": "application/x-www-form-urlencoded"
     },
