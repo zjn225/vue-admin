@@ -211,7 +211,7 @@
                     this.hasPic = true;
                     let ss = this.content.match(reg)
                     this.indexBanner = ss.length;
-                    console.log(this.indexBanner)
+                    
                 } else {                      //无图片
                     this.hasPic = false;
                 }
@@ -309,7 +309,7 @@
                     if (this.isBanner === 1) {
                         this.dialogVisible = false
                     }
-//                    this.$router.push({path: '/article'});
+                   this.$router.push({path: '/article'});
 
                 } else {
                     this.$message({
