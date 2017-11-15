@@ -195,14 +195,14 @@
             },
 
             saveArt() {
-                localStorage.title = this.title;
-                localStorage.author = this.author;
-                localStorage.content = this.content;
-                localStorage.time = this.time;
-                localStorage.selectedOptions = this.selectedOptions
-                localStorage.source = this.source;
-                localStorage.hasPic = this.hasPic;
-                localStorage.isBanner = this.isBanner;
+                localStorage.title = this.title || '';
+                localStorage.author = this.author || '';
+                localStorage.content = this.content || '';
+                localStorage.time = this.time || '';
+                localStorage.selectedOptions = this.selectedOptions || ''
+                localStorage.source = this.source || '';
+                localStorage.hasPic = this.hasPic || '';
+                localStorage.isBanner = this.isBanner || '';
             },
 
             readArt() {
