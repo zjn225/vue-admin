@@ -18,18 +18,19 @@
     export default {
         data() {
             return {
-                loading:false
+                loading:false,
             };
         },
 
         // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
         methods: {
             async onEditorChange() {
-                if (!this.link) {
+                console.log(this.friendLink.link)
+                if (!this.friendLink.link) {
                     this.$message("请输入网站链接");
                     return;
                 }
-                if (!this.name) {
+                if (!this.friendLink.name) {
                     this.$message("请输入网站名称");
                     return;
                 }
