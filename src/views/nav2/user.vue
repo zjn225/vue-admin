@@ -51,7 +51,6 @@ import { mapMutations } from "vuex";
 import {
   getTeamList,
   removeUser,
-  batchRemoveUser,
   addUser,
   getTeamOne,
   deletePerson,
