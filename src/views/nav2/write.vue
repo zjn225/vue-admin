@@ -51,7 +51,6 @@
                     on-color="#13ce66"
                     active-text="是"
                     inactive-text="否"
-                    @change="hasImg"
                     :active-value='1'
                     :inactive-value='0'
 
@@ -62,13 +61,30 @@
             <el-button type="success" class="btn2" size='medium' id="submit2" @click="saveArt()" icon="el-icon-upload2">
                 存草稿
             </el-button>
-            <el-button type="success" class="btn3" size='medium' id="submit3" @click="readArt()" icon="el-icon-download">
+            <el-button type="success" class="btn3" size='medium' id="submit3" @click="readArt()"
+                       icon="el-icon-download">
                 读草稿
             </el-button>
-            <el-button type="primary" class="btn1" size='medium' id="submit" @click="onEditorChange()"
+            <el-button type="primary" class="btn1" size='medium' id="submit" @click="handleConfirm()"
                        icon="el-icon-upload">发表文章
             </el-button>
         </div>
+
+        <!--选择轮播图-->
+        <el-dialog
+                title="选择第几张图片作为轮播图？"
+                :visible.sync="dialogVisible"
+                width="30%"
+        >
+            <el-radio-group v-model="radio" v-for="(item,index) in this.indexBanner">
+                <el-radio :label="index">图片{{index + 1}}</el-radio>
+            </el-radio-group>
+            <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="onEditorChange()">确 定</el-button>
+  </span>
+        </el-dialog>
+
     </div>
 </template>
 
@@ -80,6 +96,9 @@
     export default {
         data() {
             return {
+                indexBanner: 0,
+                radio: 0, //注意是从0开始的，但是在页面是有+1的
+                dialogVisible: false,
                 loading: false,
                 pickerOptions0: {
                     disabledDate(time) {
@@ -87,12 +106,12 @@
                     }
                 },
                 hasPic: true,//默认没动开关时是关闭状态，如果设为false，那么不动开关也无法发表
-                time: "", //发表时间
+                time: "2017", //发表时间
                 title: "默认标题", //标题
                 author: "admin", //作者
                 source: "baidu.com", //文章来源
                 content: "I am Example", // 编辑器的内容
-                selectedOptions: [], //级联选择器
+                selectedOptions: ["information", "1"], //级联选择器
                 isBanner: false, //是否列为首页banner
                 editorOption: {
                     // 编辑器的配置
@@ -179,19 +198,27 @@
                 //                console.log('editor blur!', editor)
             },
             onEditorFocus(editor) {
-                this.hasImg();
+//                this.hasImg();
                 //                console.log('editor focus!', editor)
             },
             onEditorReady(editor) {
                 //                console.log('editor ready!', editor)
             },
+
             hasImg() {
-                var reg = /<img src=/;
+                var reg = /<img src=/g;
                 if (reg.test(this.content)) {  //有图片
                     this.hasPic = true;
+                    let ss = this.content.match(reg)
+                    this.indexBanner = ss.length;
+                    console.log(this.indexBanner)
                 } else {                      //无图片
                     this.hasPic = false;
                 }
+            },
+
+            showSelect() {
+                this.dialogVisible = true
             },
 
             saveArt() {
@@ -216,8 +243,18 @@
                 this.isBanner = localStorage.isBanner
             },
 
-            async onEditorChange() {
+            /*提交文章操作，设为轮播图且有图片时打开dialog，否则直接提交*/
+            handleConfirm() {
                 this.hasImg();
+                if (this.indexBanner !== 0 && this.isBanner === 1) {
+                    this.dialogVisible = true;
+                } else {
+                    this.onEditorChange();
+                }
+            },
+
+            /*直接提交或者dialog里的确定触发*/
+            async onEditorChange() {
                 if (!this.content) {
                     this.$message("请不要发表内容为空的文章");
                     return;
@@ -256,7 +293,8 @@
                     source: this.source,
                     time: this.time,
                     selectedOptions: this.selectedOptions,
-                    isbanner: this.isBanner
+                    isbanner: this.isBanner,
+                    indexBanner: this.indexBanner
                 });
 
 
@@ -268,8 +306,10 @@
                         message: msg,
                         type: "success"
                     });
-
-                    this.$router.push({path: '/article'});
+                    if (this.isBanner === 1) {
+                        this.dialogVisible = false
+                    }
+//                    this.$router.push({path: '/article'});
 
                 } else {
                     this.$message({

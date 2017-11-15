@@ -57,7 +57,7 @@
             </el-switch>
         </div>
         <div class="btn">
-            <el-button type="primary" class="btn" id="submit" @click="onEditorChange()" icon="el-icon-upload">发表文章</el-button>
+            <el-button type="primary" class="btn" id="submit" @click="onEditorChange()" icon="el-icon-upload">修改文章</el-button>
         </div>
     </div>
 </template>
