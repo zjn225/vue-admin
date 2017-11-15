@@ -103,6 +103,12 @@ const brief = (resolve) => {
     })
 }
 
+const direction = (resolve) => {
+    import('./views/nav2/direction.vue').then((module) => {
+        resolve(module)
+    })
+}
+
 let routes = [
     {
         path: '/',
@@ -151,6 +157,7 @@ let routes = [
             {path: '/addFriendLink', component: addFriendLink, name: '新增友情链接'},
             {path: '/editLink', component: editLink, name: '修改友情链接'},
             {path: '/brief', component: brief, name: '简介修改'},
+            {path: '/direction', component: direction, name: '研究方向修改'},
         ]
     },
     {

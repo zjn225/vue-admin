@@ -59,7 +59,15 @@
             </el-switch>
         </div>
         <div class="btn">
-            <el-button type="primary" class="btn" size='medium' id="submit" @click="onEditorChange()" icon="el-icon-upload">发表文章</el-button>
+            <el-button type="success" class="btn2" size='medium' id="submit2" @click="saveArt()" icon="el-icon-upload2">
+                存草稿
+            </el-button>
+            <el-button type="success" class="btn3" size='medium' id="submit3" @click="readArt()" icon="el-icon-download">
+                读草稿
+            </el-button>
+            <el-button type="primary" class="btn1" size='medium' id="submit" @click="onEditorChange()"
+                       icon="el-icon-upload">发表文章
+            </el-button>
         </div>
     </div>
 </template>
@@ -143,7 +151,7 @@
                         children: [
                             {
                                 value: "1",
-                                label: "学术年会"
+                                label: "学术学会"
                             },
                             {
                                 value: "2",
@@ -184,6 +192,28 @@
                 } else {                      //无图片
                     this.hasPic = false;
                 }
+            },
+
+            saveArt() {
+                localStorage.title = this.title;
+                localStorage.author = this.author;
+                localStorage.content = this.content;
+                localStorage.time = this.time;
+                localStorage.selectedOptions = this.selectedOptions
+                localStorage.source = this.source;
+                localStorage.hasPic = this.hasPic;
+                localStorage.isBanner = this.isBanner;
+            },
+
+            readArt() {
+                this.title = localStorage.title
+                this.author = localStorage.author
+                this.content = localStorage.content
+                this.time = localStorage.time
+                this.selectedOptions = (localStorage.selectedOptions).split(',')
+                this.source = localStorage.source
+                this.hasPic = localStorage.hasPic
+                this.isBanner = localStorage.isBanner
             },
 
             async onEditorChange() {
@@ -300,10 +330,24 @@
         }
 
         .btn {
-            width: 120px;
-            position: relative;
-            top: 50px;
-            left: 63%;
+            .btn1 {
+                width: 120px;
+                position: relative;
+                top: 100px;
+                left: 50%;
+            }
+            .btn2 {
+                width: 120px;
+                position: relative;
+                top: 100px;
+            }
+            .btn3 {
+                width: 120px;
+                position: relative;
+                top: 100px;
+            }
+
         }
+
     }
 </style>
