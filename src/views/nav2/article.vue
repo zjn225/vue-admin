@@ -12,7 +12,7 @@
                     </el-cascader>
                 </el-form-item>
                 <el-form-item>
-                    <el-input v-model="filters.title" placeholder="输入文章标题查找"></el-input>
+                    <el-input v-model="filters.title" placeholder="输入文章标题查找"  @keyup.enter.native="handleReacher()"></el-input>
                 </el-form-item>
                 <el-button type="primary" v-on:click="handleReacher()" icon='el-icon-search'>搜索</el-button>
             </el-form>
@@ -395,12 +395,23 @@ export default {
       this.dialogFormVisible = true;
     },
     handleMove: function(index, row) {
+      const column = this.column;
+       const sort = this.selectedOptions[0];
+        const type = this.selectedOptions[1];  
+      if (
+        column[0] === sort  &&
+        column[1] ===  type
+      ) {
+        this.$message({
+          message: "当前文章已在您选择的这个分类，请不要重复移动",
+          type: "error"
+        });
+        return;
+      }  
       this.$confirm("确认移动该文章吗?", "提示", {
         type: "warning"
       }).then(() => {
-        const sort = this.selectedOptions[0];
-        const type = this.selectedOptions[1];
-        const column = this.column;
+       
 
         //NProgress.start();
         const article =[{
