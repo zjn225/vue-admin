@@ -201,7 +201,6 @@
             countPic() {
                 var reg = /<img src=/g;
                 if (reg.test(this.content)) {
-                    let num = reg.test(this.content)
                     let ss = this.content.match(reg)
                     this.picNum = ss.length;
                     console.log("图片数量：" + this.picNum)
@@ -286,7 +285,7 @@
                     time: this.time,
                     selectedOptions: this.selectedOptions,
                     isbanner: this.isBanner,
-                    picNum: this.picNum
+                    indexBanner: this.indexBanner
                 });
 
 
@@ -364,7 +363,7 @@
                 width: 120px;
                 position: relative;
                 top: 100px;
-                left: 50%;
+                left: 40%;
             }
             .btn2 {
                 width: 120px;
