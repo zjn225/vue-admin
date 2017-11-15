@@ -4,10 +4,10 @@
         <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
             <el-form :inline="true" :model="filters">
                 <el-form-item>
-                    <el-input v-model="filters.name" placeholder="姓名"></el-input>
+                    <el-input v-model="filters.name" placeholder="姓名" @keyup.enter.native='handleReacher(0)'></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" v-on:click="getUsers" icon='el-icon-search'>查询</el-button>
+                    <el-button type="primary" v-on:click="handleReacher(0)" icon='el-icon-search'>查询</el-button>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="handleAdd" icon='el-icon-circle-plus-outline'>新增</el-button>
@@ -55,7 +55,7 @@ import {
   addUser,
   getTeamOne,
   deletePerson,
-  reacherPerson
+  searchPerson
 } from "../../api/xh_api";
 
 export default {
@@ -107,30 +107,8 @@ export default {
         this.isReacher = false;
       });
     },
-    //搜索专家
-    handleReacher(start = 0) {
-      const name = this.filters.name;
-
-      this.isLoading = true;
-
-      reacherPerson({ name, start }).then(res => {
-        this.isLoading = false;
-        let { code, msg, data, pageCount } = res.data;
-
-        if (code === 200) {
-          this.person = data;
-          this.isReacher = true;
-          this.total = pageCount;
-
-    
-        } else {
-          this.$message({
-            message: msg,
-            type: "error"
-          });
-        }
-      });
-    },
+   
+  
     //删除
     handleDel: function(index, row) {
       this.$confirm("确认删除该记录吗?", "提示", {
@@ -158,7 +136,28 @@ export default {
         })
         .catch(() => {});
     },
+     //搜索专家
+    handleReacher(start = 0){
+      
+      const name = this.filters.name;
 
+      this.listLoading = true;
+      searchPerson({ name, start }).then(data => {
+        this.listLoading = false;
+        console.log(data)
+        let { code, msg, persons, pageCount } = data;
+        if (code === 200) {
+          this.persons = persons;
+          this.isReacher = true;
+          this.total = pageCount;
+        } else {
+          this.$message({
+            message: msg,
+            type: "error"
+          });
+        }
+      });
+    },
     //显示编辑界面
     handleEdit: async function(index, row) {
       const id = this.persons[index].id;

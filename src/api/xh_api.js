@@ -73,8 +73,8 @@ export const deletePerson = params => {
 export const editPerson = params => {
     return instance.post(`/data/team/edit`, params);
 };
-export const reacherPerson = params => {
-    return instance.get(`/data/team/reacher`,{params: params});
+export const searchPerson = params => {
+    return instance.get(`/data/team/search`,{params: params}).then(res => res.data);;
 };
 /*友情链接模块*/
 export const getLinkList = ( params = 0) => {

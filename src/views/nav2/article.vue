@@ -12,7 +12,7 @@
                     </el-cascader>
                 </el-form-item>
                 <el-form-item>
-                    <el-input v-model="filters.title" placeholder="输入文章标题查找"></el-input>
+                    <el-input v-model="filters.title" placeholder="输入文章标题查找"  @keyup.enter.native="handleReacher()"></el-input>
                 </el-form-item>
                 <el-button type="primary" v-on:click="handleReacher()" icon='el-icon-search'>搜索</el-button>
             </el-form>
