@@ -70,7 +70,7 @@
 
 <script>
     import {quillEditor} from "vue-quill-editor";
-    import {mapState} from "vuex";
+    import {mapState,mapMutations} from "vuex";
     import {editArticle} from "../../api/xh_api";
 
     export default {
@@ -79,8 +79,7 @@
                 picNum: 0,
                 indexBanner: 0, //注意是从0开始的，但是在页面是有+1的
                 loading: false,
-//                hasPic: true,
-//                isBanner: 0,
+
                 pickerOptions0: {
                     disabledDate(time) {
                         return time.getTime() < Date.now() - 8.64e7;
@@ -179,7 +178,7 @@
             countPic() {
                 console.log(this.article.content)
                 var reg = /src/g;
-//                console.log(reg.test(this.article.content))
+
                 if (reg.test(this.article.content)) {
                     let ss = this.article.content.match(reg)
                     this.picNum = ss.length;
@@ -244,6 +243,8 @@
                 const {code, msg} = result.data;
 
                 if (code === 200) {
+                    this.SAVE_SELECTOPTION(this.article.selectedOptions)
+
                     this.loading = false;
                     this.$message({
                         message: msg,
