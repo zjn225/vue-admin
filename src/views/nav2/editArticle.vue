@@ -53,11 +53,17 @@
                     off-text="否"
                     :active-value='1'
                     :inactive-value='0'
-                    @change="hasImg">
+                    @change="countPic()">
             </el-switch>
+
+            <el-radio-group v-model="indexBanner" v-if="article.isbanner" v-for="(item,index) in picNum" class="sele">
+                <el-radio :label="index">图片{{index + 1}}</el-radio>
+            </el-radio-group>
+
         </div>
         <div class="btn">
-            <el-button type="primary" class="btn" id="submit" @click="onEditorChange()" icon="el-icon-upload">修改文章</el-button>
+            <el-button type="primary" class="btn" id="submit" @click="onEditorChange()" icon="el-icon-upload">修改文章
+            </el-button>
         </div>
     </div>
 </template>
@@ -70,8 +76,11 @@
     export default {
         data() {
             return {
+                picNum: 0,
+                indexBanner: 0, //注意是从0开始的，但是在页面是有+1的
                 loading: false,
-                hasPic: true,
+//                hasPic: true,
+//                isBanner: 0,
                 pickerOptions0: {
                     disabledDate(time) {
                         return time.getTime() < Date.now() - 8.64e7;
@@ -88,14 +97,10 @@
                         children: [
                             {
                                 value: "1",
-                                label: "流通所新闻"
+                                label: "科研简讯"
                             },
                             {
                                 value: "2",
-                                label: "基地资讯"
-                            },
-                            {
-                                value: "3",
                                 label: "媒体报道"
                             }
                         ]
@@ -110,12 +115,8 @@
                             },
                             {
                                 value: "2",
-                                label: "课题招标"
+                                label: "调研考察"
                             },
-                            {
-                                value: "3",
-                                label: "成果影响"
-                            }
                         ]
                     },
                     {
@@ -124,11 +125,11 @@
                         children: [
                             {
                                 value: "1",
-                                label: "学术论文"
+                                label: "著作"
                             },
                             {
                                 value: "2",
-                                label: "著作"
+                                label: "学术论文"
                             },
                             {
                                 value: "3",
@@ -142,56 +143,19 @@
                         children: [
                             {
                                 value: "1",
+                                label: "学术学会"
+                            },
+                            {
+                                value: "2",
+                                label: "流通论坛"
+                            },
+                            {
+                                value: "3",
                                 label: "来访交流"
                             },
-                            {
-                                value: "2",
-                                label: "调研考察"
-                            },
-                            {
-                                value: "3",
-                                label: "主办年会"
-                            },
-                            {
-                                value: "4",
-                                label: "流通论坛"
-                            }
-                        ]
-                    },
-                    {
-                        value: "train",
-                        label: "咨询培训",
-                        children: [
-                            {
-                                value: "1",
-                                label: "咨询顾问"
-                            },
-                            {
-                                value: "2",
-                                label: "企业策划"
-                            },
-                            {
-                                value: "3",
-                                label: "专家培训"
-                            }
-                        ]
-                    },
-                    {
-                        value: "construction",
-                        label: "智库建设",
-                        children: [
-                            {
-                                value: "1",
-                                label: "名家百人讲座"
-                            },
-                            {
-                                value: "2",
-                                label: "智库动态"
-                            }
                         ]
                     }
-                ],
-                isBanner: true
+                ]
             };
         },
         components: {
@@ -200,27 +164,40 @@
         // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
         methods: {
             handleChange(value) {
-                //                console.log(value);
+                this.countPic();
             },
             onEditorBlur(editor) {
-                //                console.log('editor blur!', editor)
+                this.countPic();
             },
             onEditorFocus(editor) {
-                //                console.log('editor focus!', editor)
+                this.countPic();
             },
             onEditorReady(editor) {
-                //                console.log('editor ready!', editor)
+                this.countPic();
+            },
+
+            countPic() {
+                console.log(this.article.content)
+                var reg = /src/g;
+//                console.log(reg.test(this.article.content))
+                if (reg.test(this.article.content)) {
+                    let ss = this.article.content.match(reg)
+                    this.picNum = ss.length;
+                    console.log("图片数量：" + this.picNum)
+                }
             },
             hasImg() {
-                var reg = /<img [^>]*src=['"]([^'"]+)[^>]*>/gi;
+                var reg = /src/g;
                 if (reg.test(this.article.content)) {  //有图片
                     this.hasPic = true;
+                    this.countPic();
                 } else {                      //无图片
                     this.hasPic = false;
                 }
             },
             async onEditorChange() {
                 this.hasImg();
+                console.log(this.indexBanner)
                 if (!this.article.content) {
                     this.$message("请不要发表内容为空的文章");
                     return;
@@ -260,7 +237,8 @@
                     source: this.article.source,
                     time: this.article.time,
                     selectedOptions: this.article.selectedOptions,
-                    isbanner: this.article.isbanner
+                    isbanner: this.article.isBanner,
+                    indexBanner: this.indexBanner
                 });
                 const {code, msg} = result.data;
 
@@ -331,7 +309,10 @@
             width: 120px;
             position: relative;
             top: 50px;
-            left: 63%;
+            left: 58%;
+        }
+        .sele {
+            padding: 18px 5px 0;
         }
     }
 </style>
