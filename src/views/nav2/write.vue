@@ -97,7 +97,7 @@ export default {
         }
       },
       hasPic: true, //默认没动开关时是关闭状态，如果设为false，那么不动开关也无法发表
-      time: "2017", //发表时间
+      time: "", //发表时间
       title: "默认标题", //标题
       author: "admin", //作者
       source: "baidu.com", //文章来源
@@ -248,6 +248,7 @@ export default {
 
     async onEditorChange() {
       this.hasImg();
+      console.log(this.time)
       if (!this.content) {
         this.$message("请不要发表内容为空的文章");
         return;

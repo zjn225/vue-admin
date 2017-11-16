@@ -136,7 +136,7 @@
             }
             .quill-editor {
                 margin-top: 20px;
-                height: 590px;
+                height: 450px;
             }
             .source {
                 position: relative;
@@ -148,7 +148,7 @@
             width: 100px;
             position: relative;
             top: 40px;
-            left: 82%;
+            left: 1px;
         }
     }
 </style>
