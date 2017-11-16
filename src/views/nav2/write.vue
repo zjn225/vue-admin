@@ -56,11 +56,13 @@
                     @change="countPic()"
             >
             </el-switch>
-
-            <el-radio-group v-model="indexBanner" v-if="picNum" v-for="(item,index) in picNum" :key="index" class="sele">
+<div class="block" v-if="picNum && isBanner">
+            <h3>选择轮播图</h3>
+    
+            <el-radio-group v-model="indexBanner"  v-for="(item,index) in picNum" :key="index" class="sele">
                 <el-radio :label="index">图片{{index + 1}}</el-radio>
             </el-radio-group>
-
+</div>
         </div>
         <div class="btn">
             <el-button type="success" class="btn2" size='medium' id="submit2" @click="saveArt()" icon="el-icon-upload2">
@@ -79,306 +81,303 @@
 </template>
 
 <script>
-    import {quillEditor} from "vue-quill-editor";
-    import {postArticle} from "../../api/xh_api";
-    import {mapMutations} from "vuex";
+import { quillEditor } from "vue-quill-editor";
+import { postArticle } from "../../api/xh_api";
+import { mapMutations } from "vuex";
 
-    export default {
-        data() {
-            return {
-                picNum: 0,
-                indexBanner: 0, //注意是从0开始的，但是在页面是有+1的
-                loading: false,
-                pickerOptions0: {
-                    disabledDate(time) {
-                        return time.getTime() < Date.now() - 8.64e7;
-                    }
-                },
-                hasPic: true,//默认没动开关时是关闭状态，如果设为false，那么不动开关也无法发表
-                time: "2017", //发表时间
-                title: "默认标题", //标题
-                author: "admin", //作者
-                source: "baidu.com", //文章来源
-                content: "I am Example", // 编辑器的内容
-                selectedOptions: ["information", "1"], //级联选择器
-                isBanner: 0, //是否列为首页banner
-                editorOption: {
-                    // 编辑器的配置
-                    // something config
-                },
-                options: [
-                    {
-                        value: "information",
-                        label: "科研资讯",
-                        children: [
-                            {
-                                value: "1",
-                                label: "科研简讯"
-                            },
-                            {
-                                value: "2",
-                                label: "媒体报道"
-                            }
-                        ]
-                    },
-                    {
-                        value: "research",
-                        label: "科学研究",
-                        children: [
-                            {
-                                value: "1",
-                                label: "课题研究"
-                            },
-                            {
-                                value: "2",
-                                label: "调研考察"
-                            },
-                        ]
-                    },
-                    {
-                        value: "achievement",
-                        label: "科研成果",
-                        children: [
-                            {
-                                value: "1",
-                                label: "著作"
-                            },
-                            {
-                                value: "2",
-                                label: "学术论文"
-                            },
-                            {
-                                value: "3",
-                                label: "研究报告"
-                            }
-                        ]
-                    },
-                    {
-                        value: "exchange",
-                        label: "学术交流",
-                        children: [
-                            {
-                                value: "1",
-                                label: "学术学会"
-                            },
-                            {
-                                value: "2",
-                                label: "流通论坛"
-                            },
-                            {
-                                value: "3",
-                                label: "来访交流"
-                            },
-                        ]
-                    }
-                ]
-            };
-        },
-        components: {
-            quillEditor
-        },
-        // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
-        methods: {
-
-            handleChange(value) {
-                this.countPic();
-                //                console.log(value);
-            },
-            onEditorBlur(editor) {
-                this.countPic();
-                //                console.log('editor blur!', editor)
-            },
-            onEditorFocus(editor) {
-                this.countPic();
-                //                console.log('editor focus!', editor)
-            },
-            onEditorReady(editor) {
-                this.countPic();
-                //                console.log('editor ready!', editor)
-            },
-
-            //不能在开关的change方法加入hasImg，否则先打开开关再加入图片就出现bug了
-            countPic() {
-                var reg = /<img src=/g;
-                if (reg.test(this.content)) {
-                    let ss = this.content.match(reg)
-                    this.picNum = ss.length;
-                    console.log("图片数量：" + this.picNum)
-                }
-            },
-
-            hasImg() {
-                var reg = /<img src=/g;
-                if (reg.test(this.content)) {  //有图片
-                    this.hasPic = true;
-                    this.countPic();
-                } else {                      //无图片
-                    this.hasPic = false;
-                }
-            },
-
-
-            saveArt() {
-                localStorage.title = this.title || '';
-                localStorage.author = this.author || '';
-                localStorage.content = this.content || '';
-                localStorage.time = this.time || '';
-                localStorage.selectedOptions = this.selectedOptions || ''
-                localStorage.source = this.source || '';
-                localStorage.hasPic = this.hasPic || '';
-//                localStorage.isBanner = this.isBanner || '';
-//                localStorage.indexBanner = this.indexBanner || '';
-            },
-
-            readArt() {
-                this.title = localStorage.title
-                this.author = localStorage.author
-                this.content = localStorage.content
-                this.time = localStorage.time
-                this.selectedOptions = (localStorage.selectedOptions).split(',')
-                this.source = localStorage.source
-                this.hasPic = localStorage.hasPic
-//                this.isBanner = localStorage.isBanner
-            },
-
-
-            async onEditorChange() {
-                this.hasImg();
-                if (!this.content) {
-                    this.$message("请不要发表内容为空的文章");
-                    return;
-                }
-                if (!this.author) {
-                    this.$message("请标明作者")
-                    return;
-                }
-                if (!this.title) {
-                    this.$message("请输入标题");
-                    return;
-                }
-                if (!this.time) {
-                    this.$message("请选择发布日期");
-                    return;
-                }
-                if (this.selectedOptions.length === 0) {
-                    this.$message("请选择分类");
-                    return;
-                }
-                if (!this.source) {
-                    this.$message("请输入文章来源");
-                    return;
-                }
-                if (!this.hasPic && this.isBanner == 1) {
-                    this.$message("内容没有图片，请不要设置为首页的轮播图");
-                    return;
-                }
-
-                this.loading = true;
-
-                console.log("indexBanner" + this.indexBanner)
-
-                let result = await postArticle({
-                    title: this.title,
-                    author: this.author,
-                    content: this.content,
-                    source: this.source,
-                    time: this.time,
-                    selectedOptions: this.selectedOptions,
-                    isbanner: this.isBanner,
-                    indexBanner: this.indexBanner
-                });
-
-
-                const {code, msg} = result.data;
-
-                if (code === 200) {
-                    this.loading = false;
-                    this.$message({
-                        message: msg,
-                        type: "success"
-                    });
-
-                    this.$router.push({path: '/article'});
-
-                } else {
-                    this.$message({
-                        message: msg,
-                        type: "error"
-                    });
-                }
-            },
-            ...mapMutations(["SAVE_ARTICLEINFO"]),
-
-        },
-        computed: {
-            editor() {
-                return this.$refs.myTextEditor.quillEditor;
-            }
-        },
-        mounted() {
-
+export default {
+  data() {
+    return {
+      picNum: 0,
+      indexBanner: 0, //注意是从0开始的，但是在页面是有+1的
+      loading: false,
+      pickerOptions0: {
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 8.64e7;
         }
+      },
+      hasPic: true, //默认没动开关时是关闭状态，如果设为false，那么不动开关也无法发表
+      time: "2017", //发表时间
+      title: "默认标题", //标题
+      author: "admin", //作者
+      source: "baidu.com", //文章来源
+      content: "I am Example", // 编辑器的内容
+      selectedOptions: ["information", "1"], //级联选择器
+      isBanner: 0, //是否列为首页banner
+      editorOption: {
+        // 编辑器的配置
+        // something config
+      },
+      options: [
+        {
+          value: "information",
+          label: "科研资讯",
+          children: [
+            {
+              value: "1",
+              label: "科研简讯"
+            },
+            {
+              value: "2",
+              label: "媒体报道"
+            }
+          ]
+        },
+        {
+          value: "research",
+          label: "科学研究",
+          children: [
+            {
+              value: "1",
+              label: "课题研究"
+            },
+            {
+              value: "2",
+              label: "调研考察"
+            }
+          ]
+        },
+        {
+          value: "achievement",
+          label: "科研成果",
+          children: [
+            {
+              value: "1",
+              label: "著作"
+            },
+            {
+              value: "2",
+              label: "学术论文"
+            },
+            {
+              value: "3",
+              label: "研究报告"
+            }
+          ]
+        },
+        {
+          value: "exchange",
+          label: "学术交流",
+          children: [
+            {
+              value: "1",
+              label: "学术学会"
+            },
+            {
+              value: "2",
+              label: "流通论坛"
+            },
+            {
+              value: "3",
+              label: "来访交流"
+            }
+          ]
+        }
+      ]
     };
+  },
+  components: {
+    quillEditor
+  },
+  // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
+  methods: {
+    handleChange(value) {
+      this.countPic();
+      //                console.log(value);
+    },
+    onEditorBlur(editor) {
+      this.countPic();
+      //                console.log('editor blur!', editor)
+    },
+    onEditorFocus(editor) {
+      this.countPic();
+      //                console.log('editor focus!', editor)
+    },
+    onEditorReady(editor) {
+      this.countPic();
+      //                console.log('editor ready!', editor)
+    },
+
+    //不能在开关的change方法加入hasImg，否则先打开开关再加入图片就出现bug了
+    countPic() {
+      var reg = /<img src=/g;
+      if (reg.test(this.content)) {
+        let imgNum = this.content.match(reg);
+        this.picNum = imgNum.length;
+        console.log("图片数量：" + this.picNum);
+      }else{
+        this.picNum = 0;
+          
+      }
+    },
+
+    hasImg() {
+      var reg = /<img src=/g;
+      if (reg.test(this.content)) {
+        //有图片
+        this.hasPic = true;
+        this.countPic();
+      } else {
+        //无图片
+        this.hasPic = false;
+      }
+    },
+
+    saveArt() {
+      localStorage.title = this.title || "";
+      localStorage.author = this.author || "";
+      localStorage.content = this.content || "";
+      localStorage.time = this.time || "";
+      localStorage.selectedOptions = this.selectedOptions || "";
+      localStorage.source = this.source || "";
+      localStorage.hasPic = this.hasPic || "";
+      //                localStorage.isBanner = this.isBanner || '';
+      //                localStorage.indexBanner = this.indexBanner || '';
+    },
+
+    readArt() {
+      this.title = localStorage.title;
+      this.author = localStorage.author;
+      this.content = localStorage.content;
+      this.time = localStorage.time;
+      this.selectedOptions = localStorage.selectedOptions.split(",");
+      this.source = localStorage.source;
+      this.hasPic = localStorage.hasPic;
+      //                this.isBanner = localStorage.isBanner
+    },
+
+    async onEditorChange() {
+      this.hasImg();
+      if (!this.content) {
+        this.$message("请不要发表内容为空的文章");
+        return;
+      }
+      if (!this.author) {
+        this.$message("请标明作者");
+        return;
+      }
+      if (!this.title) {
+        this.$message("请输入标题");
+        return;
+      }
+      if (!this.time) {
+        this.$message("请选择发布日期");
+        return;
+      }
+      if (this.selectedOptions.length === 0) {
+        this.$message("请选择分类");
+        return;
+      }
+      if (!this.source) {
+        this.$message("请输入文章来源");
+        return;
+      }
+      if (!this.hasPic && this.isBanner == 1) {
+        this.$message("内容没有图片，请不要设置为首页的轮播图");
+        return;
+      }
+
+      this.loading = true;
+
+      console.log("indexBanner" + this.indexBanner);
+
+      let result = await postArticle({
+        title: this.title,
+        author: this.author,
+        content: this.content,
+        source: this.source,
+        time: this.time,
+        selectedOptions: this.selectedOptions,
+        isbanner: this.isBanner,
+        indexBanner: this.indexBanner
+      });
+
+      const { code, msg } = result.data;
+
+      if (code === 200) {
+        this.loading = false;
+        this.$message({
+          message: msg,
+          type: "success"
+        });
+        this.$store.state.selectedOptions  = this.selectedOptions;     
+
+        this.$router.push({ path: "/article" });
+      } else {
+        this.$message({
+          message: msg,
+          type: "error"
+        });
+      }
+    },
+    ...mapMutations(["SAVE_ARTICLEINFO"])
+  },
+  computed: {
+    editor() {
+      return this.$refs.myTextEditor.quillEditor;
+    }
+  },
+  mounted() {}
+};
 </script>
 
 <style lang="scss" scoped>
-    div {
-        width: 100%;
-        .left {
-            width: 77%;
-            height: auto;
-            .title {
-                margin-top: 20px;
-            }
-            .quill-editor {
-                margin-top: 20px;
-                height: 590px;
-            }
-            .source {
-                position: relative;
-                top: 90px;
-            }
-        }
-
-        .right {
-            position: relative;
-            bottom: 662px;
-            width: 20%;
-            float: right;
-
-            .el-date-editor,
-            .el-cascader {
-                width: 100%;
-            }
-
-            h3 {
-                font-size: 15px;
-                color: #444444;
-                font-weight: 600;
-            }
-        }
-
-        .btn {
-            .btn1 {
-                width: 120px;
-                position: relative;
-                top: 100px;
-                left: 40%;
-            }
-            .btn2 {
-                width: 120px;
-                position: relative;
-                top: 100px;
-            }
-            .btn3 {
-                width: 120px;
-                position: relative;
-                top: 100px;
-            }
-
-        }
-        .sele {
-            padding: 18px 5px 0;
-        }
+div {
+  width: 100%;
+  .left {
+    width: 77%;
+    height: auto;
+    .title {
+      margin-top: 20px;
     }
+    .quill-editor {
+      margin-top: 20px;
+      height: 590px;
+    }
+    .source {
+      position: relative;
+      top: 90px;
+    }
+  }
+
+  .right {
+    position: relative;
+    bottom: 662px;
+    width: 20%;
+    float: right;
+
+    .el-date-editor,
+    .el-cascader {
+      width: 100%;
+    }
+
+    h3 {
+      font-size: 15px;
+      color: #444444;
+      font-weight: 600;
+    }
+  }
+
+  .btn {
+    .btn1 {
+      width: 120px;
+      position: relative;
+      top: 100px;
+      left: 40%;
+    }
+    .btn2 {
+      width: 120px;
+      position: relative;
+      top: 100px;
+    }
+    .btn3 {
+      width: 120px;
+      position: relative;
+      top: 100px;
+    }
+  }
+  .sele {
+    padding: 18px 5px 0;
+  }
+}
 </style>

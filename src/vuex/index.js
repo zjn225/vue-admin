@@ -37,7 +37,8 @@ const state = {
         id: '',
         name: '',
         link: ''
-    }
+    },
+    selectedOptions:["information", "1"]
 };
 export default new Vuex.Store({
     state,

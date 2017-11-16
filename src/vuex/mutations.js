@@ -8,6 +8,12 @@ export default {
             state.userInfo[attr] = userInfo[attr];
         }
     },
+    [types.SAVE_SELECTOPTION](state, selectedOptions){
+
+
+            state.selectedOptions = selectedOptions;
+            console.log(selectedOptions)
+    },
     [types.SAVE_TEAMONE](state, person){
 
         for(let attr in person){

@@ -197,7 +197,7 @@
             },
             async onEditorChange() {
                 this.hasImg();
-                console.log(this.indexBanner)
+             
                 if (!this.article.content) {
                     this.$message("请不要发表内容为空的文章");
                     return;
@@ -229,6 +229,7 @@
                 }
 
                 this.loading = true;
+             
                 const result = await editArticle({
                     title: this.article.title,
                     id: this.article.id,
@@ -237,7 +238,7 @@
                     source: this.article.source,
                     time: this.article.time,
                     selectedOptions: this.article.selectedOptions,
-                    isbanner: this.article.isBanner,
+                    isbanner: this.article.isbanner,
                     indexBanner: this.indexBanner
                 });
                 const {code, msg} = result.data;

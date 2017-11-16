@@ -265,6 +265,7 @@ export default {
             this.total = pageCount;
           }
           this.listLoading = false;
+      this.SAVE_SELECTOPTION(this.selectedOptions)
 
           this.isReacher = false;
         } else {
@@ -275,7 +276,7 @@ export default {
         }
       });
     },
-    ...mapMutations(["SAVE_ARTICLEINFO"]),
+    ...mapMutations(["SAVE_ARTICLEINFO",'SAVE_SELECTOPTION']),
 
     handleReacher(start = 0) {
       console.log(this.selectedOptions);
@@ -374,6 +375,7 @@ export default {
       var id = this.articles[index].id;
       var type = this.articles[index].type;
       var sort = this.selectedOptions[0];
+      this.SAVE_SELECTOPTION(this.selectedOptions)
       const result = await getArticle({ type, sort, id });
       const { data, code, msg } = result.data;
       if (code === 200) {
@@ -476,14 +478,10 @@ export default {
       });
     }
   },
-  computed: {
-    ...mapState(["article"])
-  },
+  
   mounted() {
-    this.selectedOptions = this.article.selectedOptions || ["information", "1"];
+    this.selectedOptions = this.$store.state.selectedOptions ;
     console.log(this.selectedOptions);
-    console.log(this.article.selectedOptions);
-    console.log(this.article);
     this.getArticleList(0);
   }
 };
