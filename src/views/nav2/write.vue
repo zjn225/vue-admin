@@ -53,9 +53,14 @@
                     inactive-text="否"
                     :active-value='1'
                     :inactive-value='0'
-
+                    @change="countPic()"
             >
             </el-switch>
+
+            <el-radio-group v-model="indexBanner" v-if="picNum" v-for="(item,index) in picNum" :key="index" class="sele">
+                <el-radio :label="index">图片{{index + 1}}</el-radio>
+            </el-radio-group>
+
         </div>
         <div class="btn">
             <el-button type="success" class="btn2" size='medium' id="submit2" @click="saveArt()" icon="el-icon-upload2">
@@ -65,25 +70,10 @@
                        icon="el-icon-download">
                 读草稿
             </el-button>
-            <el-button type="primary" class="btn1" size='medium' id="submit" @click="handleConfirm()"
+            <el-button type="primary" class="btn1" size='medium' id="submit" @click="onEditorChange()"
                        icon="el-icon-upload">发表文章
             </el-button>
         </div>
-
-        <!--选择轮播图-->
-        <el-dialog
-                title="选择第几张图片作为轮播图？"
-                :visible.sync="dialogVisible"
-                width="30%"
-        >
-            <el-radio-group v-model="radio" v-for="(item,index) in this.indexBanner">
-                <el-radio :label="index">图片{{index + 1}}</el-radio>
-            </el-radio-group>
-            <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="onEditorChange()">确 定</el-button>
-  </span>
-        </el-dialog>
 
     </div>
 </template>
@@ -96,9 +86,8 @@
     export default {
         data() {
             return {
-                indexBanner: 0,
-                radio: 0, //注意是从0开始的，但是在页面是有+1的
-                dialogVisible: false,
+                picNum: 0,
+                indexBanner: 0, //注意是从0开始的，但是在页面是有+1的
                 loading: false,
                 pickerOptions0: {
                     disabledDate(time) {
@@ -112,7 +101,7 @@
                 source: "baidu.com", //文章来源
                 content: "I am Example", // 编辑器的内容
                 selectedOptions: ["information", "1"], //级联选择器
-                isBanner: false, //是否列为首页banner
+                isBanner: 0, //是否列为首页banner
                 editorOption: {
                     // 编辑器的配置
                     // something config
@@ -192,34 +181,43 @@
         methods: {
 
             handleChange(value) {
+                this.countPic();
                 //                console.log(value);
             },
             onEditorBlur(editor) {
+                this.countPic();
                 //                console.log('editor blur!', editor)
             },
             onEditorFocus(editor) {
-//                this.hasImg();
+                this.countPic();
                 //                console.log('editor focus!', editor)
             },
             onEditorReady(editor) {
+                this.countPic();
                 //                console.log('editor ready!', editor)
+            },
+
+            //不能在开关的change方法加入hasImg，否则先打开开关再加入图片就出现bug了
+            countPic() {
+                var reg = /<img src=/g;
+                if (reg.test(this.content)) {
+                    let num = reg.test(this.content)
+                    let ss = this.content.match(reg)
+                    this.picNum = ss.length;
+                    console.log("图片数量：" + this.picNum)
+                }
             },
 
             hasImg() {
                 var reg = /<img src=/g;
                 if (reg.test(this.content)) {  //有图片
                     this.hasPic = true;
-                    let ss = this.content.match(reg)
-                    this.indexBanner = ss.length;
-                    
+                    this.countPic();
                 } else {                      //无图片
                     this.hasPic = false;
                 }
             },
 
-            showSelect() {
-                this.dialogVisible = true
-            },
 
             saveArt() {
                 localStorage.title = this.title || '';
@@ -229,7 +227,8 @@
                 localStorage.selectedOptions = this.selectedOptions || ''
                 localStorage.source = this.source || '';
                 localStorage.hasPic = this.hasPic || '';
-                localStorage.isBanner = this.isBanner || '';
+//                localStorage.isBanner = this.isBanner || '';
+//                localStorage.indexBanner = this.indexBanner || '';
             },
 
             readArt() {
@@ -240,21 +239,12 @@
                 this.selectedOptions = (localStorage.selectedOptions).split(',')
                 this.source = localStorage.source
                 this.hasPic = localStorage.hasPic
-                this.isBanner = localStorage.isBanner
+//                this.isBanner = localStorage.isBanner
             },
 
-            /*提交文章操作，设为轮播图且有图片时打开dialog，否则直接提交*/
-            handleConfirm() {
-                this.hasImg();
-                if (this.indexBanner !== 0 && this.isBanner === 1) {
-                    this.dialogVisible = true;
-                } else {
-                    this.onEditorChange();
-                }
-            },
 
-            /*直接提交或者dialog里的确定触发*/
             async onEditorChange() {
+                this.hasImg();
                 if (!this.content) {
                     this.$message("请不要发表内容为空的文章");
                     return;
@@ -286,6 +276,8 @@
 
                 this.loading = true;
 
+                console.log("indexBanner" + this.indexBanner)
+
                 let result = await postArticle({
                     title: this.title,
                     author: this.author,
@@ -306,10 +298,8 @@
                         message: msg,
                         type: "success"
                     });
-                    if (this.isBanner === 1) {
-                        this.dialogVisible = false
-                    }
-                   this.$router.push({path: '/article'});
+
+                    this.$router.push({path: '/article'});
 
                 } else {
                     this.$message({
@@ -388,6 +378,8 @@
             }
 
         }
-
+        .sele {
+            padding: 18px 5px 0;
+        }
     }
 </style>
