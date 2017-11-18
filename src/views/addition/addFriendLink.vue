@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import {addLink} from "../../api/xh_api";
+import {addLink} from "../../api/api";
 
     export default {
         data() {

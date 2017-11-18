@@ -18,7 +18,7 @@
 
 <script>
     import { quillEditor } from "vue-quill-editor";
-    import { getResearchdir, postResearchdir } from "../../api/xh_api";
+    import { getResearchdir, postResearchdir } from "../../api/api";
 
     export default {
         data() {

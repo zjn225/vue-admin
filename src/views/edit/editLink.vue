@@ -13,7 +13,7 @@
 
 <script>
     import {mapState} from "vuex";
-    import {editLink} from "../../api/xh_api";
+    import {editLink} from "../../api/api";
 
     export default {
         data() {

@@ -25,6 +25,7 @@
                             type="date"
                             format="yyyy/MM/dd"
                             placeholder="选择日期"
+                            value-format="yyyy/MM/dd"
                             :picker-options="pickerOptions0">
                     </el-date-picker>
                 </div>
@@ -79,7 +80,7 @@
 </template>
 
 <script>
-import { postArticle } from "../../api/xh_api";
+import { postArticle } from "../../api/api";
 import { mapMutations } from "vuex";
 import myUpload from "vue-image-crop-upload";
 import editor from '../Upload/Quilleditor.vue'
@@ -102,7 +103,7 @@ export default {
       hasPic: true, //默认没动开关时是关闭状态，如果设为false，那么不动开关也无法发表
       time: "", //发表时间
       title: "默认标题", //标题
-      author: "admin", //作者
+      author: "", //作者
       source: "本站原创", //文章来源
       content: "I am Example", // 编辑器的内容
       selectedOptions: ["information", "1"], //级联选择器
@@ -253,15 +254,15 @@ export default {
     async onEditorChange() {
       this.hasImg();
       console.log(this.time)
-      if (!this.content) {
+      if (this.content.length===0) {
         this.$message("请不要发表内容为空的文章");
         return;
       }
-      if (!this.author) {
+      if (this.author.length===0) {
         this.$message("请标明作者");
         return;
       }
-      if (!this.title) {
+      if (this.title.length===0) {
         this.$message("请输入标题");
         return;
       }
@@ -273,7 +274,7 @@ export default {
         this.$message("请选择分类");
         return;
       }
-      if (!this.source) {
+      if (this.source.length===0) {
         this.$message("请输入文章来源");
         return;
       }
@@ -315,9 +316,6 @@ export default {
       }
     },
     ...mapMutations(["SAVE_ARTICLEINFO"])
-  },
-  computed: {
-   
   }
 };
 </script>
@@ -360,21 +358,14 @@ div {
   }
 
   .btn {
+    .btn1,.btn2,.btn3 {
+      width: 120px;
+     
+    }
+   
     .btn1 {
-      width: 120px;
-      position: relative;
-      top: 100px;
-      left: 40%;
-    }
-    .btn2 {
-      width: 120px;
-      position: relative;
-      top: 100px;
-    }
-    .btn3 {
-      width: 120px;
-      position: relative;
-      top: 100px;
+      margin-right: 100px;
+      float:right;
     }
   }
   .sele {

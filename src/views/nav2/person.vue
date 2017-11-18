@@ -55,7 +55,7 @@ import {
   getTeamOne,
   deletePerson,
   searchPerson
-} from "../../api/xh_api";
+} from "../../api/api";
 
 export default {
   data() {
@@ -165,7 +165,7 @@ export default {
       const { data, code, msg } = result.data;
       if (code === 200) {
         this.SAVE_TEAMONE(data[0]);
-        this.$router.push({ path: "/writePerson" });
+        this.$router.push({ path: "/editPerson" });
       } else {
         this.$message({
           message: msg,

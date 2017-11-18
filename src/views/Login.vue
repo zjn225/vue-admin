@@ -21,7 +21,7 @@
 </template>
 
 <script>
-    import {requestLogin} from '../api/xh_api';
+    import {requestLogin} from '../api/api';
     import moment from 'moment';
 
     export default {

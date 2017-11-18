@@ -81,7 +81,7 @@ import {
   getArticle,
   searchArticle,
   moveArticle
-} from "../../api/xh_api";
+} from "../../api/api";
 
 export default {
   data() {

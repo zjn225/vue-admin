@@ -28,24 +28,24 @@ const Safety = (resolve) => {
     })
 }
 
-const user = (resolve) => {
-    import('./views/nav2/user.vue').then((module) => {
+const person = (resolve) => {
+    import('./views/nav2/person.vue').then((module) => {
         resolve(module)
     })
 }
 const Write = (resolve) => {
-    import('./views/nav2/Write.vue').then((module) => {
+    import('./views/nav2/writeArticle.vue').then((module) => {
         resolve(module)
     })
 }
 
-const writePerson = (resolve) => {
-    import('./views/nav2/writePerson.vue').then((module) => {
+const editPerson = (resolve) => {
+    import('./views/edit/editPerson.vue').then((module) => {
         resolve(module)
     })
 }
 const editArticle = (resolve) => {
-    import('./views/nav2/editArticle.vue').then((module) => {
+    import('./views/edit/editArticle.vue').then((module) => {
         resolve(module)
     })
 }
@@ -61,12 +61,12 @@ const Article = (resolve) => {
 }
 
 const addPerson = (resolve) => {
-    import('./views/nav2/addPerson.vue').then((module) => {
+    import('./views/addition/addPerson.vue').then((module) => {
         resolve(module)
     })
 }
 const addBook = (resolve) => {
-    import('./views/nav2/addBook.vue').then((module) => {
+    import('./views/addition/addBook.vue').then((module) => {
         resolve(module)
     })
 }
@@ -81,12 +81,12 @@ const friendLink = (resolve) => {
     })
 }
 const addFriendLink = (resolve) => {
-    import('./views/nav2/addFriendLink.vue').then((module) => {
+    import('./views/addition/addFriendLink.vue').then((module) => {
         resolve(module)
     })
 }
 const editLink = (resolve) => {
-    import('./views/nav2/editLink.vue').then((module) => {
+    import('./views/edit/editLink.vue').then((module) => {
         resolve(module)
     })
 }
@@ -145,12 +145,12 @@ let routes = [
         name: '管理',
         iconCls: 'el-icon-menu',
         children: [
-            {path: '/write', component: Write, name: '撰写文章'},
+            {path: '/writeArticle', component: Write, name: '撰写文章'},
             {path: '/article', component: Article, name: '文章著作管理'},
-            {path: '/user', component: user, name: '专家团队管理'},
+            {path: '/person', component: person, name: '专家团队管理'},
             {path: '/feedBack', component: feedBack, name: '反馈管理'},
             {path: '/editArticle', component: editArticle, name: '修改文章'},
-            {path: '/writePerson', component: writePerson, name: '修改专家团队'},
+            {path: '/editPerson', component: editPerson, name: '修改专家团队'},
             {path: '/writeBook', component: writeBook, name: '修改著作'},
             {path: '/addPerson', component: addPerson, name: '新增专家团队'},
             {path: '/addBook', component: addBook, name: '新增著作'},

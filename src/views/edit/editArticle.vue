@@ -7,7 +7,6 @@
             :fileName="'myFile'"
             :canCrop="canCrop"
             :uploadUrl="uploadUrl"
-            :options="editorOption"
             v-model="article.content"></editor>
         </div>
         <div class="right">
@@ -26,7 +25,7 @@
                             type="date"
                             format="yyyy/MM/dd"
                             placeholder="选择日期"
-                            value-format="yyyy-MM-dd"
+                            value-format="yyyy/MM/dd"
                             :picker-options="pickerOptions0">
                     </el-date-picker>
                 </div>
@@ -67,11 +66,11 @@
         </div>
     </div>
 </template>
-            v-model="article.content"></editor>
+           
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import { editArticle } from "../../api/xh_api";
+import { editArticle } from "../../api/api";
 import editor from "../Upload/Quilleditor.vue";
 
 export default {
@@ -80,16 +79,14 @@ export default {
       picNum: 0,
       indexBanner: 0, //注意是从0开始的，但是在页面是有+1的
       loading: false,
+      canCrop:false,
       uploadUrl: `http:${process.env.API_ROOT}data/article/uploadImg`,
       pickerOptions0: {
         disabledDate(time) {
           return time.getTime() < Date.now() - 8.64e7;
         }
       },
-      editorOption: {
-        // 编辑器的配置
-        // something config
-      },
+     
       options: [
         {
           value: "information",

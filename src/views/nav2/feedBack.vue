@@ -129,7 +129,7 @@
         getFeedOne,
         deleteFeed,
         lookContent
-    } from "../../api/xh_api";
+    } from "../../api/api";
 
     export default {
         data() {

@@ -47,7 +47,7 @@
 
 <script>
 import util from "../../common/js/util";
-import { getLinkList , getLinkOne, deleteLinks} from "../../api/xh_api";
+import { getLinkList , getLinkOne, deleteLinks} from "../../api/api";
 import { mapMutations } from "vuex";
 
 export default {

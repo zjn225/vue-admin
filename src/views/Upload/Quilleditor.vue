@@ -5,6 +5,7 @@
                      :options="editorOption"
                      @change="onChange"
                      v-loading="loading"
+                     element-loading-text="上传图片中"
         >
             <div id="toolbar" slot="toolbar">
                 <span class="ql-formats"><button type="button" class="ql-bold"></button></span>
@@ -158,7 +159,7 @@
 <script>
 import { quillEditor } from "vue-quill-editor";
 import CropUpload from "./CropUpload";
-import { uploadImg } from "../../api/xh_api";
+import { uploadImg } from "../../api/api";
 
 export default {
   props: {
@@ -304,14 +305,10 @@ export default {
             resp.path
           );
         });
-        // 接下来就可以用 ajax 提交 fromdData
+       
       });
 
-      //   xhr.onload=function () {
-      //     if(xhr.status==200){
-      //       self.editor.insertEmbed(self.editor.getSelection().index, 'image', xhr.response.path);
-      //     }
-      //   }
+     
     },
     /*裁切上传成功 res根据上传接口值获取*/
     onUploadSuccess: function(path) {
@@ -324,7 +321,7 @@ export default {
       // this.showCrop=true;
       // }else{
       /*创建input file 不裁切，自己控制*/
-      var input = document.createElement("input");
+      let input = document.createElement("input");
       input.type = "file";
       input.name = this.fileName;
       input.accept = "image/jpeg,image/png,image/jpg,image/gif";
@@ -358,6 +355,7 @@ export default {
 </script>
 <style>
 .quill-editor {
+  padding-bottom: 80px;
   margin-top: 20px;
   height: 590px;
 }

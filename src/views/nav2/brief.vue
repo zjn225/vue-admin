@@ -18,7 +18,7 @@
 
 <script>
     import {quillEditor} from "vue-quill-editor";
-    import {getIntro, updateIntro} from "../../api/xh_api";
+    import {getIntro, updateIntro} from "../../api/api";
 
     export default {
         data() {

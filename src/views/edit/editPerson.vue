@@ -1,50 +1,50 @@
 <template>
-    <div v-loading="loading" element-loading-text="正在新增中，请稍后"
+    <div v-loading="loading" element-loading-text="正在修改中，请稍后"
          element-loading-spinner="el-icon-loading">
         <div class="left">
-            <editor ref="myTextEditor"
+              <editor ref="myTextEditor"
             :fileName="'myFile'"
             :canCrop="canCrop"
             :uploadUrl="uploadUrl"
-            v-model="content"></editor>
+            v-model="person.content"></editor>
         </div>
         <div class="right">
             <!--作者-->
             <div class="author">
                 <h3>专家名字</h3>
-                <el-input class="right_input" v-model="name" placeholder=""></el-input>
+                <el-input class="right_input" v-model="person.name" placeholder=""></el-input>
             </div>
 
             <h3>职位</h3>
-            <el-input class="right_input" v-model="position" placeholder=""></el-input>
-
-            <h3>头像</h3>
+            <el-input class="right_input" v-model="person.position" placeholder=""></el-input>
             <el-button type="primary" @click="toggleShow" class='setAvatar'>设置头像</el-button>
             <my-upload field="img"
                        @crop-success="cropSuccess"
                        @crop-upload-success="cropUploadSuccess"
                        @crop-upload-fail="cropUploadFail"
                        v-model="show"
-                       :width="300"
-                       :height="300"
+                       :width="400"
+                       :height="400"
                        :url="avatarURL"
-                       :params="params"
-                       :headers="headers"
+                      
+                      
                        img-format="png"></my-upload>
+            <img class='avatar' :src='person.avatar' alt="asd">
 
-            <img :src="dialogImageUrl" alt="" class='avatar'>
 
         </div>
         <div class="btn">
-            <el-button type="primary" class="btn" id="submit" @click="onEditorChange()">提交</el-button>
+            <el-button type="primary" class="btn" id="submit" @click="onEditorChange()">更新数据</el-button>
         </div>
+
     </div>
 </template>
 
 <script>
     import editor from '../Upload/Quilleditor.vue'
 
-    import {addPerson} from "../../api/api";
+    import {editPerson} from "../../api/api";
+    import {mapState} from "vuex";
     import myUpload from "vue-image-crop-upload";
 
     export default {
@@ -52,64 +52,38 @@
             return {
                 loading: false,
                 avatarURL: `http:${process.env.API_ROOT}data/team/person/avatar`,
-                canCrop:false,
+                 canCrop:false,
                 /*测试上传图片的接口，返回结构为{url:''}*/
                 uploadUrl:`http:${process.env.API_ROOT}data/person/uploadImg`,
-                name: "",
-                position: "",
-                content: "",
                 show: false,
-                avatar: "",
-                dialogImageUrl: "",
+                avatarID: false,
                 dialogVisible: false,
-                editorOption: {
-                    // 编辑器的配置
-                    // something config
+                pickerOptions0: {
+                    disabledDate(time) {
+                        return time.getTime() < Date.now() - 8.64e7;
+                    }
                 }
+               
             };
         },
         components: {
-             editor ,
+            editor,
             "my-upload": myUpload
         },
         // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
         methods: {
-            handleChange(value) {
-                //                console.log(value);
-            },
-            onEditorBlur(editor) {
-                //                console.log('editor blur!', editor)
-            },
-            onEditorFocus(editor) {
-                //                console.log('editor focus!', editor)
-            },
-            onEditorReady(editor) {
-                //                console.log('editor ready!', editor)
-            },
+
             async onEditorChange() {
-                if (!this.content) {
-                    this.$message("请不要发表内容为空的文章");
-                    return;
-                }
-                if (!this.name) {
-                    this.$message("请输入该专家的名字");
-                    return;
-                }
-                if (!this.position) {
-                    this.$message("请输入该专家的职位");
-                    return;
-                }
-
                 this.loading=true;
-
-                let result = await addPerson({
-                    name: this.name,
-                    position: this.position,
-                    content: this.content,
-                    avatar: this.avatar
+                let data = await editPerson({
+                    name: this.person.name,
+                    id: this.person.id,
+                    position: this.person.position,
+                    content: this.person.content,
+                    avatar: this.person.avatar
                 });
 
-                const {code, msg} = result.data;
+                const {code, msg} = data;
 
                 if (code === 200) {
                     this.loading=false;
@@ -117,7 +91,6 @@
                         message: msg,
                         type: "success"
                     });
-
                     this.$router.push({path: "/person"});
                 } else {
                     this.$message({
@@ -126,6 +99,7 @@
                     });
                 }
             },
+
 
             toggleShow() {
                 this.show = !this.show;
@@ -137,10 +111,9 @@
              * [param] field
              */
             cropSuccess(imgDataUrl, field) {
+                console.log(imgDataUrl, field);
                 console.log("-------- crop success --------");
-                this.dialogImageUrl = imgDataUrl;
-                console.log(this.dialogImageUrl);
-                this.dialogVisible = true;
+                this.imgDataUrl = imgDataUrl;
             },
             /**
              * upload success
@@ -150,7 +123,7 @@
              */
             cropUploadSuccess(jsonData, field) {
                 console.log("-------- upload success --------");
-                this.avatar = jsonData.path;
+                this.person.avatar = jsonData.path;
 
             },
             /**
@@ -170,7 +143,9 @@
         computed: {
             editor() {
                 return this.$refs.myTextEditor.quillEditor;
-            }
+            },
+
+            ...mapState(["person"])
         },
         mounted() {
         }

@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import {changePass} from "../../api/xh_api";
+import {changePass} from "../../api/api";
 
     export default {
         data() {
