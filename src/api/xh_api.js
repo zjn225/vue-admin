@@ -16,20 +16,17 @@ let instance = axios.create({
     ],
     timeout: 35000
 });
-let postArticles = axios.create({
+let postImg = axios.create({
     baseURL: ipath,
     headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "multipart/form-data"
     },
     withCredentials: true,
-    transformRequest: [
-        function(data) {
-            data = Qs.stringify(data);
-            return data;
-        }
-    ],
+   
     timeout: 105000
 });
+
+
 /*登录模块*/
 
 export const requestLogin = params => {
@@ -42,7 +39,7 @@ export const changePass = params => {
 
 /*文章模块*/
 export const postArticle = params => {
-    return postArticles.post(`/data/article`,params);
+    return instance.post(`/data/article`,params);
 };
 export const getCatalog = params => {
     return instance.get(`/data/catalog`, {params: params});
@@ -66,7 +63,13 @@ export const moveArticle = params => {
     return instance.post(`/data/article/batchMove`, params).then(res => res.data);
 };
 
-
+/*研究方向 */
+export const getResearchdir = () => {
+    return instance.get(`/data/researchdir`).then(res => res.data);
+};
+export const postResearchdir = params => {
+    return instance.post(`/data/researchdir`,params).then(res => res.data);
+};
 
 /*专家团队模块*/
 export const getTeamList = params => {
@@ -178,4 +181,7 @@ export const  getDirec = params => {
 };
 export const  updateDirec = params => {
     return instance.post(`/data/Direc`, params).then(res => res.data);
+};
+export const  uploadImg = params => {
+    return postImg.post(`/data/article/uploadImg`, params).then(res => res.data);
 };

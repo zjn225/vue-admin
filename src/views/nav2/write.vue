@@ -3,13 +3,11 @@
          element-loading-spinner="el-icon-loading">
         <div class="left">
             <el-input class="title" v-model="title" placeholder="请输入标题"></el-input>
-            <quill-editor ref="myTextEditor"
-                          v-model="content"
-                          :options="editorOption"
-                          @blur="onEditorBlur($event)"
-                          @focus="onEditorFocus($event)"
-                          @ready="onEditorReady($event)">
-            </quill-editor>
+           <editor ref="myTextEditor"
+            :fileName="'myFile'"
+            :canCrop="canCrop"
+            :uploadUrl="uploadUrl"
+            v-model="content"></editor>
         </div>
         <div class="right">
             <!--作者-->
@@ -81,14 +79,19 @@
 </template>
 
 <script>
-import { quillEditor } from "vue-quill-editor";
 import { postArticle } from "../../api/xh_api";
 import { mapMutations } from "vuex";
-
+import myUpload from "vue-image-crop-upload";
+import editor from '../Upload/Quilleditor.vue'
 export default {
   data() {
     return {
       picNum: 0,
+      show: false,
+       canCrop:false,
+      /*测试上传图片的接口，返回结构为{url:''}*/
+      uploadUrl:`http:${process.env.API_ROOT}data/article/uploadImg`,
+      content:'',
       indexBanner: 0, //注意是从0开始的，但是在页面是有+1的
       loading: false,
       pickerOptions0: {
@@ -99,9 +102,9 @@ export default {
       hasPic: true, //默认没动开关时是关闭状态，如果设为false，那么不动开关也无法发表
       time: "2017", //发表时间
       title: "默认标题", //标题
-      author: "admin", //作者
-      source: "baidu.com", //文章来源
-      content: "I am Example", // 编辑器的内容
+      author: "", //作者
+      source: "本站原创", //文章来源
+      content: "", // 编辑器的内容
       selectedOptions: ["information", "1"], //级联选择器
       isBanner: 0, //是否列为首页banner
       editorOption: {
@@ -177,13 +180,13 @@ export default {
     };
   },
   components: {
-    quillEditor
+    editor 
   },
   // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
   methods: {
     handleChange(value) {
       this.countPic();
-      //                console.log(value);
+                     console.log(value);
     },
     onEditorBlur(editor) {
       this.countPic();
@@ -197,17 +200,18 @@ export default {
       this.countPic();
       //                console.log('editor ready!', editor)
     },
+   
 
+   
     //不能在开关的change方法加入hasImg，否则先打开开关再加入图片就出现bug了
     countPic() {
       var reg = /<img src=/g;
       if (reg.test(this.content)) {
         let imgNum = this.content.match(reg);
         this.picNum = imgNum.length;
-        console.log("图片数量：" + this.picNum);
-      }else{
+      
+      } else {
         this.picNum = 0;
-          
       }
     },
 
@@ -279,8 +283,7 @@ export default {
 
       this.loading = true;
 
-      console.log("indexBanner" + this.indexBanner);
-
+    
       let result = await postArticle({
         title: this.title,
         author: this.author,
@@ -300,7 +303,7 @@ export default {
           message: msg,
           type: "success"
         });
-        this.$store.state.selectedOptions  = this.selectedOptions;     
+        this.$store.state.selectedOptions = this.selectedOptions;
 
         this.$router.push({ path: "/article" });
       } else {
@@ -313,11 +316,8 @@ export default {
     ...mapMutations(["SAVE_ARTICLEINFO"])
   },
   computed: {
-    editor() {
-      return this.$refs.myTextEditor.quillEditor;
-    }
-  },
-  mounted() {}
+   
+  }
 };
 </script>
 

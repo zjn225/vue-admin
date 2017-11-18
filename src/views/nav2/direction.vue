@@ -18,7 +18,7 @@
 
 <script>
     import { quillEditor } from "vue-quill-editor";
-    import { getDirec, updateDirec } from "../../api/xh_api";
+    import { getResearchdir, postResearchdir } from "../../api/xh_api";
 
     export default {
         data() {
@@ -75,9 +75,10 @@
                 }
             },
             getContent() {
-                getDirec().then(data => {
+                getResearchdir().then(data => {
                     let { code, msg, content } = data;
-                    console.log(data)
+
+                    console.log(content )
                     if (code === 200) {
                         this.content = content;
                     } else {
@@ -95,7 +96,7 @@
                 }
 
                 this.loading = true;
-                updateDirec({ content: this.content }).then(data => {
+                postResearchdir({ content: this.content }).then(data => {
                     let { code, msg } =data;
                     this.loading = false;
 
