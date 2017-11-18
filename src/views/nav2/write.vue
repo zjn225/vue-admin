@@ -101,7 +101,7 @@ export default {
       },
       hasPic: true, //默认没动开关时是关闭状态，如果设为false，那么不动开关也无法发表
       time: "2017", //发表时间
-      title: "默认标题", //标题
+      title: "默认标题ss", //标题
       author: "", //作者
       source: "本站原创", //文章来源
       content: "", // 编辑器的内容
