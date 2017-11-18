@@ -100,11 +100,11 @@ export default {
         }
       },
       hasPic: true, //默认没动开关时是关闭状态，如果设为false，那么不动开关也无法发表
-      time: "2017", //发表时间
-      title: "默认标题ss", //标题
-      author: "", //作者
+      time: "", //发表时间
+      title: "默认标题", //标题
+      author: "admin", //作者
       source: "本站原创", //文章来源
-      content: "", // 编辑器的内容
+      content: "I am Example", // 编辑器的内容
       selectedOptions: ["information", "1"], //级联选择器
       isBanner: 0, //是否列为首页banner
       editorOption: {
@@ -252,6 +252,7 @@ export default {
 
     async onEditorChange() {
       this.hasImg();
+      console.log(this.time)
       if (!this.content) {
         this.$message("请不要发表内容为空的文章");
         return;
