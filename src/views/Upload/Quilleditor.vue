@@ -146,56 +146,21 @@
        </span>
      </div>
         </quill-editor>
-        <crop-upload
-                   v-model="showCrop"
-                   :width="width"
-                   :height="height"
-                   :fileName="fileName"
+        <CropImg
+                   v-if="showCrop"                  
                    :uploadUrl="uploadUrl"
-                   @uploadSuccess="onUploadSuccess"
-                   ></crop-upload>
+                   @onUploadSuccess="onUploadSuccess"
+                   @onStopCrop="onStopCrop"
+                   ></CropImg>        
     </div>
 </template>
 <script>
+import CropImg from "./CropImg";
 import { quillEditor } from "vue-quill-editor";
-import CropUpload from "./CropUpload";
 import { uploadImg } from "../../api/api";
 
 export default {
-  props: {
-    /*编辑器的内容*/
-    value: {
-      type: String
-    },
-    /*上传图片的地址*/
-    uploadUrl: {
-      type: String
-    },
-    /*上传图片的file控件name*/
-    fileName: {
-      type: String
-    },
-    /*图片大小*/
-    maxSize: {
-      type: Number,
-      default: 400 //kb
-    },
-    /*使用使用裁切*/
-    canCrop: {
-      type: Boolean,
-      default: true
-    },
-    /*裁切的最小尺寸*/
-    width: {
-      type: Number,
-      default: 200
-    },
-    /*裁切的最小尺寸*/
-    height: {
-      type: Number,
-      default: 200
-    }
-  },
+  
   data() {
     return {
       content: "",
@@ -206,128 +171,51 @@ export default {
       },
       loading: false,
       /*显示裁切控件*/
-      showCrop: false
+      showCrop: false,
+      uploadUrl:'',
     };
   },
-  methods: {
-    compress(file, quality, callback) {
-      if (!window.FileReader || !window.Blob) {
-        return errorHandler("您的浏览器不支持图片压缩")();
-      }
-
-      var reader = new FileReader();
-      var mimeType = file.type || "image/jpeg";
-
-      reader.onload = createImage;
-      reader.onerror = errorHandler("图片读取失败！");
-      reader.readAsDataURL(file);
-
-      function createImage() {
-        var dataURL = this.result;
-        var image = new Image();
-        image.onload = compressImage;
-        image.onerror = errorHandler("图片加载失败");
-        image.src = dataURL;
-      }
-
-      function compressImage() {
-        var canvas = document.createElement("canvas");
-        var ctx;
-        var dataURI;
-        var result;
-
-        canvas.width = this.naturalWidth;
-        canvas.height = this.naturalHeight;
-        ctx = canvas.getContext("2d");
-        ctx.drawImage(this, 0, 0);
-        dataURI = canvas.toDataURL(mimeType, quality);
-        result = dataURIToBlob(dataURI);
-
-        callback(null, result);
-      }
-
-      function dataURIToBlob(dataURI) {
-        var type = dataURI.match(/data:([^;]+)/)[1];
-        var base64 = dataURI.replace(/^[^,]+,/, "");
-        var byteString = atob(base64);
-
-        var ia = new Uint8Array(byteString.length);
-        for (var i = 0; i < byteString.length; i++) {
-          ia[i] = byteString.charCodeAt(i);
-        }
-
-        return new Blob([ia], { type: type });
-      }
-
-      function errorHandler(message) {
-        return function() {
-          var error = new Error("Compression Error:", message);
-          callback(error, null);
-        };
-      }
+  methods: {   
+  
+    /*裁切上传成功 res根据上传接口值获取*/
+    onUploadSuccess: function(path) {
+      this.showCrop= false;    
+      this.editor.focus();
+      this.editor.insertEmbed(this.editor.getSelection().index, "image", path);
+    },
+    onStopCrop(){
+      this.showCrop= false;      
     },
     onChange() {
       this.$emit("input", this.content);
     },
-    /*选择上传图片切换*/
     onFileChange(e) {
-      var fileInput = e.target;
+      let fileInput = e.target;
+      let file = fileInput.files[0];
       if (fileInput.files.length == 0) {
         return;
       }
-      if (fileInput.files[0].size > 1024 * 1024 * this.maxSize) {
-        alert("图片过大");
-        return;
-      }
-      if (!this.uploadUrl) {
-        console.log("no editor uploadUrl");
-        return;
-      }
-      var self = this;
-      var formData = new FormData();
-    
-      this.editor.focus();
-     
-      this.loading = true;
-
-      this.compress(fileInput.files[0], 0.7, function(err, data) {
-        if (err) {
-          console.log(err);
-          return;
-        }
-        formData.append(self.fileName, data, name);
-        uploadImg(formData).then(resp => {
-          self.loading = false;
-
-          self.editor.insertEmbed(
-            self.editor.getSelection().index,
-            "image",
-            resp.path
-          );
-        });
        
-      });
-
+      if (window.createObjectURL != undefined) { // basic
+           this.uploadUrl = window.createObjectURL(file);
+      } else if (window.URL != undefined) { // mozilla(firefox)
+        this.uploadUrl = window.URL.createObjectURL(file);
+      
+      } else if (window.webkitURL != undefined) { // webkit or chrome
+          this.uploadUrl = window.webkitURL.createObjectURL(file);
+      }
      
-    },
-    /*裁切上传成功 res根据上传接口值获取*/
-    onUploadSuccess: function(path) {
       this.editor.focus();
-      this.editor.insertEmbed(this.editor.getSelection().index, "image", path);
+      this.showCrop= true;      
     },
     /*点击上传图片按钮*/
     imgClick() {
-      // if(this.canCrop){
-      // this.showCrop=true;
-      // }else{
-      /*创建input file 不裁切，自己控制*/
-      let input = document.createElement("input");
+    let input = document.createElement("input");
       input.type = "file";
       input.name = this.fileName;
       input.accept = "image/jpeg,image/png,image/jpg,image/gif";
       input.onchange = this.onFileChange;
       input.click();
-      // }
     }
   },
   computed: {
@@ -337,7 +225,8 @@ export default {
   },
   components: {
     quillEditor,
-    CropUpload
+    CropImg
+  
   },
   mounted() {
     this.content = this.value;
@@ -359,4 +248,5 @@ export default {
   margin-top: 20px;
   height: 590px;
 }
+
 </style>
