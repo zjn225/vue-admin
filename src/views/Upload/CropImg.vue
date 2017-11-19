@@ -38,7 +38,7 @@ export default {
         outputType: "jpeg",
         canScale: true,
         autoCrop: true,
-        outputSize:0.7
+        outputSize:0.9
       }
     };
   },

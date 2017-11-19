@@ -185,3 +185,4 @@ export const  updateDirec = params => {
 export const  uploadImg = params => {
     return postImg.post(`/data/article/uploadImg`, params).then(res => res.data);
 };
+

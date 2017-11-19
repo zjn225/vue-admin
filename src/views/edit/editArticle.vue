@@ -3,11 +3,13 @@
          element-loading-spinner="el-icon-loading">
         <div class="left">
             <el-input class="title" v-model="article.title" placeholder="请输入标题"></el-input>
-             <editor ref="myTextEditor"
-            :fileName="'myFile'"
-            :canCrop="canCrop"
-            :uploadUrl="uploadUrl"
-            v-model="article.content"></editor>
+              <quillEditor v-model="article.content"
+                ref="myQuillEditor"
+                :options="editorOption"
+                @blur="onEditorBlur($event)"
+                @focus="onEditorFocus($event)"
+                @ready="onEditorReady($event)">
+      </quillEditor>
         </div>
         <div class="right">
             <!--作者-->
@@ -64,22 +66,31 @@
             <el-button type="primary" class="btn" id="submit" @click="onEditorChange()" icon="el-icon-upload">修改文章
             </el-button>
         </div>
+        <CropImg
+                   v-if="showCrop"                  
+                   :uploadUrl="uploadUrl"
+                   @onUploadSuccess="onUploadSuccess"
+                   @onStopCrop="onStopCrop"
+                   ></CropImg>  
     </div>
 </template>
            
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import { editArticle } from "../../api/api";
-import editor from "../Upload/Quilleditor.vue";
+import { editArticle,uploadImg } from "../../api/api";
+import CropImg from "../Upload/CropImg";
+import { quillEditor } from 'vue-quill-editor'
 
 export default {
   data() {
     return {
+
+      content:'',
       picNum: 0,
       indexBanner: 0, //注意是从0开始的，但是在页面是有+1的
       loading: false,
-      canCrop:false,
+      showCrop: false,
       uploadUrl: `http:${process.env.API_ROOT}data/article/uploadImg`,
       pickerOptions0: {
         disabledDate(time) {
@@ -156,7 +167,8 @@ export default {
     };
   },
   components: {
-    editor
+    CropImg,
+    quillEditor
   },
   // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
   methods: {
@@ -173,7 +185,7 @@ export default {
       this.countPic();
     },
     ...mapMutations(['SAVE_SELECTOPTION']),
-
+ 
     countPic() {
       var reg = /src/g;
 
@@ -257,14 +269,60 @@ export default {
           type: "error"
         });
       }
-    }
+    },
+    
+    onUploadSuccess: function(path) {
+      this.showCrop= false;    
+      this.editor.focus();
+      this.editor.insertEmbed(this.editor.getSelection().index, "image", path);
+    },
+    onStopCrop(){
+      this.showCrop= false;      
+    },
+   
+    onFileChange(e) {
+      let fileInput = e.target;
+      let file = fileInput.files[0];
+      if (fileInput.files.length == 0) {
+        return;
+      }
+       
+      if (window.createObjectURL != undefined) { // basic
+           this.uploadUrl = window.createObjectURL(file);
+      } else if (window.URL != undefined) { // mozilla(firefox)
+        this.uploadUrl = window.URL.createObjectURL(file);
+      
+      } else if (window.webkitURL != undefined) { // webkit or chrome
+          this.uploadUrl = window.webkitURL.createObjectURL(file);
+      }
+     
+      this.editor.focus();
+      this.showCrop= true;      
+    },
   },
   // 如果你需要得到当前的editor对象来做一些事情，你可以像下面这样定义一个方法属性来获取当前的editor对象，
   // 实际上这里的$refs对应的是当前组件内所有关联了ref属性的组件元素对象
   computed: {
     
-    ...mapState(["article"])
-  }
+    ...mapState(["article"]),
+     editor() {
+       return this.$refs.myQuillEditor.quill;
+     }
+  },
+   mounted() {
+    let self = this;
+    var imgHandler =  function imgHandler(){
+    
+      let input = document.createElement("input");
+      input.type = "file";
+      input.name = self.fileName;
+      input.accept = "image/jpeg,image/png,image/jpg,image/gif";
+      input.onchange = self.onFileChange;
+      input.click();
+    }
+    this.$refs.myQuillEditor.quill.getModule("toolbar").addHandler("image", imgHandler)
+  },
+
 };
 </script>
 
@@ -308,7 +366,7 @@ div {
   .btn {
     width: 120px;
     position: relative;
-    top: 50px;
+    top: 30px;
     left: 58%;
   }
   .sele {

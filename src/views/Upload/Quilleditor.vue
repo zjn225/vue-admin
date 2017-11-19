@@ -1,10 +1,11 @@
 <template>
     <div>
-        <quill-editor v-model="content"
+        <quill-editor
                      ref="myTextEditor"
                      :options="editorOption"
                      @change="onChange"
                      v-loading="loading"
+                     v-model='content'
                      element-loading-text="上传图片中"
         >
             <div id="toolbar" slot="toolbar">
@@ -158,12 +159,17 @@
 import CropImg from "./CropImg";
 import { quillEditor } from "vue-quill-editor";
 import { uploadImg } from "../../api/api";
+import { mapState, mapMutations } from "vuex";
 
 export default {
-  
+ props:{
+   contents:{
+     type: String
+   }
+ },
   data() {
     return {
-      content: "",
+      content:'asdasd',
       editorOption: {
         modules: {
           toolbar: "#toolbar"
@@ -239,6 +245,16 @@ export default {
         }
       }
     }
+  },
+   computed: {
+    
+    ...mapState(["article"])
+  },
+   created() {
+    // `this` 指向 vm 实例
+    this.content = this.contents
+    this.$emit("input",  this.contents);
+    console.log(this.contents)
   }
 };
 </script>

@@ -2,11 +2,13 @@
     <div v-loading="loading" element-loading-text="正在新增中，请稍后"
          element-loading-spinner="el-icon-loading">
         <div class="left">
-            <editor ref="myTextEditor"
-            :fileName="'myFile'"
-            :canCrop="canCrop"
-            :uploadUrl="uploadUrl"
-            v-model="content"></editor>
+             <quillEditor v-model="content"
+                ref="myQuillEditor"
+                :options="editorOption"
+                @blur="onEditorBlur($event)"
+                @focus="onEditorFocus($event)"
+                @ready="onEditorReady($event)">
+      </quillEditor>
         </div>
         <div class="right">
             <!--作者-->
@@ -28,8 +30,7 @@
                        :width="300"
                        :height="300"
                        :url="avatarURL"
-                       :params="params"
-                       :headers="headers"
+                     
                        img-format="png"></my-upload>
 
             <img :src="dialogImageUrl" alt="" class='avatar'>
@@ -42,9 +43,10 @@
 </template>
 
 <script>
-    import editor from '../Upload/Quilleditor.vue'
+    import CropImg from "../Upload/CropImg";
+    import { quillEditor } from 'vue-quill-editor'
 
-    import {addPerson} from "../../api/api";
+    import {addPerson,uploadImg } from "../../api/api";
     import myUpload from "vue-image-crop-upload";
 
     export default {
@@ -60,6 +62,7 @@
                 content: "",
                 show: false,
                 avatar: "",
+                showCrop: false,
                 dialogImageUrl: "",
                 dialogVisible: false,
                 editorOption: {
@@ -69,7 +72,8 @@
             };
         },
         components: {
-             editor ,
+               CropImg,
+            quillEditor,
             "my-upload": myUpload
         },
         // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
@@ -101,7 +105,7 @@
                 }
 
                 this.loading=true;
-
+             
                 let result = await addPerson({
                     name: this.name,
                     position: this.position,
@@ -137,9 +141,9 @@
              * [param] field
              */
             cropSuccess(imgDataUrl, field) {
-                console.log("-------- crop success --------");
+            
                 this.dialogImageUrl = imgDataUrl;
-                console.log(this.dialogImageUrl);
+        
                 this.dialogVisible = true;
             },
             /**
@@ -149,9 +153,8 @@
              * [param] field
              */
             cropUploadSuccess(jsonData, field) {
-                console.log("-------- upload success --------");
+               
                 this.avatar = jsonData.path;
-
             },
             /**
              * upload fail
@@ -160,20 +163,59 @@
              * [param] field
              */
             cropUploadFail(status, field) {
-                console.log("-------- upload fail --------");
-                console.log(status);
-                console.log("field: " + field);
+              
+           
 
-            }
+            },
+               onUploadSuccess: function(path) {
+      this.showCrop= false;    
+      this.editor.focus();
+      this.editor.insertEmbed(this.editor.getSelection().index, "image", path);
+    },
+    onStopCrop(){
+      this.showCrop= false;      
+    },
+   
+    onFileChange(e) {
+      let fileInput = e.target;
+      let file = fileInput.files[0];
+      if (fileInput.files.length == 0) {
+        return;
+      }
+       
+      if (window.createObjectURL != undefined) { // basic
+           this.uploadUrl = window.createObjectURL(file);
+      } else if (window.URL != undefined) { // mozilla(firefox)
+        this.uploadUrl = window.URL.createObjectURL(file);
+      
+      } else if (window.webkitURL != undefined) { // webkit or chrome
+          this.uploadUrl = window.webkitURL.createObjectURL(file);
+      }
+     
+      this.editor.focus();
+      this.showCrop= true;      
+    },
         },
 
         computed: {
             editor() {
-                return this.$refs.myTextEditor.quillEditor;
+                      return this.$refs.myQuillEditor.quill;
+
             }
         },
-        mounted() {
-        }
+          mounted() {
+    let self = this;
+    var imgHandler =  function imgHandler(){
+    
+      let input = document.createElement("input");
+      input.type = "file";
+      input.name = self.fileName;
+      input.accept = "image/jpeg,image/png,image/jpg,image/gif";
+      input.onchange = self.onFileChange;
+      input.click();
+    }
+    this.$refs.myQuillEditor.quill.getModule("toolbar").addHandler("image", imgHandler)
+  },
     };
 </script>
 
