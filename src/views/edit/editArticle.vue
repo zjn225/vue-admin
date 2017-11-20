@@ -85,7 +85,10 @@ import { quillEditor } from 'vue-quill-editor'
 export default {
   data() {
     return {
-
+        editorOption: {
+            // 编辑器的配置
+            // something config
+        },
       content:'',
       picNum: 0,
       indexBanner: 0, //注意是从0开始的，但是在页面是有+1的
@@ -366,7 +369,7 @@ div {
   .btn {
     width: 120px;
     position: relative;
-    top: 30px;
+    top: 40px;
     left: 58%;
   }
   .sele {

@@ -49,7 +49,7 @@ import CropImg from "../Upload/CropImg";
             handleChange(value) {},
             onEditorBlur(editor) {},
             onEditorFocus(editor) {
-                this.hasImg();
+
             },
             onEditorReady(editor) {},
 
@@ -182,7 +182,7 @@ import CropImg from "../Upload/CropImg";
             }
             .quill-editor {
                 margin-top: 20px;
-                height: 450px;
+                height: 400px;
             }
             .source {
                 position: relative;

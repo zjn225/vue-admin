@@ -418,7 +418,7 @@ div {
   }
 
   .btn {
-    margin-top:60px;
+    margin-top:80px;
     .btn1,.btn2,.btn3 {
       width: 120px;
      
