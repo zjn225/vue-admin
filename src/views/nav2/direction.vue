@@ -42,14 +42,15 @@ export default {
     };
   },
   components: {
-    quillEditor
+    quillEditor,
+    CropImg
   },
   // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
   methods: {
     handleChange(value) {},
     onEditorBlur(editor) {},
     onEditorFocus(editor) {
-      this.hasImg();
+
     },
     onEditorReady(editor) {},
 
@@ -136,6 +137,7 @@ export default {
       if (fileInput.files.length == 0) {
         return;
       }
+      this.showCrop = true;
 
       if (window.createObjectURL != undefined) {
         // basic
@@ -176,23 +178,36 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-div {
-  width: 100%;
-  .left {
-    width: 100%;
-    height: auto;
-    .title {
-      margin-top: 20px;
-    }
-    .quill-editor {
-      margin-top: 20px;
-      height: 450px;
+    div {
+        width: 100%;
+        .left {
+            width: 100%;
+            height: auto;
+            .title {
+                margin-top: 20px;
+            }
+            .quill-editor {
+                margin-top: 20px;
+                height: 400px;
+            }
+            .source {
+                position: relative;
+                top: 90px;
+            }
+        }
+
+        .btn {
+            width: 100px;
+            position: relative;
+            top: 40px;
+            left: 1px;
+        }
     }
     .source {
       position: relative;
       top: 90px;
     }
-  }
+  
 
   .btn {
     width: 100px;
@@ -200,5 +215,5 @@ div {
     top: 40px;
     left: 1px;
   }
-}
+
 </style>

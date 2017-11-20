@@ -8,7 +8,7 @@
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",
     "build": "node build/build.js",
-    "deploy" : "fjpublish env -s"
+    "deploy": "fjpublish env -s"
   },
   "dependencies": {
     "axios": "^0.15.3",
@@ -21,6 +21,7 @@
     "nprogress": "^0.2.0",
     "qs": "^6.5.1",
     "vue": "^2.2.2",
+    "vue-cropper": "^0.2.6",
     "vue-image-crop-upload": "^2.1.0",
     "vue-router": "^2.3.0",
     "vuex": "^2.0.0-rc.6"
