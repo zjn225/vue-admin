@@ -33,7 +33,7 @@
                 </div>
             </div>
             <!--类别-->
-            <div class="block">
+            <!-- <div class="block">
                 <h3>分类</h3>
                 <el-cascader
                         expand-trigger="hover"
@@ -41,7 +41,7 @@
                         v-model="article.selectedOptions"
                         @change="handleChange">
                 </el-cascader>
-            </div>
+            </div> -->
             <!--分类-->
             <h3>文章来源</h3>
             <el-input class="source" v-model="article.source" placeholder="文章来源"></el-input>
@@ -56,11 +56,11 @@
                     :inactive-value='0'
                     @change="countPic()">
             </el-switch>
-            <div v-if="article.isbanner"> 
+            <!-- <div v-if="article.isbanner"> 
                 <el-radio-group v-model="indexBanner"  v-for="(item,index) in picNum" :key='index' class="sele">
                     <el-radio :label="index">图片{{index + 1}}</el-radio>
                 </el-radio-group>
-            </div>
+            </div> -->
         </div>
         <div class="btn">
             <el-button type="primary" class="btn" id="submit" @click="onEditorChange()" icon="el-icon-upload">修改文章
