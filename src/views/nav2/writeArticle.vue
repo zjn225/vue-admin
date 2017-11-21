@@ -63,7 +63,7 @@
 <div class="block" v-if="picNum && isBanner">
             <h3>选择轮播图</h3>
     
-            <el-radio-group v-model="indexBanner"  v-for="(item,index) in picNum" :key="index" class="sele">
+            <el-radio-group v-model="indexbanner"  v-for="(item,index) in picNum" :key="index" class="sele">
                 <el-radio :label="index">图片{{index + 1}}</el-radio>
             </el-radio-group>
 </div>
@@ -103,7 +103,7 @@ export default {
       /*测试上传图片的接口，返回结构为{url:''}*/
       uploadUrl:`http:${process.env.API_ROOT}data/article/uploadImg`,
       content:'',
-      indexBanner: 0, //注意是从0开始的，但是在页面是有+1的
+      indexbanner: 0, //注意是从0开始的，但是在页面是有+1的
       loading: false,
        /*显示裁切控件*/
       showCrop: false,
@@ -250,7 +250,7 @@ export default {
       localStorage.source = this.source || "";
       localStorage.hasPic = this.hasPic || "";
       //                localStorage.isBanner = this.isBanner || '';
-      //                localStorage.indexBanner = this.indexBanner || '';
+      //                localStorage.indexbanner = this.indexbanner || '';
     },
 
     readArt() {
@@ -307,7 +307,7 @@ export default {
         time: this.time,
         selectedOptions: this.selectedOptions,
         isbanner: this.isBanner,
-        indexBanner: this.indexBanner
+        indexbanner: this.indexbanner
       });
 
       const { code, msg } = result.data;

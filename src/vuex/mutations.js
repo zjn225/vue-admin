@@ -12,7 +12,6 @@ export default {
 
 
             state.selectedOptions = selectedOptions;
-            console.log(selectedOptions)
     },
     [types.SAVE_TEAMONE](state, person){
 
@@ -24,7 +23,6 @@ export default {
         for(let attr in article){
             state.article[attr] = article[attr];
         }
-        console.log(state.article)
         
     },
     [types.SAVE_BOOKINFO](state, book){

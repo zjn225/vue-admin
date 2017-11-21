@@ -25,7 +25,7 @@
         // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
         methods: {
             async onEditorChange() {
-                console.log(this.friendLink.link)
+              
                 if (!this.friendLink.link) {
                     this.$message("请输入网站链接");
                     return;

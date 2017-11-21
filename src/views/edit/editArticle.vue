@@ -38,7 +38,7 @@
                 <el-cascader
                         expand-trigger="hover"
                         :options="options"
-                        v-model="article.selectedOptions"
+                        v-model="selectedOptions"
                         @change="handleChange">
                 </el-cascader>
             </div> -->
@@ -56,11 +56,12 @@
                     :inactive-value='0'
                     @change="countPic()">
             </el-switch>
-            <!-- <div v-if="article.isbanner"> 
-                <el-radio-group v-model="indexBanner"  v-for="(item,index) in picNum" :key='index' class="sele">
+        
+            <div v-if="article.isbanner"> 
+                <el-radio-group v-model="indexbanner"  v-for="(item,index) in picNum" :key='index' class="sele">
                     <el-radio :label="index">图片{{index + 1}}</el-radio>
                 </el-radio-group>
-            </div> -->
+            </div>
         </div>
         <div class="btn">
             <el-button type="primary" class="btn" id="submit" @click="onEditorChange()" icon="el-icon-upload">修改文章
@@ -91,7 +92,8 @@ export default {
         },
       content:'',
       picNum: 0,
-      indexBanner: 0, //注意是从0开始的，但是在页面是有+1的
+      indexbanner : this.$store.state.article.indexbanner,
+      // selectedOptions : this.$store.state.article.selectedOptions,
       loading: false,
       showCrop: false,
       uploadUrl: `http:${process.env.API_ROOT}data/article/uploadImg`,
@@ -187,7 +189,7 @@ export default {
     onEditorReady(editor) {
       this.countPic();
     },
-    ...mapMutations(['SAVE_SELECTOPTION']),
+    // ...mapMutations(['SAVE_SELECTOPTION']),
  
     countPic() {
       var reg = /src/g;
@@ -195,7 +197,7 @@ export default {
       if (reg.test(this.article.content)) {
         let ss = this.article.content.match(reg);
         this.picNum = ss.length;
-        console.log("图片数量：" + this.picNum);
+     
       }
     },
     hasImg() {
@@ -243,22 +245,13 @@ export default {
       }
 
       this.loading = true;
-
-      const result = await editArticle({
-        title: this.article.title,
-        id: this.article.id,
-        author: this.article.author,
-        content: this.article.content,
-        source: this.article.source,
-        time: this.article.time,
-        selectedOptions: this.article.selectedOptions,
-        isbanner: this.article.isbanner,
-        indexBanner: this.indexBanner
-      });
+      // this.article.selectedOptions = this.selectedOptions;
+      this.article.indexbanner = this.indexbanner;
+      const result = await editArticle(this.article);
       const { code, msg } = result.data;
 
       if (code === 200) {
-        this.SAVE_SELECTOPTION(this.article.selectedOptions);
+        // this.SAVE_SELECTOPTION(this.selectedOptions);
 
         this.loading = false;
         this.$message({
@@ -306,16 +299,19 @@ export default {
   // 如果你需要得到当前的editor对象来做一些事情，你可以像下面这样定义一个方法属性来获取当前的editor对象，
   // 实际上这里的$refs对应的是当前组件内所有关联了ref属性的组件元素对象
   computed: {
-    
     ...mapState(["article"]),
+    
      editor() {
        return this.$refs.myQuillEditor.quill;
      }
   },
-   mounted() {
+  created:{
+
+  },
+  mounted() {
     let self = this;
+    console.log(this.article)
     var imgHandler =  function imgHandler(){
-    
       let input = document.createElement("input");
       input.type = "file";
       input.name = self.fileName;

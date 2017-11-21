@@ -21,7 +21,7 @@
             <h3>职位</h3>
             <el-input class="right_input" v-model="person.position" placeholder=""></el-input>
             <el-button type="primary" @click="toggleShow" class='setAvatar'>设置头像</el-button>
-            <my-upload field="img"
+            <myUpload field="img"
                        @crop-success="cropSuccess"
                        @crop-upload-success="cropUploadSuccess"
                        @crop-upload-fail="cropUploadFail"
@@ -29,9 +29,7 @@
                        :width="400"
                        :height="400"
                        :url="avatarURL"
-                      
-                      
-                       img-format="png"></my-upload>
+                       img-format="png"></myUpload>
             <img class='avatar' :src='person.avatar' alt="asd">
 
 
@@ -78,7 +76,7 @@
         components: {
              CropImg,
             quillEditor,
-            "my-upload": myUpload
+            myUpload
         },
         // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
         methods: {
