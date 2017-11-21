@@ -3,4 +3,4 @@ node_modules/
 npm-debug.log
 .editorconfig
 dist/
-fjpublish.config/
+fjpublish.config.js/
