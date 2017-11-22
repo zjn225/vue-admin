@@ -25,15 +25,15 @@
             </el-table-column>
             <el-table-column type="index" label="序号" width="50">
             </el-table-column>
-            <el-table-column prop="title" label="标题" max-width="420" sortable>
+            <el-table-column prop="title" label="标题" max-width="320" sortable>
             </el-table-column>
             <el-table-column prop="author" label="作者" width="100" sortable>
             </el-table-column>
-            <el-table-column prop="source" label="文章来源" width="100" sortable>
+            <el-table-column prop="source" label="文章来源" width="180" sortable>
             </el-table-column>
-            <el-table-column prop="time" label="发布时间" width="100" sortable>
+            <el-table-column prop="time" label="发布时间" width="200" sortable>
             </el-table-column>
-            <el-table-column label="操作" width="300">
+            <el-table-column label="操作" width="320">
                 <template slot-scope="scope">
                     <el-button type="primary" size="small" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit">编辑</el-button>
                     <el-button type="primary" size="small" @click="showColumn(false,scope.$index)" >移动栏目</el-button>
