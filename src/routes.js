@@ -28,6 +28,7 @@ const Safety = (resolve) => {
     })
 }
 
+
 const person = (resolve) => {
     import('./views/nav2/person.vue').then((module) => {
         resolve(module)
@@ -38,7 +39,11 @@ const Write = (resolve) => {
         resolve(module)
     })
 }
-
+const Brief = (resolve) => {
+    import('./views/nav2/Brief.vue').then((module) => {
+        resolve(module)
+    })
+}
 const editPerson = (resolve) => {
     import('./views/edit/editPerson.vue').then((module) => {
         resolve(module)
@@ -61,11 +66,7 @@ const addPerson = (resolve) => {
         resolve(module)
     })
 }
-const addBook = (resolve) => {
-    import('./views/addition/addBook.vue').then((module) => {
-        resolve(module)
-    })
-}
+
 const Basic = (resolve) => {
     import('./views/nav3/Basic.vue').then((module) => {
         resolve(module)
@@ -147,12 +148,13 @@ let routes = [
             {path: '/feedBack', component: feedBack, name: '反馈管理'},
             {path: '/editArticle', component: editArticle, name: '修改文章'},
             {path: '/editPerson', component: editPerson, name: '修改专家团队'},
+            {path: '/brief', component: Brief, name: '修改简介'},
             {path: '/addPerson', component: addPerson, name: '新增专家团队'},
-            {path: '/addBook', component: addBook, name: '新增著作'},
+           
             {path: '/addFriendLink', component: addFriendLink, name: '新增友情链接'},
             {path: '/editLink', component: editLink, name: '修改友情链接'},
             {path: '/brief', component: brief, name: '简介修改'},
-            {path: '/direction', component: direction, name: '研究方向修改'},
+            {path: '/direction', component: direction, name: '修改研究方向'},
         ]
     },
     {
