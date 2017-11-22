@@ -21,7 +21,7 @@
                 <el-date-picker
                         v-model="time"
                         type="date"
-                        format="yyyy/MM/dd"
+                        format="yyyy-MM-dd"
                         placeholder="选择日期"
                         :picker-options="pickerOptions0">
                 </el-date-picker>

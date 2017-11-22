@@ -49,11 +49,7 @@ const editArticle = (resolve) => {
         resolve(module)
     })
 }
-const writeBook = (resolve) => {
-    import('./views/nav2/writeBook.vue').then((module) => {
-        resolve(module)
-    })
-}
+
 const Article = (resolve) => {
     import('./views/nav2/Article.vue').then((module) => {
         resolve(module)
@@ -151,7 +147,6 @@ let routes = [
             {path: '/feedBack', component: feedBack, name: '反馈管理'},
             {path: '/editArticle', component: editArticle, name: '修改文章'},
             {path: '/editPerson', component: editPerson, name: '修改专家团队'},
-            {path: '/writeBook', component: writeBook, name: '修改著作'},
             {path: '/addPerson', component: addPerson, name: '新增专家团队'},
             {path: '/addBook', component: addBook, name: '新增著作'},
             {path: '/addFriendLink', component: addFriendLink, name: '新增友情链接'},
