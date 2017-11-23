@@ -7,15 +7,30 @@
 	:outputSize="CropImg.outputSize"
 	:outputType="CropImg.outputType"
 	:info="CropImg.info"
-	:canScale="CropImg.canScale"
 	:autoCrop="CropImg.autoCrop"
-	:autoCropWidth="CropImg.width"
-	:autoCropHeight="CropImg.height"
 	:fixed="CropImg.fixed"
   class='vueCropper'
 ></vueCropper>
-	<el-button @click="cropSuccess" class="btn1" type="primary">裁剪</el-button>
-	<el-button @click="cropStop" class="btn2" type="primary">返回</el-button>
+<el-row :gutter="10" class='btn-box'>
+    
+   <el-button @click="startCrop" v-if="!crap" class="btn btn1" type="primary" round>开始截图</el-button>
+   <el-button @click="stopCrop" v-else class="btn " type="danger" round>结束截图</el-button>
+  <el-button @click="changeScale(1)" class="btn" type="primary" round>放大</el-button>
+  <el-button @click="changeScale(-1)" class="btn" type="primary" round>缩小</el-button>
+  <el-button @click="rotateLeft" class="btn" type="primary" round>左转</el-button>
+	<el-button @click="rotateRight" class="btn" type="primary" round>右转</el-button>
+</el-row>
+<el-row :gutter="2" class='submit-box'>
+  
+  <el-button @click="cropSuccess" class="btn" type="success" :loading="logining">确认</el-button>
+  <el-button @click="cropStop" class="btn" type="info">返回</el-button>
+</el-row>
+	
+	
+ 
+	
+	
+	
   </div>
 </template>
 <script>
@@ -31,14 +46,14 @@ export default {
   data() {
     return {
       crap: false,
+      logining: false,
+
       fullscreenLoading :true,
       CropImg: {
      
         info: true,
         outputType: "jpeg",
-        canScale: true,
-        autoCrop: true,
-        outputSize:0.9
+        outputSize:0.9,
       }
     };
   },
@@ -46,16 +61,46 @@ export default {
     vueCropper
   },
   methods: {
+    rotateLeft () {
+			this.$refs.cropper.rotateLeft()
+		},
+		rotateRight () {
+			this.$refs.cropper.rotateRight()
+		},
+    startCrop () {
+			// start
+			this.crap = true
+			this.$refs.cropper.startCrop()
+		},
+		stopCrop () {
+			//  stop
+			this.crap = false
+			this.$refs.cropper.stopCrop()
+		},
+    changeScale (num) {
+			num = num || 1
+			this.$refs.cropper.changeScale(num)
+		},
     cropStop(){
       this.$refs.cropper.stopCrop();
       this.$emit("onStopCrop");  
     },
-    cropSuccess() {   
+    cropSuccess() {
+      this.logining = true;
+   
       this.$refs.cropper.getCropBlob(data => {
 				let formData = new FormData();
 				formData.append("img", data, name);
-        uploadImg(formData).then(data => {             
+        uploadImg(formData).then(data => {
+        this.logining = false;
+                       
           this.$emit("onUploadSuccess", data.path);         
+        }).catch(()=>{
+          this.logining = false;
+          this.$message({
+              message: '上传失败',
+              type: "error"
+          });
         });
       });
     }
@@ -84,20 +129,27 @@ export default {
   transform: translate(-50%, -50%);
   transform-origin: 50% 50%;
 }
+.btn{
+  width: 100px;
+  height: 50px;
+}
 .btn1{
-  width: 120px;
-  height: 50px;
-
-  position: absolute;
-  left: 57%;
-  top: 85%;
+  margin-left: 10px;
 }
-.btn2{
+.btn-box{
   width: 120px;
-  height: 50px;
-
   position: absolute;
-  left: 64%;
-  top: 85%;
+  left: 72%;
+  top: 30%;
 }
+.btn-box .btn{
+  margin-top: 20px;
+}
+.submit-box{
+  width: 300px;
+  position: absolute;
+  left: 60%;
+  top: 87%;
+}
+
 </style>
