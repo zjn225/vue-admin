@@ -260,6 +260,7 @@ export default {
         });
         this.$router.push({ path: "/article" });
       } else {
+        this.loading = false;        
         this.$message({
           message: msg,
           type: "error"

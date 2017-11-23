@@ -240,7 +240,7 @@ export default {
       const start = (currentPage - 1) * 14 + currentPage - 1;
 
       if (this.isReacher) {
-        this.handleReacher(start);
+        this.handleReacher(start,false);
       } else {
         console.log(start);
         this.getArticleList(start);
@@ -278,22 +278,29 @@ export default {
     },
     ...mapMutations(["SAVE_ARTICLEINFO",'SAVE_SELECTOPTION']),
 
-    handleReacher(start = 0) {
+    handleReacher(start = 0,flag=true) {
       console.log(this.selectedOptions);
       const sort = this.selectedOptions[0];
       const type = this.selectedOptions[1];
       const title = this.filters.title;
 
       this.listLoading = true;
-      searchArticle({ sort, type, title, start }).then(res => {
+      searchArticle({ sort,title, start,type }).then(res => {
         this.listLoading = false;
         let { code, msg, data, pageCount } = res.data;
 
         if (code === 200) {
           this.articles = data;
+          
+          console.log(data)
+          flag && (this.total = pageCount);
+            
+          
           this.isReacher = true;
-          this.total = pageCount;
+          
         } else {
+          this.listLoading = false;
+          
           this.$message({
             message: msg,
             type: "error"
