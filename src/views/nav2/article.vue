@@ -292,7 +292,7 @@ export default {
         if (code === 200) {
           this.articles = data;
           
-          console.log(data)
+      
           flag && (this.total = pageCount);
             
           

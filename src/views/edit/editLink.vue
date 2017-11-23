@@ -49,6 +49,8 @@
                     });
                     this.$router.push({path: "/friendLink"});
                 } else {
+                    this.loading=false;                    
+
                     this.$message({
                         message: msg,
                         type: "error"

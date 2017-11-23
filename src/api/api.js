@@ -137,14 +137,6 @@ export const batchRemoveBook = params => {
     return instance.get(`/user/batchremove`, {params: params});
 };
 
-export const addBook = params => {
-    return instance.get(`/user/add`, {params: params});
-};
-
-
-
-
-
 
 export const editUser = params => {
     return instance.get(`/user/edit`, {params: params});

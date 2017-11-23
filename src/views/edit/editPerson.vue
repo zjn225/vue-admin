@@ -101,6 +101,7 @@
                     });
                     this.$router.push({path: "/person"});
                 } else {
+                    this.loading=false;                    
                     this.$message({
                         message: msg,
                         type: "error"

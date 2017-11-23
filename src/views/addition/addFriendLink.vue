@@ -41,7 +41,7 @@ import {addLink} from "../../api/api";
                 const {code, msg} = result.data;
 
                 if (code === 200) {
-                    this.loading=false
+                    this.loading=false;
                     this.$message({
                         message: msg,
                         type: "success"
