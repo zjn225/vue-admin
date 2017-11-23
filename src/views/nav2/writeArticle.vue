@@ -98,7 +98,7 @@
     export default {
         data() {
             return {
-                time:'',
+                time: '',
                 picNum: 0,
                 show: false,
                 canCrop: false,
@@ -200,7 +200,6 @@
         // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
         methods: {
             ...mapMutations(["SAVE_ARTICLEINFO"]),
-
             handleChange(value) {
                 this.countPic();
             },
@@ -213,19 +212,16 @@
             onEditorReady(editor) {
                 this.countPic();
             },
-
             //不能在开关的change方法加入hasImg，否则先打开开关再加入图片就出现bug了
             countPic() {
                 var reg = /<img src=/g;
                 if (reg.test(this.content)) {
                     let imgNum = this.content.match(reg);
                     this.picNum = imgNum.length;
-
                 } else {
                     this.picNum = 0;
                 }
             },
-
             hasImg() {
                 var reg = /<img src=/g;
                 if (reg.test(this.content)) {
@@ -237,7 +233,6 @@
                     this.hasPic = false;
                 }
             },
-
             saveArt() {
                 localStorage.title = this.title || "";
                 localStorage.author = this.author || "";
@@ -249,7 +244,6 @@
                 //                localStorage.isBanner = this.isBanner || '';
                 //                localStorage.indexbanner = this.indexbanner || '';
             },
-
             readArt() {
                 this.title = localStorage.title;
                 this.author = localStorage.author;
@@ -260,9 +254,8 @@
                 this.hasPic = localStorage.hasPic;
                 //                this.isBanner = localStorage.isBanner
             },
-
             async onEditorChange() {
-                console.log('1212'+this.time)
+                console.log('1212' + this.time)
                 this.hasImg();
                 if (this.content.length === 0) {
                     this.$message("请不要发表内容为空的文章");
@@ -292,10 +285,7 @@
                     this.$message("内容没有图片，请不要设置为首页的轮播图");
                     return;
                 }
-
                 this.loading = true;
-
-
                 let result = await postArticle({
                     title: this.title,
                     author: this.author,
@@ -306,9 +296,7 @@
                     isbanner: this.isBanner,
                     indexbanner: this.indexbanner
                 });
-
                 const {code, msg} = result.data;
-
                 if (code === 200) {
                     this.loading = false;
                     this.$message({
@@ -316,7 +304,6 @@
                         type: "success"
                     });
                     this.$store.state.selectedOptions = this.selectedOptions;
-
                     this.$router.push({path: "/article"});
                 } else {
                     this.$message({
@@ -325,8 +312,6 @@
                     });
                 }
             },
-
-
             onUploadSuccess: function (path) {
                 this.showCrop = false;
                 this.editor.focus();
@@ -335,23 +320,19 @@
             onStopCrop() {
                 this.showCrop = false;
             },
-
             onFileChange(e) {
                 let fileInput = e.target;
                 let file = fileInput.files[0];
                 if (fileInput.files.length == 0) {
                     return;
                 }
-
                 if (window.createObjectURL != undefined) { // basic
                     this.uploadUrl = window.createObjectURL(file);
                 } else if (window.URL != undefined) { // mozilla(firefox)
                     this.uploadUrl = window.URL.createObjectURL(file);
-
                 } else if (window.webkitURL != undefined) { // webkit or chrome
                     this.uploadUrl = window.webkitURL.createObjectURL(file);
                 }
-
                 this.editor.focus();
                 this.showCrop = true;
             },
@@ -364,24 +345,19 @@
                 hours = date.getHours(),
                 minutes = date.getMinutes(),
                 seconds = date.getSeconds();
-
             if (hours < 10) {
                 hours = '0' + hours
             }
-
             if (minutes < 10) {
                 minutes = '0' + minutes
             }
-
             if (seconds < 10) {
                 seconds = '0' + seconds
             }
-            const loginTime = year + '年' + month + '月' + day + '日 ' + hours + ':' + minutes + ':' + seconds;
+            const loginTime = year + '/' + month + '/' + day;
             this.time = loginTime;
-
             let self = this;
             var imgHandler = function imgHandler() {
-
                 let input = document.createElement("input");
                 input.type = "file";
                 input.name = self.fileName;
@@ -446,32 +422,26 @@
                 top: 90px;
             }
         }
-
         .right {
             position: relative;
             bottom: 662px;
             width: 20%;
             float: right;
-
             .el-date-editor,
             .el-cascader {
                 width: 100%;
             }
-
             h3 {
                 font-size: 15px;
                 color: #444444;
                 font-weight: 600;
             }
         }
-
         .btn {
             margin-top: 80px;
             .btn1, .btn2, .btn3 {
                 width: 120px;
-
             }
-
             .btn1 {
                 margin-right: 100px;
                 float: right;

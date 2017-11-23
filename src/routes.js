@@ -153,7 +153,7 @@ let routes = [
            
             {path: '/addFriendLink', component: addFriendLink, name: '新增友情链接'},
             {path: '/editLink', component: editLink, name: '修改友情链接'},
-            {path: '/brief', component: brief, name: '简介修改'},
+            {path: '/brief', component: brief, name: '修改简介'},
             {path: '/direction', component: direction, name: '修改研究方向'},
         ]
     },
