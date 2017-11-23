@@ -27,8 +27,8 @@
                        @crop-upload-success="cropUploadSuccess"
                        @crop-upload-fail="cropUploadFail"
                        v-model="show"
-                       :width="300"
-                       :height="300"
+                       :width="200"
+                       :height="200"
                        :url="avatarURL"
                        :params="params"
                        :headers="headers"
@@ -109,6 +109,10 @@
                 }
                 if (!this.position) {
                     this.$message("请输入该专家的职位");
+                    return;
+                }
+                if (!this.show) {
+                    this.$message("头像未上传");
                     return;
                 }
 
