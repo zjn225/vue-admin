@@ -8,7 +8,7 @@
                             expand-trigger="hover"
                             :options="options"
                             v-model="selectedOptions"
-                            @change="getArticleList(0)">
+                            @change="changeCategory">
                     </el-cascader>
                 </el-form-item>
                 <el-form-item>
@@ -236,21 +236,19 @@ export default {
   },
   methods: {
     handleCurrentChange(currentPage) {
-      console.log(currentPage);
       const start = (currentPage - 1) * 14 + currentPage - 1;
 
       if (this.isReacher) {
         this.handleReacher(start,false);
       } else {
-        console.log(start);
-        this.getArticleList(start);
+        this.getArticleList(start,false);
       }
     },
     selectArticle(selection, row) {
       this.sels = selection;
     },
     //获取文章列表
-    getArticleList(start) {
+    getArticleList(start,flag = true) {
       const sort = this.selectedOptions[0];
       const type = this.selectedOptions[1];
       this.listLoading = false;
@@ -260,14 +258,11 @@ export default {
         let { code, msg, data, pageCount } = res.data;
         if (code === 200) {
           this.articles = data;
-          this.isReacher = true;
-          if (this.total === 0) {
-            this.total = pageCount;
-          }
-          this.listLoading = false;
-      this.SAVE_SELECTOPTION(this.selectedOptions)
+          
+        flag &&　(this.total = pageCount);
+          
+        this.SAVE_SELECTOPTION(this.selectedOptions)
 
-          this.isReacher = false;
         } else {
           this.$message({
             message: msg,
@@ -277,9 +272,11 @@ export default {
       });
     },
     ...mapMutations(["SAVE_ARTICLEINFO",'SAVE_SELECTOPTION']),
-
+    changeCategory(){
+      this.isReacher = false;
+      this.getArticleList(0);
+    },
     handleReacher(start = 0,flag=true) {
-      console.log(this.selectedOptions);
       const sort = this.selectedOptions[0];
       const type = this.selectedOptions[1];
       const title = this.filters.title;
@@ -291,15 +288,12 @@ export default {
 
         if (code === 200) {
           this.articles = data;
-          
-      
+                
           flag && (this.total = pageCount);
-            
           
           this.isReacher = true;
           
         } else {
-          this.listLoading = false;
           
           this.$message({
             message: msg,
@@ -316,7 +310,6 @@ export default {
         .then(() => {
           this.listLoading = true;
 
-          //NProgress.start();
           let article = [
             {
               id: this.articles[index].id,
@@ -422,7 +415,6 @@ export default {
       }).then(() => {
        
 
-        //NProgress.start();
         const article =[{
             id : this.articles[this.removeID].id
 
