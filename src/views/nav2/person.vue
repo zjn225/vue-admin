@@ -63,7 +63,7 @@
         getTeamOne,
         deletePerson,
         searchPerson,
-        uuuu
+        updatePersonIndex
     } from "../../api/api";
 
     export default {
@@ -192,17 +192,26 @@
                 }
                 let thisP = this.persons[_index],
                     nextP = this.persons[_index + 1],
-                    id = this.persons[_index].id,
-                    index = this.persons[_index].id + 1
+                    id = [],
+                    rank = []; 
 
-                console.log(id, index)
+                    id[0] = thisP.id;
+                    rank[0] =  nextP.rank; 
+                    id[1] =  nextP.id;
+                    rank[1] = thisP.rank; 
 
-                uuuu({id,index}).then((data)=>{
+               
+
+                updatePersonIndex({id,rank}).then((data)=>{
                     let {code} = data;
                     if (code === 200) {
+                        thisP.rank = rank[0];
+                        nextP.rank = rank[1];
                         /*Vue 不能检测以下变动的数组：1、索引修改 2、长度修改*/
                         this.persons.splice(_index, 1, nextP)
+
                         this.persons.splice(_index + 1, 1, thisP)
+                   
                     } else {
                         this.$message({
                             message: 'error',
@@ -220,16 +229,24 @@
                 }
                 let thisP = this.persons[_index],
                     lastP = this.persons[_index - 1],
-                    id = this.persons[_index].id,
-                    index = this.persons[_index].id - 1
+                    id = [],
+                    rank = []; 
+                    id[0] = thisP.id;
+                    rank[0] = lastP.rank; 
+                    id[1] = lastP.id;
+                    rank[1] =thisP.rank; 
 
-                console.log(id, index)
+                console.log(id, rank)
 
-                uuuu({id,index}).then((data)=>{
+                updatePersonIndex({id,rank}).then((data)=>{
                     let {code} = data;
+                   
                     if (code === 200) {
+                        thisP.rank = rank[0];
+                        lastP.rank = rank[1];
                         this.persons.splice(_index - 1, 1, thisP)
-                        this.persons.splice(_index, 1, lastP)
+                        this.persons.splice(_index, 1, lastP);
+                        
                     } else {
                         this.$message({
                             message: 'error',
@@ -312,6 +329,5 @@
 </script>
 
 <style scoped>
-    .my {
-    }
+   
 </style>

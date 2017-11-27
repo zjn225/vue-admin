@@ -166,6 +166,9 @@ export const  getIntro = params => {
 export const  updateIntro = params => {
     return instance.post(`/data/Intro`, params).then(res => res.data);
 };
+export const  updatePersonIndex = params => {
+    return instance.post(`/data/team/index`, params).then(res => res.data);
+};
 
 //研究方向
 export const  getDirec = params => {
