@@ -26,8 +26,8 @@
                        @crop-upload-success="cropUploadSuccess"
                        @crop-upload-fail="cropUploadFail"
                        v-model="show"
-                       :width="400"
-                       :height="400"
+                       :width="200"
+                       :height="200"
                        :url="avatarURL"
                        img-format="png"></myUpload>
             <img class='avatar' :src='person.avatar' alt="asd">

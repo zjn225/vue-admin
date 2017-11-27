@@ -42,22 +42,22 @@ export const postArticle = params => {
     return instance.post(`/data/article`,params);
 };
 export const getCatalog = params => {
-    return instance.get(`/data/catalog`, {params: params});
+    return instance.get(`/data/article/catalog`, {params: params});
 };
 
 export const getArticle = params => {
     return instance.get(`/data/article`, {params: params});
 };
 export const searchArticle = params => {
-    return instance.get(`/data/searchArticle`, {params: params});
+    return instance.get(`/data/article/search`, {params: params});
 };
 
 export const deleteArticle = params => {
-    return instance.post(`/data/deletearticle`,params);
+    return instance.post(`/data/article/delete`,params);
 };
 
 export const editArticle = params => {
-    return instance.post(`/data/editarticle`, params);
+    return instance.post(`/data/article/edit`, params);
 };
 export const moveArticle = params => {
     return instance.post(`/data/article/batchMove`, params).then(res => res.data);
@@ -167,7 +167,7 @@ export const  updateIntro = params => {
     return instance.post(`/data/Intro`, params).then(res => res.data);
 };
 export const  updatePersonIndex = params => {
-    return instance.post(`/data/team/index`, params).then(res => res.data);
+    return instance.post(`/data/team/rank`, params).then(res => res.data);
 };
 
 //研究方向
