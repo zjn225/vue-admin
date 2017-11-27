@@ -107,45 +107,9 @@ export const editLink = params => {
 };
 
 
-
 export const  deleteLinks = params => {
     return instance.post(`/data/friendLinks/delete`, params);
 };
-
-
-
-export const batchRemoveLink = params => {
-    return instance.get(`/user/batchremove`, {params: params});
-};
-
-
-
-/*著作模块*/
-export const getBookListPage = params => {
-    return instance.get(`/tt`, {params: params});
-};
-
-export const removeBook = params => {
-    return instance.get(`/user/remove`, {params: params});
-};
-
-export const getBookList = params => {
-    return instance.get(`/user/list`, {params: params});
-};
-
-export const batchRemoveBook = params => {
-    return instance.get(`/user/batchremove`, {params: params});
-};
-
-
-export const editUser = params => {
-    return instance.get(`/user/edit`, {params: params});
-};
-
-export const addUser = params => {
-    return instance.get(`/user/add`, {params: params});
-};
-
 
 export const  getReadFeedList = params => {
     return instance.get(`/data/feedback/catalog`, {params: params}).then(res => res.data);
