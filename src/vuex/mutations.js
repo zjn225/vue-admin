@@ -11,7 +11,7 @@ export default {
     [types.SAVE_SELECTOPTION](state, selectedOptions){
 
 
-            state.selectedOptions = selectedOptions;
+state.selectedOptions = selectedOptions;
     },
     [types.SAVE_TEAMONE](state, person){
 
@@ -25,12 +25,7 @@ export default {
         }
         
     },
-    [types.SAVE_BOOKINFO](state, book){
-
-        for(let attr in book){
-            state.book[attr] = book[attr];
-        }
-    },
+   
     [types.SAVE_FRIENDLINK](state, friendLink){
         for(let attr in friendLink){
             state.friendLink[attr] = friendLink[attr];

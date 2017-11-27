@@ -40,7 +40,7 @@ const Write = (resolve) => {
     })
 }
 const Brief = (resolve) => {
-    import('./views/nav2/Brief.vue').then((module) => {
+    import('./views/nav2/brief.vue').then((module) => {
         resolve(module)
     })
 }
