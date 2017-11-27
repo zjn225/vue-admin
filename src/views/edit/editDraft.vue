@@ -2,10 +2,10 @@
     <div v-loading="loading" element-loading-text="正在发表，请稍后"
          element-loading-spinner="el-icon-loading">
         <div class="left">
-            <el-input class="title" v-model="title" placeholder="请输入标题"></el-input>
+            <el-input class="title" v-model="draft.title" placeholder="请输入标题"></el-input>
 
 
-            <quillEditor v-model="content"
+            <quillEditor v-model="draft.content"
                          ref="myQuillEditor"
                          :options="editorOption"
                          @blur="onEditorBlur($event)"
@@ -18,7 +18,7 @@
             <!--作者-->
             <div class="author">
                 <h3>作者</h3>
-                <el-input class="right_input" v-model="author" placeholder="作者"></el-input>
+                <el-input class="right_input" v-model="draft.author" placeholder="作者"></el-input>
             </div>
             <!--发布日期-->
             <div class="date">
@@ -26,7 +26,7 @@
                 <div class="block">
                     <span class="demonstration"></span>
                     <el-date-picker
-                            v-model="time"
+                            v-model="draft.time"
                             type="date"
                             format="yyyy-MM-dd"
                             placeholder="选择日期"
@@ -35,19 +35,9 @@
                     </el-date-picker>
                 </div>
             </div>
-            <!--类别-->
-            <div class="block">
-                <h3>分类</h3>
-                <el-cascader
-                        expand-trigger="hover"
-                        :options="options"
-                        v-model="selectedOptions"
-                        @change="handleChange">
-                </el-cascader>
-            </div>
-            <!--分类-->
+           
             <h3>文章来源</h3>
-            <el-input class="source" v-model="source" placeholder="文章来源"></el-input>
+            <el-input class="source" v-model="draft.source" placeholder="文章来源"></el-input>
 
             <h3>是否将该文章列为首页轮播图</h3>
             <el-switch
@@ -69,11 +59,11 @@
             </div>
         </div>
         <div class="btn">
-            <el-button type="success" class="btn2" size='medium' id="submit2" @click="saveDraft" icon="el-icon-upload2">
-                存草稿
+            <el-button type="success" class="btn2" size='medium' id="submit2" @click="renewDraft()" icon="el-icon-upload2">
+                更新草稿
             </el-button>
          
-            <el-button type="primary" class="btn1" size='medium' id="submit" @click="onEditorChange"
+            <el-button type="primary" class="btn1" size='medium' id="submit" @click="onEditorChange()"
                        icon="el-icon-upload">发表文章
             </el-button>
         </div>
@@ -87,21 +77,20 @@
 </template>
 
 <script>
-    import {postArticle, postDraft,uploadImg} from "../../api/api";
-    import {mapMutations} from "vuex";
+    import {postArticle, postDraft,updateDraft,deleteDraft,uploadImg} from "../../api/api";
+    import {mapMutations,mapState} from "vuex";
     import CropImg from "../Upload/CropImg";
     import {quillEditor} from 'vue-quill-editor'
 
     export default {
         data() {
             return {
-                time: '',
                 picNum: 0,
                 show: false,
                 canCrop: false,
                 /*测试上传图片的接口，返回结构为{url:''}*/
                 uploadUrl: `http:${process.env.API_ROOT}data/article/uploadImg`,
-                content: '',
+         
                 indexbanner: 0, //注意是从0开始的，但是在页面是有+1的
                 loading: false,
                 /*显示裁切控件*/
@@ -112,11 +101,7 @@
                     }
                 },
                 hasPic: true, //默认没动开关时是关闭状态，如果设为false，那么不动开关也无法发表
-                title: "默认标题", //标题
-                author: "佚名", //作者
-                source: "本站原创", //文章来源
-                content: "I am Example", // 编辑器的内容
-                selectedOptions: ["information", "1"], //级联选择器
+      
                 isBanner: 0, //是否列为首页banner
                 editorOption: {
                     // 编辑器的配置
@@ -230,42 +215,40 @@
                     this.hasPic = false;
                 }
             },
-            async saveDraft() {
+            /*更新草稿 */
+            async renewDraft() {
               
-                if (this.content.length === 0) {
+                if (this.draft.content.length === 0) {
                     this.$message("请不要发表内容为空的文章");
                     return;
                 }
-                if (this.author.length === 0) {
+                if (this.draft.author.length === 0) {
                     this.$message("请标明作者");
                     return;
                 }
-                if (this.title.length === 0) {
+                if (this.draft.title.length === 0) {
                     this.$message("请输入标题");
                     return;
                 }
-                if (!this.time) {
+                if (!this.draft.time) {
                     this.$message("请选择发布日期");
                     return;
                 }
-                if (this.selectedOptions.length === 0) {
-                    this.$message("请选择分类");
-                    return;
-                }
-                if (this.source.length === 0) {
+               
+                if (this.draft.source.length === 0) {
                     this.$message("请输入文章来源");
                     return;
                 }
                
                 this.loading = true;
-                let result = await postDraft({
-                    title: this.title,
-                    author: this.author,
-                    content: this.content,
-                    source: this.source,
-                    time: this.time,
-                    sort : this.selectedOptions[0],
-                    type: this.selectedOptions[1]
+                let result = await updateDraft({
+                    id: this.draft.id,
+                    title: this.draft.title,
+                    author: this.draft.author,
+                    content: this.draft.content,
+                    source: this.draft.source,
+                    time: this.draft.time
+                 
                 });
                 const {code, msg} = result;
                 if (code === 200) {
@@ -285,27 +268,24 @@
             async onEditorChange() {
               
                 this.hasImg();
-                if (this.content.length === 0) {
+                if (this.draft.content.length === 0) {
                     this.$message("请不要发表内容为空的文章");
                     return;
                 }
-                if (this.author.length === 0) {
+                if (this.draft.author.length === 0) {
                     this.$message("请标明作者");
                     return;
                 }
-                if (this.title.length === 0) {
+                if (this.draft.title.length === 0) {
                     this.$message("请输入标题");
                     return;
                 }
-                if (!this.time) {
+                if (!this.draft.time) {
                     this.$message("请选择发布日期");
                     return;
                 }
-                if (this.selectedOptions.length === 0) {
-                    this.$message("请选择分类");
-                    return;
-                }
-                if (this.source.length === 0) {
+               
+                if (this.draft.source.length === 0) {
                     this.$message("请输入文章来源");
                     return;
                 }
@@ -314,24 +294,33 @@
                     return;
                 }
                 this.loading = true;
+                let selectedOptions = [];
+                selectedOptions[0] = this.draft.sort;                 
+                selectedOptions[1] = parseInt(this.draft.type);                 
                 let result = await postArticle({
-                    title: this.title,
-                    author: this.author,
-                    content: this.content,
-                    source: this.source,
-                    time: this.time,
-                    selectedOptions: this.selectedOptions,
+                    title: this.draft.title,
+                    author: this.draft.author,
+                    content: this.draft.content,
+                    source: this.draft.source,
+                    time: this.draft.time,
+                    selectedOptions,
                     isbanner: this.isBanner,
                     indexbanner: this.indexbanner
                 });
                 const {code, msg} = result.data;
                 if (code === 200) {
+
+                    //成功发布草稿后，发送请求删除该草稿
+                    let article = [{
+                        id: this.draft.id
+                    }];
+                    deleteDraft({article});
                     this.loading = false;
                     this.$message({
                         message: msg,
                         type: "success"
                     });
-                    this.$store.state.selectedOptions = this.selectedOptions;
+                    this.$store.state.selectedOptions = selectedOptions;
                     this.$router.push({path: "/article"});
                 } else {
                     this.$message({
@@ -396,6 +385,8 @@
             this.$refs.myQuillEditor.quill.getModule("toolbar").addHandler("image", imgHandler)
         },
         computed: {
+            ...mapState(["draft"]),
+
             editor() {
                 return this.$refs.myQuillEditor.quill;
             },

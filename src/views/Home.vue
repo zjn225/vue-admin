@@ -279,24 +279,8 @@
             }
         }
 
-        /*折叠后*/
-        .el-menu-item:nth-child(5),
-        .el-menu-item:nth-child(6),
-        .el-menu-item:nth-child(7),
-        .el-menu-item:nth-child(8),
-        .el-menu-item:nth-child(10),
-        .el-menu-item:nth-child(9){
-        display: none;
-    }
+       
 
-        /*未折叠*/
-        .liItem:nth-child(5),
-        .liItem:nth-child(6),
-        .liItem:nth-child(7),
-        .liItem:nth-child(8),
-        .liItem:nth-child(10),
-        .liItem:nth-child(9) {
-            display: none;
-        }
+    
     }
 </style>

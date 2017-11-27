@@ -62,6 +62,33 @@ export const editArticle = params => {
 export const moveArticle = params => {
     return instance.post(`/data/article/batchMove`, params).then(res => res.data);
 };
+/*草稿 */
+export const getDraft = params => {
+    return instance.get(`/data/draft`, {params: params}).then(res => res.data);
+};
+export const postDraft = params => {
+    return instance.post(`/data/draft`,params).then(res => res.data);
+};
+export const publishDraft = params => {
+    return instance.get(`/data/draft/publish`,{params: params}).then(res => res.data);
+};
+export const updateDraft = params => {
+    return instance.post(`/data/draft/update`,params).then(res => res.data);
+};
+export const getDraftCatalog = params => {
+    return instance.get(`/data/draft/catalog`, {params: params}).then(res => res.data);
+};
+
+export const deleteDraft = params => {
+    return instance.post(`/data/draft/delete`,params).then(res => res.data);
+};
+
+export const editDraft = params => {
+    return instance.post(`/data/draft/edit`, params).then(res => res.data);
+};
+export const moveDraft = params => {
+    return instance.post(`/data/draft/batchMove`, params).then(res => res.data);
+};
 
 /*研究方向 */
 export const getResearchdir = () => {

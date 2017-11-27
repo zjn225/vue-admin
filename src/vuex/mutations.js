@@ -11,7 +11,7 @@ export default {
     [types.SAVE_SELECTOPTION](state, selectedOptions){
 
 
-state.selectedOptions = selectedOptions;
+    state.selectedOptions = selectedOptions;
     },
     [types.SAVE_TEAMONE](state, person){
 
@@ -22,6 +22,12 @@ state.selectedOptions = selectedOptions;
     [types.SAVE_ARTICLEINFO](state, article){
         for(let attr in article){
             state.article[attr] = article[attr];
+        }
+        
+    },
+    [types.SAVE_DRAFTINFO](state, draft){
+        for(let attr in draft){
+            state.draft[attr] = draft[attr];
         }
         
     },

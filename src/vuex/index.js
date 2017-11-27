@@ -27,6 +27,14 @@ const state = {
         isbanner: '',
         selectedOptions: ''
     },
+    draft: {
+        title: '',
+        author: '',
+        source: '',
+        time: '',
+        content: '',
+        selectedOptions: ''
+    },
     books: {
         name: '',
         time: '',

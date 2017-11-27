@@ -105,6 +105,16 @@ const direction = (resolve) => {
         resolve(module)
     })
 }
+const Draft = (resolve) => {
+    import('./views/nav2/draft.vue').then((module) => {
+        resolve(module)
+    })
+}
+const editDraft = (resolve) => {
+    import('./views/edit/editDraft.vue').then((module) => {
+        resolve(module)
+    })
+}
 
 let routes = [
     {
@@ -140,21 +150,22 @@ let routes = [
         path: '/',
         component: Home,
         name: '管理',
+        
         iconCls: 'el-icon-menu',
         children: [
-            {path: '/writeArticle', component: Write, name: '撰写文章'},
+            {path: '/writeArticle', component: Write, name: '撰写文章' },
+            {path: '/draft', component: Draft, name: '草稿箱'},                     
             {path: '/article', component: Article, name: '文章著作管理'},
             {path: '/person', component: person, name: '专家团队管理'},
             {path: '/feedBack', component: feedBack, name: '反馈管理'},
-            {path: '/editArticle', component: editArticle, name: '修改文章'},
-            {path: '/editPerson', component: editPerson, name: '修改专家团队'},
             {path: '/brief', component: Brief, name: '修改简介'},
-            {path: '/addPerson', component: addPerson, name: '新增专家团队'},
-           
-            {path: '/addFriendLink', component: addFriendLink, name: '新增友情链接'},
-            {path: '/editLink', component: editLink, name: '修改友情链接'},
-            {path: '/brief', component: brief, name: '修改简介'},
             {path: '/direction', component: direction, name: '修改研究方向'},
+            {path: '/editArticle', component: editArticle, name: '修改文章',hidden:true},
+            {path: '/editPerson', component: editPerson, name: '修改专家团队',hidden:true},
+            {path: '/addPerson', component: addPerson, name: '新增专家团队', hidden:true},
+            {path: '/editDraft', component: editDraft, name: '修改草稿', hidden:true},         
+            {path: '/addFriendLink', component: addFriendLink, name: '新增友情链接', hidden:true},
+            {path: '/editLink', component: editLink, name: '修改友情链接', hidden:true},
         ]
     },
     {
@@ -166,6 +177,7 @@ let routes = [
         children: [
             // {path: '/basic', component: Basic, name: '基本设置'},
             //机构简介，机构设置
+            
             {path: '/friendLink', component: friendLink, name: '友情链接'}
         ]
     },
