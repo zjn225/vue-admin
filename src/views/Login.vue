@@ -1,8 +1,9 @@
 <template>
-    <div class="wrap">
+    <div class="wrap" id="wrap">
         <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px"
                  class="demo-ruleForm login-container">
-            <h2 class="title">流通所后台管理系统</h2>
+            <h2 class="title">广财流通所后台管理系统</h2>
+            <div class="line"></div>
             <el-form-item prop="account">
                 <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="账号"></el-input>
             </el-form-item>
@@ -21,6 +22,7 @@
 
 <script>
     import {requestLogin} from '../api/api';
+    import moment from 'moment';
 
     export default {
         data() {
@@ -31,6 +33,9 @@
 
             };
             return {
+                loginSite: '',
+                loginTime: '',
+                loginCip: '',
                 logining: false,
                 ruleForm2: {
                     account: 'admin',
@@ -38,12 +43,12 @@
                 },
                 rules2: {
                     account: [
-                        {required: true,  message: '请输入账号', trigger: 'blur'},
-                        { min: 3, message: '账号长度在3个字符以上', trigger: 'blur' }
+                        {required: true, message: '请输入账号', trigger: 'blur'},
+                        {min: 3, message: '账号长度在3个字符以上', trigger: 'blur'}
                     ],
                     checkPass: [
                         {required: true, message: '请输入密码', trigger: 'blur'},
-                        { min: 5, message: '密码长度在5个字符以上', trigger: 'blur' }
+                        {min: 5, message: '密码长度在5个字符以上', trigger: 'blur'}
                     ]
                 },
             };
@@ -52,29 +57,121 @@
             handleSubmit2(ev) {
                 var _this = this;
                 this.$refs.ruleForm2.validate((valid) => {
-                    console.log(this.$refs)//{ruleForm2: VueComponent}
                     if (valid) {
                         this.logining = true;
-                        var loginParams = {account: this.ruleForm2.account, password: this.ruleForm2.checkPass};
+                        let date = new Date(),
+                            year = date.getFullYear(),
+                            month = (date.getMonth() + 1),
+                            day = date.getDate(),
+                            hours = date.getHours(),
+                            minutes = date.getMinutes(),
+                            seconds = date.getSeconds();
+
+                        if (hours < 10) {
+                            hours = '0' + hours
+                        }
+
+                        if (minutes < 10) {
+                            minutes = '0' + minutes
+                        }
+
+                        if (seconds < 10) {
+                            seconds = '0' + seconds
+                        }
+
+                        const loginTime = year + '年' + month + '月' + day + '日 ' + hours + ':' + minutes + ':' + seconds;
+
+                        /*登录时间，加入localStorage防止刷新的时候无法正常显示*/
+                        this.loginTime = loginTime;
+                        this.loginSite = returnCitySN['cname'];
+                        var loginParams = {
+                            account: this.ruleForm2.account,
+                            password: this.ruleForm2.checkPass,
+                            loginTime: this.loginTime,
+                            loginSite: this.loginSite
+                        };
                         requestLogin(loginParams).then(data => {
-                            this.logining = false;
-                            let {code, msg} = data;
+                            let {code, msg, loginTime, loginSite} = data;
                             if (code !== 200) {
                                 this.$message({
                                     message: msg,
                                     type: 'error'
                                 });
+                                this.logining = false;
                             } else {
+                                this.$message({
+                                    message: msg,
+                                    type: "success"
+                                });
+                                this.logining = false;
+
+                                this.$store.state.loginTime = loginTime;
+                                localStorage.loginTime = loginTime;
+                                this.$store.state.loginSite = loginSite;
+                                localStorage.loginSite = loginSite
+
                                 sessionStorage.setItem('status', 1);
-                                this.$router.push({path: '/main'});
+                                this.$router.push({path: '/Main'});
                             }
-                        });
+                        }, () => {
+                            this.$message({
+                                message: "请求失败",
+                                type: "error"
+                            });
+                            this.logining = false;
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;
                     }
                 });
-            }
+                /*登录地点*/
+                this.loginSite = returnCitySN['cname']
+                this.$store.state.loginSite = this.loginSite;
+                localStorage.loginSite = this.loginSite
+            },
+            /*随机更换图片*/
+            randomImg() {
+                var wrap = document.getElementById('wrap');
+                var body = document.getElementsByTagName('body')[0];
+                var rand = Math.ceil(Math.random() * 5);
+                var url = "http://o835i1293.bkt.clouddn.com/lts" + rand + ".jpg"
+                console.log(url)
+                var value = "url(" + "'" + url + "'" + ")"
+                this.setCss(wrap, 'background-image', value)
+                this.setCss(wrap, 'background-size', "cover")
+                this.setCss(wrap, 'background-position', "center")
+                this.setCss(wrap, 'position', "relative")
+            },
+            setCss: function (curEle, attr, value) {
+                if (attr === "float") {
+                    curEle["style"]["cssFloat"] = value;
+                    curEle["style"]["styleFloat"] = value;
+                    return;
+                }
+                if (attr === "opacity") {
+                    curEle["style"]["opacity"] = value;
+                    curEle["style"]["filter"] = "alpha(opacity=" + value * 100 + ")";
+                    return;
+                }
+                var reg = null;
+                reg = /^(width|height|top|bottom|left|right|((margin|padding)(Top|Bottom|Left|Right)?))$/;
+                if (reg.test(attr)) {
+                    if (!isNaN(value)) { //是有效数字，即是不带单位的
+                        value += "px";
+                    }
+                }
+                curEle["style"][attr] = value;
+            },
+        },
+        mounted() {
+            const s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = 'http://pv.sohu.com/cityjson?ie=utf-8'; //引用搜狐接口
+            document.body.appendChild(s);
+            this.randomImg();
+            //返回值 var returnCitySN =
+            // {"cip": "183.6.137.86", "cid": "440100", "cname": "广东省广州市"};
         }
     }
 
@@ -82,24 +179,28 @@
 
 <style lang="scss" scoped>
     .wrap {
-        position: absolute;
         width: 100%;
         height: 100%;
-        background-color: #2D3A4B;
+        /* background-color: #2D3A4B;
+         background-image: url('../assets/bg2.jpg');
+          background-size: cover;
+          background-position: center;
+          position: relative;*/
     }
 
     .login-container {
-        /*box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);*/
+        box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);
         -webkit-border-radius: 5px;
         border-radius: 5px;
         -moz-border-radius: 5px;
-        background-clip: padding-box;
-        margin: 180px auto;
-        width: 350px;
-        padding: 35px 35px 15px 35px;
         background: #fff;
-        border: 1px solid #eaeaea;
-        box-shadow: 0 0 5px #cac6c6;
+        padding: 23px 31px 0px 34px;
+        position: absolute;
+        right: 160px;
+        top: 50%;
+        transform: translateY(-60%);
+        width: 300px;
+        height: 280px;
         .title {
             margin: 0px auto 40px auto;
             text-align: center;

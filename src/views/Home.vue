@@ -13,7 +13,7 @@
             <!--用户信息-->
             <el-col :span="4" class="goOut">
                 <span class="el-dropdown-link" @click="logout">{{goOut}}</span>
-                <span class="el-dropdown-link">{{goSite}}</span>
+                <span class="el-dropdown-link" @click="jumpSite">{{goSite}}</span>
             </el-col>
 
         </el-col>
@@ -27,7 +27,8 @@
                         <!--不是叶子节点-->
                         <el-submenu :index="index+''" v-if="!item.leaf">
                             <template slot="title"><i :class="item.iconCls"></i>{{item.name}}</template>
-                            <el-menu-item v-for="child in item.children" :index="child.path" :key="child.path"
+                            <el-menu-item class="liItem" v-for="child in item.children" :index="child.path"
+                                          :key="child.path"
                                           v-if="!child.hidden">{{child.name}}
                             </el-menu-item>
                         </el-submenu>
@@ -63,8 +64,10 @@
 </li>
 </ul>
 </aside>
+<!--右侧内容区-->
 <section class="content-container">
     <div>
+        <!--面包屑导航部分-->
         <el-col :span="24" class="breadcrumb-container">
             <strong class="title">{{$route.name}}</strong>
             <el-breadcrumb separator="/" class="breadcrumb-inner">
@@ -73,6 +76,7 @@
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </el-col>
+        <!--真正的组件渲染区-->
         <el-col :span="24" class="content-wrapper">
             <transition name="fade" mode="out-in">
                 <router-view></router-view>
@@ -88,7 +92,7 @@
     export default {
         data() {
             return {
-                sysName: '流通所管理系统',
+                sysName: '广财流通所管理系统',
                 smlName: 'lts',
                 collapsed: false,
                 sysUserName: '',
@@ -133,6 +137,9 @@
 
 
             },
+            jumpSite:function () {
+              window.open("http://lococo.site");
+            },
             //折叠导航栏
             collapse: function () {
                 this.collapsed = !this.collapsed;
@@ -165,11 +172,11 @@
             line-height: 60px;
             background: $color-primary;
             color: #fff;
-            .goOut{
+            .goOut {
                 text-align: right;
                 padding-right: 35px;
                 float: right;
-                span{
+                span {
                     cursor: pointer;
                     margin: 10px;
                 }
@@ -177,12 +184,9 @@
             .logo {
                 //width:230px;
                 height: 60px;
-                font-size: 22px;
+                font-size: 20px;
                 padding-left: 20px;
                 padding-right: 20px;
-                border-color: rgba(238, 241, 146, 0.3);
-                border-right-width: 1px;
-                border-right-style: solid;
                 img {
                     width: 40px;
                     float: left;
@@ -256,6 +260,7 @@
                 // left: 230px;
                 overflow-y: scroll;
                 padding: 20px;
+                height: 100%;
                 .breadcrumb-container {
                     //margin-bottom: 15px;
                     .title {
@@ -272,6 +277,26 @@
                     box-sizing: border-box;
                 }
             }
+        }
+
+        /*折叠后*/
+        .el-menu-item:nth-child(5),
+        .el-menu-item:nth-child(6),
+        .el-menu-item:nth-child(7),
+        .el-menu-item:nth-child(8),
+        .el-menu-item:nth-child(10),
+        .el-menu-item:nth-child(9){
+        display: none;
+    }
+
+        /*未折叠*/
+        .liItem:nth-child(5),
+        .liItem:nth-child(6),
+        .liItem:nth-child(7),
+        .liItem:nth-child(8),
+        .liItem:nth-child(10),
+        .liItem:nth-child(9) {
+            display: none;
         }
     }
 </style>

@@ -22,7 +22,8 @@ export default {
 
     //登录
     mock.onPost('/login').reply(config => {
-      let {account, password} = JSON.parse(config.data);
+        console.log("bbb")
+        let {account, password} = JSON.parse(config.data);
       return new Promise((resolve, reject) => {
         let ok = false;
         setTimeout(() => {

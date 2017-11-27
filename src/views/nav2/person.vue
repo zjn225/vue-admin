@@ -1,0 +1,333 @@
+<template>
+    <section>
+        <!--工具条-->
+        <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+            <el-form :inline="true" :model="filters">
+                <el-form-item>
+                    <el-input v-model="filters.name" placeholder="姓名" @keyup.enter.native='handleReacher(0)'></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" v-on:click="handleReacher(0)" icon='el-icon-search'>查询</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="handleAdd" icon='el-icon-circle-plus-outline'>新增</el-button>
+                </el-form-item>
+            </el-form>
+        </el-col>
+
+        <!--列表-->
+        <el-table :data="persons" highlight-current-row v-loading="isLoading" @selection-change="selsChange"
+                  style="width: 100%;" id='mytable'>
+            <el-table-column type="selection">
+            </el-table-column>
+            <el-table-column type="index" label="序号">
+            </el-table-column>
+            <el-table-column prop="name" label="姓名" sortable>
+            </el-table-column>
+            <el-table-column prop="position" label="职称" sortable>
+            </el-table-column>
+            <el-table-column label="操作" width="600">
+                <template slot-scope="scope">
+                    <el-button type="success" size="mini" icon="el-icon-caret-top"
+                               @click="upIt(scope.$index, scope.row)"></el-button>
+                    <el-button type="success" size="mini" icon="el-icon-caret-bottom"
+                               @click="downIt(scope.$index, scope.row)"></el-button>
+                    <el-button type="primary" size="small" @click="handleEdit(scope.$index, scope.row)"
+                               icon="el-icon-edit">编辑
+                    </el-button>
+                    <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)"
+                               icon="el-icon-delete">删除
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <!--工具条-->
+        <el-col :span="24" class="toolbar">
+            <el-button type="danger" @click="batchRemove" :disabled="this.sels.length<=0">批量删除</el-button>
+            <el-pagination layout="prev, pager, next,jumper" @current-change="handleCurrentChange" :page-size="20"
+                           :total="total" style="float:right;">
+            </el-pagination>
+        </el-col>
+
+    </section>
+</template>
+
+<script>
+    import util from "../../common/js/util";
+    import {mapMutations} from "vuex";
+    import {
+        getTeamList,
+        removeUser,
+        addUser,
+        getTeamOne,
+        deletePerson,
+        searchPerson,
+        updatePersonIndex
+    } from "../../api/api";
+
+    export default {
+        data() {
+            return {
+                filters: {
+                    name: ""
+                },
+                persons: [],
+                total: 0,
+                page: 1,
+                isLoading: false,
+                sels: [], //列表选中列
+                isReacher: "",
+                editFormVisible: false, //编辑界面是否显示
+                editLoading: false,
+                editFormRules: {
+                    name: [{required: true, message: "请输入姓名", trigger: "blur"}]
+                },
+
+                addFormVisible: false, //新增界面是否显示
+                addLoading: false,
+                addFormRules: {
+                    name: [{required: true, message: "请输入姓名", trigger: "blur"}]
+                }
+            };
+        },
+        methods: {
+            ...mapMutations(["SAVE_TEAMONE"]),
+            handleCurrentChange(currentPage) {
+                const start = (currentPage - 1) * 20 + currentPage - 1;
+
+                if (this.isReacher) {
+                    this.handleReacher(start);
+                } else {
+                    this.getUsers(start);
+                }
+            },
+            //获取用户列表
+            getUsers(start = 0) {
+                this.isLoading = true;
+                getTeamList(start).then(data => {
+//                    console.log(data)
+                    if (this.total === 0) {
+                        this.total = data.pageCount;
+                    }
+                    this.persons = data.person;
+                    this.isLoading = false;
+                    this.isReacher = false;
+                    console.log(this.persons)
+                });
+            },
+
+
+            //删除
+            handleDel: function (index, row) {
+                this.$confirm("确认删除该记录吗?", "提示", {
+                    type: "warning"
+                })
+                    .then(() => {
+                        this.isLoading = true;
+                        let person = [{id: row.id}];
+                        deletePerson({person}).then(res => {
+                            this.isLoading = false;
+                            let {code, msg} = res.data;
+                            if (code === 200) {
+                                this.$message({
+                                    message: "删除成功",
+                                    type: "success"
+                                });
+                                this.getUsers();
+                            } else {
+                                this.$message({
+                                    message: msg,
+                                    type: "error"
+                                });
+                            }
+                        });
+                    })
+                    .catch(() => {
+                    });
+            },
+            //搜索专家
+            handleReacher(start = 0) {
+
+                const name = this.filters.name;
+
+                this.listLoading = true;
+                searchPerson({name, start}).then(data => {
+                    this.listLoading = false;
+//                    console.log(data)
+                    let {code, msg, persons, pageCount} = data;
+                    if (code === 200) {
+                        this.persons = persons;
+                        this.isReacher = true;
+                        this.total = pageCount;
+                    } else {
+                        this.$message({
+                            message: msg,
+                            type: "error"
+                        });
+                    }
+                });
+            },
+            //显示编辑界面
+            handleEdit: async function (index, row) {
+                const id = this.persons[index].id;
+
+                const result = await getTeamOne({id});
+                const {data, code, msg} = result.data;
+                if (code === 200) {
+                    this.SAVE_TEAMONE(data[0]);
+                    this.$router.push({path: "/editPerson"});
+                } else {
+                    this.$message({
+                        message: msg,
+                        type: "error"
+                    });
+                }
+            },
+
+            /*向下移动*/
+            downIt: function (_index, row) {
+                if (this.persons[_index] === this.persons[this.persons.length - 1]) {
+                    return
+                }
+                let thisP = this.persons[_index],
+                    nextP = this.persons[_index + 1],
+                    id = [],
+                    rank = []; 
+
+                    id[0] = thisP.id;
+                    rank[0] =  nextP.rank; 
+                    id[1] =  nextP.id;
+                    rank[1] = thisP.rank; 
+
+               
+
+                updatePersonIndex({id,rank}).then((data)=>{
+                    let {code} = data;
+                    if (code === 200) {
+                        thisP.rank = rank[0];
+                        nextP.rank = rank[1];
+                        /*Vue 不能检测以下变动的数组：1、索引修改 2、长度修改*/
+                        this.persons.splice(_index, 1, nextP)
+
+                        this.persons.splice(_index + 1, 1, thisP)
+                   
+                    } else {
+                        this.$message({
+                            message: 'error',
+                            type: "error"
+                        });
+                    }
+                })
+
+            },
+
+            /*向上移动*/
+            upIt: function (_index, row) {
+                if (this.persons[_index] === this.persons[0]) {
+                    return
+                }
+                let thisP = this.persons[_index],
+                    lastP = this.persons[_index - 1],
+                    id = [],
+                    rank = []; 
+                    id[0] = thisP.id;
+                    rank[0] = lastP.rank; 
+                    id[1] = lastP.id;
+                    rank[1] =thisP.rank; 
+
+                console.log(id, rank)
+
+                updatePersonIndex({id,rank}).then((data)=>{
+                    let {code} = data;
+                   
+                    if (code === 200) {
+                        thisP.rank = rank[0];
+                        lastP.rank = rank[1];
+                        this.persons.splice(_index - 1, 1, thisP)
+                        this.persons.splice(_index, 1, lastP);
+                        
+                    } else {
+                        this.$message({
+                            message: 'error',
+                            type: "error"
+                        });
+                    }
+                })
+
+            },
+
+            /*提交更改*/
+            async onEditorChange() {
+                let result = await addPerson({
+                    name: this.name,
+                    position: this.position,
+                    content: this.content,
+                    avatar: this.avatar
+                });
+
+                const {code, msg} = result.data;
+
+                if (code === 200) {
+                    this.loading = false;
+                    this.$message({
+                        message: msg,
+                        type: "success"
+                    });
+
+                } else {
+                    this.loading = false;
+                    this.$message({
+                        message: msg,
+                        type: "error"
+                    });
+                }
+            },
+
+
+            //新增
+            handleAdd: function () {
+                this.$router.push({path: "/addPerson"});
+            },
+            selsChange: function (sels) {
+                this.sels = sels;
+            },
+            //批量删除
+            batchRemove: function () {
+                var person = this.sels.map(item => ({id: item.id}));
+                this.$confirm("确认删除选中记录吗？", "提示", {
+                    type: "warning"
+                })
+                    .then(() => {
+                        this.isLoading = true;
+                        //NProgress.start();
+                        batchRemoveUser({person}).then(res => {
+                            this.isLoading = false;
+                            let {code, msg} = res;
+                            if (code === 200) {
+                                this.$message({
+                                    message: "删除成功",
+                                    type: "success"
+                                });
+                                // this.getUsers();
+                            } else {
+                                this.$message({
+                                    message: msg,
+                                    type: "error"
+                                });
+                            }
+                        });
+                    })
+                    .catch(() => {
+                    });
+            }
+        },
+        mounted() {
+            this.getUsers();
+        }
+    };
+</script>
+
+<style scoped>
+   
+</style>

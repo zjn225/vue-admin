@@ -1,0 +1,454 @@
+<template>
+    <div v-loading="loading" element-loading-text="正在发表，请稍后"
+         element-loading-spinner="el-icon-loading">
+        <div class="left">
+            <el-input class="title" v-model="title" placeholder="请输入标题"></el-input>
+
+
+            <quillEditor v-model="content"
+                         ref="myQuillEditor"
+                         :options="editorOption"
+                         @blur="onEditorBlur($event)"
+                         @focus="onEditorFocus($event)"
+                         @ready="onEditorReady($event)">
+            </quillEditor>
+
+        </div>
+        <div class="right">
+            <!--作者-->
+            <div class="author">
+                <h3>作者</h3>
+                <el-input class="right_input" v-model="author" placeholder="作者"></el-input>
+            </div>
+            <!--发布日期-->
+            <div class="date">
+                <h3>发布日期</h3>
+                <div class="block">
+                    <span class="demonstration"></span>
+                    <el-date-picker
+                            v-model="time"
+                            type="date"
+                            format="yyyy-MM-dd"
+                            placeholder="选择日期"
+                            value-format="yyyy-MM-dd"
+                            :picker-options="pickerOptions0">
+                    </el-date-picker>
+                </div>
+            </div>
+            <!--类别-->
+            <div class="block">
+                <h3>分类</h3>
+                <el-cascader
+                        expand-trigger="hover"
+                        :options="options"
+                        v-model="selectedOptions"
+                        @change="handleChange">
+                </el-cascader>
+            </div>
+            <!--分类-->
+            <h3>文章来源</h3>
+            <el-input class="source" v-model="source" placeholder="文章来源"></el-input>
+
+            <h3>是否将该文章列为首页轮播图</h3>
+            <el-switch
+                    v-model="isBanner"
+                    on-color="#13ce66"
+                    active-text="是"
+                    inactive-text="否"
+                    :active-value='1'
+                    :inactive-value='0'
+                    @change="countPic()"
+            >
+            </el-switch>
+            <div class="block" v-if="picNum && isBanner">
+                <h3>选择轮播图</h3>
+
+                <el-radio-group v-model="indexbanner" v-for="(item,index) in picNum" :key="index" class="sele">
+                    <el-radio :label="index">图片{{index + 1}}</el-radio>
+                </el-radio-group>
+            </div>
+        </div>
+        <div class="btn">
+            <el-button type="success" class="btn2" size='medium' id="submit2" @click="saveArt()" icon="el-icon-upload2">
+                存草稿
+            </el-button>
+            <el-button type="success" class="btn3" size='medium' id="submit3" @click="readArt()"
+                       icon="el-icon-download">
+                读草稿
+            </el-button>
+            <el-button type="primary" class="btn1" size='medium' id="submit" @click="onEditorChange()"
+                       icon="el-icon-upload">发表文章
+            </el-button>
+        </div>
+        <CropImg
+                v-if="showCrop"
+                :uploadUrl="uploadUrl"
+                @onUploadSuccess="onUploadSuccess"
+                @onStopCrop="onStopCrop"
+        ></CropImg>
+    </div>
+</template>
+
+<script>
+    import {postArticle, uploadImg} from "../../api/api";
+    import {mapMutations} from "vuex";
+    import CropImg from "../Upload/CropImg";
+    import {quillEditor} from 'vue-quill-editor'
+
+    export default {
+        data() {
+            return {
+                time: '',
+                picNum: 0,
+                show: false,
+                canCrop: false,
+                /*测试上传图片的接口，返回结构为{url:''}*/
+                uploadUrl: `http:${process.env.API_ROOT}data/article/uploadImg`,
+                content: '',
+                indexbanner: 0, //注意是从0开始的，但是在页面是有+1的
+                loading: false,
+                /*显示裁切控件*/
+                showCrop: false,
+                pickerOptions0: {
+                    disabledDate(time) {
+                        return time.getTime() < Date.now() - 8.64e7;
+                    }
+                },
+                hasPic: true, //默认没动开关时是关闭状态，如果设为false，那么不动开关也无法发表
+                title: "默认标题", //标题
+                author: "佚名", //作者
+                source: "本站原创", //文章来源
+                content: "I am Example", // 编辑器的内容
+                selectedOptions: ["information", "1"], //级联选择器
+                isBanner: 0, //是否列为首页banner
+                editorOption: {
+                    // 编辑器的配置
+                    // something config
+                },
+                options: [
+                    {
+                        value: "information",
+                        label: "科研资讯",
+                        children: [
+                            {
+                                value: "1",
+                                label: "科研简讯"
+                            },
+                            {
+                                value: "2",
+                                label: "媒体报道"
+                            }
+                        ]
+                    },
+                    {
+                        value: "research",
+                        label: "科学研究",
+                        children: [
+                            {
+                                value: "1",
+                                label: "课题研究"
+                            },
+                            {
+                                value: "2",
+                                label: "调研考察"
+                            }
+                        ]
+                    },
+                    {
+                        value: "achievement",
+                        label: "科研成果",
+                        children: [
+                            {
+                                value: "1",
+                                label: "著作"
+                            },
+                            {
+                                value: "2",
+                                label: "学术论文"
+                            },
+                            {
+                                value: "3",
+                                label: "研究报告"
+                            }
+                        ]
+                    },
+                    {
+                        value: "exchange",
+                        label: "学术交流",
+                        children: [
+                            {
+                                value: "1",
+                                label: "学术学会"
+                            },
+                            {
+                                value: "2",
+                                label: "流通论坛"
+                            },
+                            {
+                                value: "3",
+                                label: "来访交流"
+                            }
+                        ]
+                    }
+                ]
+            };
+        },
+        components: {
+            CropImg,
+            quillEditor
+        },
+        // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
+        methods: {
+            ...mapMutations(["SAVE_ARTICLEINFO"]),
+            handleChange(value) {
+                this.countPic();
+            },
+            onEditorBlur(editor) {
+                this.countPic();
+            },
+            onEditorFocus(editor) {
+                this.countPic();
+            },
+            onEditorReady(editor) {
+                this.countPic();
+            },
+            //不能在开关的change方法加入hasImg，否则先打开开关再加入图片就出现bug了
+            countPic() {
+                var reg = /<img src=/g;
+                if (reg.test(this.content)) {
+                    let imgNum = this.content.match(reg);
+                    this.picNum = imgNum.length;
+                } else {
+                    this.picNum = 0;
+                }
+            },
+            hasImg() {
+                var reg = /<img src=/g;
+                if (reg.test(this.content)) {
+                    //有图片
+                    this.hasPic = true;
+                    this.countPic();
+                } else {
+                    //无图片
+                    this.hasPic = false;
+                }
+            },
+            saveArt() {
+                localStorage.title = this.title || "";
+                localStorage.author = this.author || "";
+                localStorage.content = this.content || "";
+                localStorage.time = this.time || "";
+                localStorage.selectedOptions = this.selectedOptions || "";
+                localStorage.source = this.source || "";
+                localStorage.hasPic = this.hasPic || "";
+                //                localStorage.isBanner = this.isBanner || '';
+                //                localStorage.indexbanner = this.indexbanner || '';
+            },
+            readArt() {
+                this.title = localStorage.title;
+                this.author = localStorage.author;
+                this.content = localStorage.content;
+                this.time = localStorage.time;
+                this.selectedOptions = localStorage.selectedOptions.split(",");
+                this.source = localStorage.source;
+                this.hasPic = localStorage.hasPic;
+                //                this.isBanner = localStorage.isBanner
+            },
+            async onEditorChange() {
+                console.log('1212' + this.time)
+                this.hasImg();
+                if (this.content.length === 0) {
+                    this.$message("请不要发表内容为空的文章");
+                    return;
+                }
+                if (this.author.length === 0) {
+                    this.$message("请标明作者");
+                    return;
+                }
+                if (this.title.length === 0) {
+                    this.$message("请输入标题");
+                    return;
+                }
+                if (!this.time) {
+                    this.$message("请选择发布日期");
+                    return;
+                }
+                if (this.selectedOptions.length === 0) {
+                    this.$message("请选择分类");
+                    return;
+                }
+                if (this.source.length === 0) {
+                    this.$message("请输入文章来源");
+                    return;
+                }
+                if (!this.hasPic && this.isBanner == 1) {
+                    this.$message("内容没有图片，请不要设置为首页的轮播图");
+                    return;
+                }
+                this.loading = true;
+                let result = await postArticle({
+                    title: this.title,
+                    author: this.author,
+                    content: this.content,
+                    source: this.source,
+                    time: this.time,
+                    selectedOptions: this.selectedOptions,
+                    isbanner: this.isBanner,
+                    indexbanner: this.indexbanner
+                });
+                const {code, msg} = result.data;
+                if (code === 200) {
+                    this.loading = false;
+                    this.$message({
+                        message: msg,
+                        type: "success"
+                    });
+                    this.$store.state.selectedOptions = this.selectedOptions;
+                    this.$router.push({path: "/article"});
+                } else {
+                    this.$message({
+                        message: msg,
+                        type: "error"
+                    });
+                }
+            },
+            onUploadSuccess: function (path) {
+                this.showCrop = false;
+                this.editor.focus();
+                this.editor.insertEmbed(this.editor.getSelection().index, "image", path);
+            },
+            onStopCrop() {
+                this.showCrop = false;
+            },
+            onFileChange(e) {
+                let fileInput = e.target;
+                let file = fileInput.files[0];
+                if (fileInput.files.length == 0) {
+                    return;
+                }
+                if (window.createObjectURL != undefined) { // basic
+                    this.uploadUrl = window.createObjectURL(file);
+                } else if (window.URL != undefined) { // mozilla(firefox)
+                    this.uploadUrl = window.URL.createObjectURL(file);
+                } else if (window.webkitURL != undefined) { // webkit or chrome
+                    this.uploadUrl = window.webkitURL.createObjectURL(file);
+                }
+                this.editor.focus();
+                this.showCrop = true;
+            },
+        },
+        mounted() {
+            let date = new Date(),
+                year = date.getFullYear(),
+                month = (date.getMonth() + 1),
+                day = date.getDate(),
+                hours = date.getHours(),
+                minutes = date.getMinutes(),
+                seconds = date.getSeconds();
+            if (hours < 10) {
+                hours = '0' + hours
+            }
+            if (minutes < 10) {
+                minutes = '0' + minutes
+            }
+            if (seconds < 10) {
+                seconds = '0' + seconds
+            }
+            const loginTime = year + '/' + month + '/' + day;
+            this.time = loginTime;
+            let self = this;
+            var imgHandler = function imgHandler() {
+                let input = document.createElement("input");
+                input.type = "file";
+                input.name = self.fileName;
+                input.accept = "image/jpeg,image/png,image/jpg,image/gif";
+                input.onchange = self.onFileChange;
+                input.click();
+            }
+            this.$refs.myQuillEditor.quill.getModule("toolbar").addHandler("image", imgHandler)
+        },
+        computed: {
+            editor() {
+                return this.$refs.myQuillEditor.quill;
+            },
+//            time: {
+//                get: function () {
+//                    let date = new Date(),
+//                        year = date.getFullYear(),
+//                        month = (date.getMonth() + 1),
+//                        day = date.getDate(),
+//                        hours = date.getHours(),
+//                        minutes = date.getMinutes(),
+//                        seconds = date.getSeconds();
+//
+//                    if (hours < 10) {
+//                        hours = '0' + hours
+//                    }
+//
+//                    if (minutes < 10) {
+//                        minutes = '0' + minutes
+//                    }
+//
+//                    if (seconds < 10) {
+//                        seconds = '0' + seconds
+//                    }
+//
+//                    const _time = year + '年' + month + '月' + day + '日 ' + hours + ':' + minutes + ':' + seconds;
+//                    return _time
+//                },
+//                set: function (newValue) {
+//                    this.time = newValue
+//                }
+//            }
+        },
+    };
+</script>
+
+<style lang="scss" scoped>
+    div {
+        width: 100%;
+        .left {
+            width: 77%;
+            height: auto;
+            .title {
+                margin-top: 20px;
+            }
+            .quill-editor {
+                margin-top: 20px;
+                height: 590px;
+            }
+            .source {
+                position: relative;
+                top: 90px;
+            }
+        }
+        .right {
+            position: relative;
+            bottom: 662px;
+            width: 20%;
+            float: right;
+            .el-date-editor,
+            .el-cascader {
+                width: 100%;
+            }
+            h3 {
+                font-size: 15px;
+                color: #444444;
+                font-weight: 600;
+            }
+        }
+        .btn {
+            margin-top: 80px;
+            .btn1, .btn2, .btn3 {
+                width: 120px;
+            }
+            .btn1 {
+                margin-right: 100px;
+                float: right;
+            }
+        }
+        .sele {
+            padding: 18px 5px 0;
+        }
+    }
+</style>
