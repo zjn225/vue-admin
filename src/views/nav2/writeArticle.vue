@@ -123,7 +123,7 @@
                     // 编辑器的配置
                     // something config
                 },
-                options: [
+                options:  [
                     {
                         value: "information",
                         label: "科研资讯",
@@ -176,7 +176,7 @@
                         children: [
                             {
                                 value: "1",
-                                label: "学术学会"
+                                label: "学术会议"
                             },
                             {
                                 value: "2",
@@ -187,8 +187,36 @@
                                 label: "来访交流"
                             }
                         ]
+                    },
+                    {
+                        value:"advisory",
+                        label:"咨询服务",
+                        children:[
+                            {
+                                value:"1",
+                                label:"政府咨询"
+                            },
+                            {
+                                value:"2",
+                                label:"企业咨询"
+                            },
+                            {
+                                value:"3",
+                                label:"培训课程"
+                            }
+                        ]
+                    },
+                    {
+                        value:"expert",
+                        label:"智库专家",
+                        children:[
+                            {
+                                value:"1",
+                                label:"专家动态"
+                            },
+                        ]
                     }
-                ]
+                ],
             };
         },
         components: {
@@ -272,7 +300,7 @@
                 if (code === 200) {
                     this.loading = false;
                     this.$message({
-                        message: msg,
+                        message: '存草稿成功，请到草稿箱查看',
                         type: "success"
                     });
                     this.$store.state.selectedOptions = this.selectedOptions;

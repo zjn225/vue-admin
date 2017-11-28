@@ -2,13 +2,13 @@
     <div v-loading="loading" element-loading-text="正在新增中，请稍后"
          element-loading-spinner="el-icon-loading">
         <div class="left">
-             <quillEditor v-model="content"
-                ref="myQuillEditor"
-                :options="editorOption"
-                @blur="onEditorBlur($event)"
-                @focus="onEditorFocus($event)"
-                @ready="onEditorReady($event)">
-      </quillEditor>
+            <quillEditor v-model="content"
+                         ref="myQuillEditor"
+                         :options="editorOption"
+                         @blur="onEditorBlur($event)"
+                         @focus="onEditorFocus($event)"
+                         @ready="onEditorReady($event)">
+            </quillEditor>
         </div>
         <div class="right">
             <!--作者-->
@@ -39,11 +39,11 @@
             <el-button type="primary" class="btn" id="submit" @click="onEditorChange()">提交</el-button>
         </div>
         <CropImg
-                   v-if="showCrop"                  
-                   :uploadUrl="uploadUrl"
-                   @onUploadSuccess="onUploadSuccess"
-                   @onStopCrop="onStopCrop"
-                   ></CropImg>    
+                v-if="showCrop"
+                :uploadUrl="uploadUrl"
+                @onUploadSuccess="onUploadSuccess"
+                @onStopCrop="onStopCrop"
+        ></CropImg>
     </div>
 </template>
 
@@ -51,17 +51,17 @@
     import CropImg from "../Upload/CropImg";
     import { quillEditor,uploadImg} from 'vue-quill-editor'
 
-    import {addPerson} from "../../api/api";
+    import {addExpert} from "../../api/api";
     import myUpload from "vue-image-crop-upload";
 
     export default {
         data() {
             return {
                 loading: false,
-                avatarURL: `http:${process.env.API_ROOT}data/team/person/avatar`,
+                avatarURL: `http:${process.env.API_ROOT}data/team/expert/avatar`,
                 canCrop:false,
                 /*测试上传图片的接口，返回结构为{url:''}*/
-                uploadUrl:`http:${process.env.API_ROOT}data/person/uploadImg`,
+                uploadUrl:`http:${process.env.API_ROOT}data/expert/uploadImg`,
                 name: "",
                 position: "",
                 content: "",
@@ -78,7 +78,7 @@
             };
         },
         components: {
-             CropImg,
+            CropImg,
             quillEditor,
             "my-upload": myUpload
         },
@@ -116,7 +116,7 @@
 
                 this.loading=true;
 
-                let result = await addPerson({
+                let result = await addExpert({
                     name: this.name,
                     position: this.position,
                     content: this.content,
@@ -132,9 +132,9 @@
                         type: "success"
                     });
 
-                    this.$router.push({path: "/person"});
+                    this.$router.push({path: "/expert"});
                 } else {
-                    this.loading=false;                    
+                    this.loading=false;
                     this.$message({
                         message: msg,
                         type: "error"
@@ -180,35 +180,35 @@
                 console.log("field: " + field);
 
             },
-            
-    onUploadSuccess: function(path) {
-      this.showCrop= false;    
-      this.editor.focus();
-      this.editor.insertEmbed(this.editor.getSelection().index, "image", path);
-    },
-    onStopCrop(){
-      this.showCrop= false;      
-    },
-   
-    onFileChange(e) {
-      let fileInput = e.target;
-      let file = fileInput.files[0];
-      if (fileInput.files.length == 0) {
-        return;
-      }
-       
-      if (window.createObjectURL != undefined) { // basic
-           this.uploadUrl = window.createObjectURL(file);
-      } else if (window.URL != undefined) { // mozilla(firefox)
-        this.uploadUrl = window.URL.createObjectURL(file);
-      
-      } else if (window.webkitURL != undefined) { // webkit or chrome
-          this.uploadUrl = window.webkitURL.createObjectURL(file);
-      }
-     
-      this.editor.focus();
-      this.showCrop= true;      
-    },
+
+            onUploadSuccess: function(path) {
+                this.showCrop= false;
+                this.editor.focus();
+                this.editor.insertEmbed(this.editor.getSelection().index, "image", path);
+            },
+            onStopCrop(){
+                this.showCrop= false;
+            },
+
+            onFileChange(e) {
+                let fileInput = e.target;
+                let file = fileInput.files[0];
+                if (fileInput.files.length == 0) {
+                    return;
+                }
+
+                if (window.createObjectURL != undefined) { // basic
+                    this.uploadUrl = window.createObjectURL(file);
+                } else if (window.URL != undefined) { // mozilla(firefox)
+                    this.uploadUrl = window.URL.createObjectURL(file);
+
+                } else if (window.webkitURL != undefined) { // webkit or chrome
+                    this.uploadUrl = window.webkitURL.createObjectURL(file);
+                }
+
+                this.editor.focus();
+                this.showCrop= true;
+            },
         },
 
         computed: {
@@ -216,19 +216,19 @@
                 return this.$refs.myQuillEditor.quill;
             }
         },
-         mounted() {
-    let self = this;
-    var imgHandler =  function imgHandler(){
-    
-      let input = document.createElement("input");
-      input.type = "file";
-      input.name = self.fileName;
-      input.accept = "image/jpeg,image/png,image/jpg,image/gif";
-      input.onchange = self.onFileChange;
-      input.click();
-    }
-    this.$refs.myQuillEditor.quill.getModule("toolbar").addHandler("image", imgHandler)
-  },
+        mounted() {
+            let self = this;
+            var imgHandler =  function imgHandler(){
+
+                let input = document.createElement("input");
+                input.type = "file";
+                input.name = self.fileName;
+                input.accept = "image/jpeg,image/png,image/jpg,image/gif";
+                input.onchange = self.onFileChange;
+                input.click();
+            }
+            this.$refs.myQuillEditor.quill.getModule("toolbar").addHandler("image", imgHandler)
+        },
     };
 </script>
 

@@ -34,6 +34,13 @@ const person = (resolve) => {
         resolve(module)
     })
 }
+
+const expert = (resolve) => {
+    import('./views/nav2/expert.vue').then((module) => {
+        resolve(module)
+    })
+}
+
 const Write = (resolve) => {
     import('./views/nav2/writeArticle.vue').then((module) => {
         resolve(module)
@@ -46,6 +53,11 @@ const Brief = (resolve) => {
 }
 const editPerson = (resolve) => {
     import('./views/edit/editPerson.vue').then((module) => {
+        resolve(module)
+    })
+}
+const editExpert = (resolve) => {
+    import('./views/edit/editExpert.vue').then((module) => {
         resolve(module)
     })
 }
@@ -63,6 +75,12 @@ const Article = (resolve) => {
 
 const addPerson = (resolve) => {
     import('./views/addition/addPerson.vue').then((module) => {
+        resolve(module)
+    })
+}
+
+const addExpert = (resolve) => {
+    import('./views/addition/addExpert.vue').then((module) => {
         resolve(module)
     })
 }
@@ -116,6 +134,7 @@ const editDraft = (resolve) => {
     })
 }
 
+
 let routes = [
     {
         path: '/',
@@ -156,14 +175,22 @@ let routes = [
             {path: '/writeArticle', component: Write, name: '撰写文章' },
             {path: '/draft', component: Draft, name: '草稿箱'},                     
             {path: '/article', component: Article, name: '文章著作管理'},
-            {path: '/person', component: person, name: '专家团队管理'},
+
+            {path: '/person', component: person, name: '研究团队管理'},
+            {path: '/expert', component: expert, name: '智库专家管理'},
+
             {path: '/feedBack', component: feedBack, name: '反馈管理'},
-            {path: '/brief', component: Brief, name: '修改简介'},
+            {path: '/brief', component: Brief, name: '修改本院简介'},
             {path: '/direction', component: direction, name: '修改研究方向'},
             {path: '/editArticle', component: editArticle, name: '修改文章',hidden:true},
-            {path: '/editPerson', component: editPerson, name: '修改专家团队',hidden:true},
-            {path: '/addPerson', component: addPerson, name: '新增专家团队', hidden:true},
-            {path: '/editDraft', component: editDraft, name: '修改草稿', hidden:true},         
+
+            {path: '/editPerson', component: editPerson, name: '修改研究团队',hidden:true},
+            {path: '/addPerson', component: addPerson, name: '新增研究团队', hidden:true},
+
+            {path: '/editExpert', component: editExpert, name: '修改智库专家',hidden:true},
+            {path: '/addExpert', component: addExpert, name: '新增智库专家', hidden:true},
+
+            {path: '/editDraft', component: editDraft, name: '修改草稿', hidden:true},
             {path: '/addFriendLink', component: addFriendLink, name: '新增友情链接', hidden:true},
             {path: '/editLink', component: editLink, name: '修改友情链接', hidden:true},
         ]
@@ -175,9 +202,6 @@ let routes = [
         iconCls: 'fa fa-telegram',
         // leaf: true,//只有一个节点
         children: [
-            // {path: '/basic', component: Basic, name: '基本设置'},
-            //机构简介，机构设置
-            
             {path: '/friendLink', component: friendLink, name: '友情链接'}
         ]
     },

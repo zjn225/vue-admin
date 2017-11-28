@@ -84,71 +84,99 @@ export default {
       column: [],
       dialogFormVisible: false,
       removeID: 0,
-      options: [
-        {
-          value: "information",
-          label: "科研资讯",
-          children: [
-            {
-              value: "1",
-              label: "科研简讯"
-            },
-            {
-              value: "2",
-              label: "媒体报道"
-            }
-          ]
-        },
-        {
-          value: "research",
-          label: "科学研究",
-          children: [
-            {
-              value: "1",
-              label: "课题研究"
-            },
-            {
-              value: "2",
-              label: "调研考察"
-            }
-          ]
-        },
-        {
-          value: "achievement",
-          label: "科研成果",
-          children: [
-            {
-              value: "1",
-              label: "著作"
-            },
-            {
-              value: "2",
-              label: "学术论文"
-            },
-            {
-              value: "3",
-              label: "研究报告"
-            }
-          ]
-        },
-        {
-          value: "exchange",
-          label: "学术交流",
-          children: [
-            {
-              value: "1",
-              label: "学术学会"
-            },
-            {
-              value: "2",
-              label: "流通论坛"
-            },
-            {
-              value: "3",
-              label: "来访交流"
-            }
-          ]
-        }
+      options:  [
+          {
+              value: "information",
+              label: "科研资讯",
+              children: [
+                  {
+                      value: "1",
+                      label: "科研简讯"
+                  },
+                  {
+                      value: "2",
+                      label: "媒体报道"
+                  }
+              ]
+          },
+          {
+              value: "research",
+              label: "科学研究",
+              children: [
+                  {
+                      value: "1",
+                      label: "课题研究"
+                  },
+                  {
+                      value: "2",
+                      label: "调研考察"
+                  }
+              ]
+          },
+          {
+              value: "achievement",
+              label: "科研成果",
+              children: [
+                  {
+                      value: "1",
+                      label: "著作"
+                  },
+                  {
+                      value: "2",
+                      label: "学术论文"
+                  },
+                  {
+                      value: "3",
+                      label: "研究报告"
+                  }
+              ]
+          },
+          {
+              value: "exchange",
+              label: "学术交流",
+              children: [
+                  {
+                      value: "1",
+                      label: "学术会议"
+                  },
+                  {
+                      value: "2",
+                      label: "流通论坛"
+                  },
+                  {
+                      value: "3",
+                      label: "来访交流"
+                  }
+              ]
+          },
+          {
+              value:"advisory",
+              label:"咨询服务",
+              children:[
+                  {
+                      value:"1",
+                      label:"政府咨询"
+                  },
+                  {
+                      value:"2",
+                      label:"企业咨询"
+                  },
+                  {
+                      value:"3",
+                      label:"培训课程"
+                  }
+              ]
+          },
+          {
+              value:"expert",
+              label:"智库专家",
+              children:[
+                  {
+                      value:"1",
+                      label:"专家动态"
+                  },
+              ]
+          }
       ],
      
       filters: {

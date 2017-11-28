@@ -3,7 +3,7 @@
          element-loading-spinner="el-icon-loading">
         <div class="left">
 
-            <quillEditor v-model="person.content"
+            <quillEditor v-model="expert.content"
                          ref="myQuillEditor">
             </quillEditor>
         </div>
@@ -11,11 +11,11 @@
             <!--作者-->
             <div class="author">
                 <h3>专家名字</h3>
-                <el-input class="right_input" v-model="person.name" placeholder=""></el-input>
+                <el-input class="right_input" v-model="expert.name" placeholder=""></el-input>
             </div>
 
             <h3>职位</h3>
-            <el-input class="right_input" v-model="person.position" placeholder=""></el-input>
+            <el-input class="right_input" v-model="expert.position" placeholder=""></el-input>
             <el-button type="primary" @click="toggleShow" class='setAvatar'>设置头像</el-button>
             <myUpload field="img"
                       @crop-success="cropSuccess"
@@ -26,7 +26,7 @@
                       :height="200"
                       :url="avatarURL"
                       img-format="png"></myUpload>
-            <img class='avatar' :src='person.avatar' alt="asd">
+            <img class='avatar' :src='expert.avatar' alt="asd">
 
 
         </div>
@@ -44,7 +44,7 @@
 
 <script>
 
-    import {editPerson, uploadImg} from "../../api/api";
+    import {editExpert, uploadImg} from "../../api/api";
     import {mapState} from "vuex";
     import myUpload from "vue-image-crop-upload";
     import CropImg from "../Upload/CropImg";
@@ -55,10 +55,10 @@
             return {
                 loading: false,
                 showCrop: false,
-                avatarURL: `http:${process.env.API_ROOT}data/team/person/avatar`,
+                avatarURL: `http:${process.env.API_ROOT}data/team/expert/avatar`,
                 canCrop: false,
                 /*测试上传图片的接口，返回结构为{url:''}*/
-                uploadUrl: `http:${process.env.API_ROOT}data/person/uploadImg`,
+                uploadUrl: `http:${process.env.API_ROOT}data/expert/uploadImg`,
                 show: false,
                 avatarID: false,
                 dialogVisible: false,
@@ -80,12 +80,12 @@
 
             async onEditorChange() {
                 this.loading = true;
-                let data = await editPerson({
-                    name: this.person.name,
-                    id: this.person.id,
-                    position: this.person.position,
-                    content: this.person.content,
-                    avatar: this.person.avatar
+                let data = await editExpert({
+                    name: this.expert.name,
+                    id: this.expert.id,
+                    position: this.expert.position,
+                    content: this.expert.content,
+                    avatar: this.expert.avatar
                 });
 
                 const {code, msg} = data;
@@ -96,7 +96,7 @@
                         message: msg,
                         type: "success"
                     });
-                    this.$router.push({path: "/person"});
+                    this.$router.push({path: "/expert"});
                 } else {
                     this.loading = false;
                     this.$message({
@@ -129,7 +129,7 @@
              */
             cropUploadSuccess(jsonData, field) {
                 console.log("-------- upload success --------");
-                this.person.avatar = jsonData.path;
+                this.expert.avatar = jsonData.path;
 
             },
             /**
@@ -179,7 +179,7 @@
                 return this.$refs.myQuillEditor.quill;
             },
 
-            ...mapState(["person"])
+            ...mapState(["expert"])
         },
         mounted() {
             let self = this;

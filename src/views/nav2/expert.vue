@@ -16,7 +16,7 @@
         </el-col>
 
         <!--列表-->
-        <el-table :data="persons" highlight-current-row v-loading="isLoading" @selection-change="selsChange"
+        <el-table :data="experts" highlight-current-row v-loading="isLoading" @selection-change="selsChange"
                   style="width: 100%;" id='mytable'>
             <el-table-column type="selection">
             </el-table-column>
@@ -57,11 +57,11 @@
     import util from "../../common/js/util";
     import {mapMutations} from "vuex";
     import {
-        getTeamList,
-        getTeamOne,
-        deletePerson,
-        searchPerson,
-        updatePersonIndex
+        getExpertList,
+        getExpertOne,
+        deleteExpert,
+        searchExpert,
+        updateExpertIndex
     } from "../../api/api";
 
     export default {
@@ -70,7 +70,7 @@
                 filters: {
                     name: ""
                 },
-                persons: [],
+                experts: [],
                 total: 0,
                 page: 1,
                 isLoading: false,
@@ -90,28 +90,28 @@
             };
         },
         methods: {
-            ...mapMutations(["SAVE_TEAMONE"]),
+            ...mapMutations(["SAVE_EXPERTONE"]),
             handleCurrentChange(currentPage) {
                 const start = (currentPage - 1) * 20 + currentPage - 1;
 
                 if (this.isReacher) {
                     this.handleReacher(start);
                 } else {
-                    this.getUsers(start);
+                    this.getExperts(start);
                 }
             },
             //获取用户列表
-            getUsers(start = 0) {
+            getExperts(start = 0) {
                 this.isLoading = true;
-                getTeamList(start).then(data => {
+                getExpertList(start).then(data => {
 //                    console.log(data)
                     if (this.total === 0) {
                         this.total = data.pageCount;
                     }
-                    this.persons = data.person;
+                    this.experts = data.expert;
                     this.isLoading = false;
                     this.isReacher = false;
-                    console.log(this.persons)
+                    console.log(this.experts)
                 });
             },
 
@@ -123,8 +123,8 @@
                 })
                     .then(() => {
                         this.isLoading = true;
-                        let person = [{id: row.id}];
-                        deletePerson({person}).then(res => {
+                        let expert = [{id: row.id}];
+                        deleteExpert({expert}).then(res => {
                             this.isLoading = false;
                             let {code, msg} = res.data;
                             if (code === 200) {
@@ -132,7 +132,7 @@
                                     message: "删除成功",
                                     type: "success"
                                 });
-                                this.getUsers();
+                                this.getExperts();
                             } else {
                                 this.$message({
                                     message: msg,
@@ -150,12 +150,12 @@
                 const name = this.filters.name;
 
                 this.listLoading = true;
-                searchPerson({name, start}).then(data => {
+                searchExpert({name, start}).then(data => {
                     this.listLoading = false;
 //                    console.log(data)
-                    let {code, msg, persons, pageCount} = data;
+                    let {code, msg, experts, pageCount} = data;
                     if (code === 200) {
-                        this.persons = persons;
+                        this.experts = experts;
                         this.isReacher = true;
                         this.total = pageCount;
                     } else {
@@ -168,13 +168,13 @@
             },
             //显示编辑界面
             handleEdit: async function (index, row) {
-                const id = this.persons[index].id;
+                const id = this.experts[index].id;
 
-                const result = await getTeamOne({id});
+                const result = await getExpertOne({id});
                 const {data, code, msg} = result.data;
                 if (code === 200) {
-                    this.SAVE_TEAMONE(data[0]);
-                    this.$router.push({path: "/editPerson"});
+                    this.SAVE_EXPERTONE(data[0]);
+                    this.$router.push({path: "/editExpert"});
                 } else {
                     this.$message({
                         message: msg,
@@ -185,31 +185,31 @@
 
             /*向下移动*/
             downIt: function (_index, row) {
-                if (this.persons[_index] === this.persons[this.persons.length - 1]) {
+                if (this.experts[_index] === this.experts[this.experts.length - 1]) {
                     return
                 }
-                let thisP = this.persons[_index],
-                    nextP = this.persons[_index + 1],
+                let thisP = this.experts[_index],
+                    nextP = this.experts[_index + 1],
                     id = [],
-                    rank = []; 
+                    rank = [];
 
-                    id[0] = thisP.id;
-                    rank[0] =  nextP.rank; 
-                    id[1] =  nextP.id;
-                    rank[1] = thisP.rank; 
+                id[0] = thisP.id;
+                rank[0] =  nextP.rank;
+                id[1] =  nextP.id;
+                rank[1] = thisP.rank;
 
-               
 
-                updatePersonIndex({id,rank}).then((data)=>{
+
+                updateExpertIndex({id,rank}).then((data)=>{
                     let {code} = data;
                     if (code === 200) {
                         thisP.rank = rank[0];
                         nextP.rank = rank[1];
                         /*Vue 不能检测以下变动的数组：1、索引修改 2、长度修改*/
-                        this.persons.splice(_index, 1, nextP)
+                        this.experts.splice(_index, 1, nextP)
 
-                        this.persons.splice(_index + 1, 1, thisP)
-                   
+                        this.experts.splice(_index + 1, 1, thisP)
+
                     } else {
                         this.$message({
                             message: 'error',
@@ -222,29 +222,29 @@
 
             /*向上移动*/
             upIt: function (_index, row) {
-                if (this.persons[_index] === this.persons[0]) {
+                if (this.experts[_index] === this.experts[0]) {
                     return
                 }
-                let thisP = this.persons[_index],
-                    lastP = this.persons[_index - 1],
+                let thisP = this.experts[_index],
+                    lastP = this.experts[_index - 1],
                     id = [],
-                    rank = []; 
-                    id[0] = thisP.id;
-                    rank[0] = lastP.rank; 
-                    id[1] = lastP.id;
-                    rank[1] =thisP.rank; 
+                    rank = [];
+                id[0] = thisP.id;
+                rank[0] = lastP.rank;
+                id[1] = lastP.id;
+                rank[1] =thisP.rank;
 
                 console.log(id, rank)
 
-                updatePersonIndex({id,rank}).then((data)=>{
+                updateExpertIndex({id,rank}).then((data)=>{
                     let {code} = data;
-                   
+
                     if (code === 200) {
                         thisP.rank = rank[0];
                         lastP.rank = rank[1];
-                        this.persons.splice(_index - 1, 1, thisP)
-                        this.persons.splice(_index, 1, lastP);
-                        
+                        this.experts.splice(_index - 1, 1, thisP)
+                        this.experts.splice(_index, 1, lastP);
+
                     } else {
                         this.$message({
                             message: 'error',
@@ -257,21 +257,21 @@
 
             //新增
             handleAdd: function () {
-                this.$router.push({path: "/addPerson"});
+                this.$router.push({path: "/addExpert"});
             },
             selsChange: function (sels) {
                 this.sels = sels;
             },
             //批量删除
             batchRemove: function () {
-                var person = this.sels.map(item => ({id: item.id}));
+                var expert = this.sels.map(item => ({id: item.id}));
                 this.$confirm("确认删除选中记录吗？", "提示", {
                     type: "warning"
                 })
                     .then(() => {
                         this.isLoading = true;
                         //NProgress.start();
-                        batchRemoveUser({person}).then(res => {
+                        batchRemoveUser({expert}).then(res => {
                             this.isLoading = false;
                             let {code, msg} = res;
                             if (code === 200) {
@@ -279,6 +279,7 @@
                                     message: "删除成功",
                                     type: "success"
                                 });
+                                // this.getExperts();
                             } else {
                                 this.$message({
                                     message: msg,
@@ -292,11 +293,11 @@
             }
         },
         mounted() {
-            this.getUsers();
+            this.getExperts();
         }
     };
 </script>
 
 <style scoped>
-   
+
 </style>

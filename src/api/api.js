@@ -98,7 +98,7 @@ export const postResearchdir = params => {
     return instance.post(`/data/researchdir`,params).then(res => res.data);
 };
 
-/*专家团队模块*/
+/*研究团队模块*/
 export const getTeamList = params => {
     return instance.get(`/data/team/catalog`, {params: params}).then(res => res.data);
 };
@@ -119,6 +119,29 @@ export const editPerson = params => {
 export const searchPerson = params => {
     return instance.get(`/data/team/search`,{params: params}).then(res => res.data);
 };
+
+/*智库专家模块*/
+export const getExpertList = params => {
+    return instance.get(`/data/expert/catalog`, {params: params}).then(res => res.data);
+};
+export const getExpertOne = params => {
+    return instance.get(`/data/expert/expert`, {params: params});
+};
+
+export const addExpert = params => {
+    return instance.post(`/data/expert/expert`, params);
+};
+
+export const deleteExpert = params => {
+    return instance.post(`/data/expert/delete`, params);
+};
+export const editExpert = params => {
+    return instance.post(`/data/expert/edit`, params).then(res => res.data);
+};
+export const searchExpert = params => {
+    return instance.get(`/data/expert/search`,{params: params}).then(res => res.data);
+};
+
 /*友情链接模块*/
 export const getLinkList = ( params = 0) => {
     return instance.get(`/data/friendLinks/catalog`,{params: params});
@@ -159,6 +182,9 @@ export const  updateIntro = params => {
 };
 export const  updatePersonIndex = params => {
     return instance.post(`/data/team/rank`, params).then(res => res.data);
+};
+export const  updateExpertIndex = params => {
+    return instance.post(`/data/expert/rank`, params).then(res => res.data);
 };
 
 //研究方向

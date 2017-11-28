@@ -7,12 +7,18 @@ import mutations from "./mutations";
 Vue.use(Vuex);
 const state = {
     loginTime: '',
-    loginSite:'',
-    loginCip:'',
+    loginSite: '',
+    loginCip: '',
     user: {
         time: ''
     },
     person: {
+        name: '',
+        position: '',
+        avatar: '',
+        content: '',
+    },
+    expert: {
         name: '',
         position: '',
         avatar: '',
@@ -46,7 +52,7 @@ const state = {
         name: '',
         link: ''
     },
-    selectedOptions:["information", "1"]
+    selectedOptions: ["information", "1"]
 };
 export default new Vuex.Store({
     state,

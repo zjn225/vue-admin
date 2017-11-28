@@ -32,16 +32,6 @@
                     </el-date-picker>
                 </div>
             </div>
-            <!--类别-->
-            <!-- <div class="block">
-                <h3>分类</h3>
-                <el-cascader
-                        expand-trigger="hover"
-                        :options="options"
-                        v-model="selectedOptions"
-                        @change="handleChange">
-                </el-cascader>
-            </div> -->
             <!--分类-->
             <h3>文章来源</h3>
             <el-input class="source" v-model="article.source" placeholder="文章来源"></el-input>
@@ -103,73 +93,6 @@ export default {
           return time.getTime() < Date.now() - 8.64e7;
         }
       },
-     
-      options: [
-        {
-          value: "information",
-          label: "科研资讯",
-          children: [
-            {
-              value: "1",
-              label: "科研简讯"
-            },
-            {
-              value: "2",
-              label: "媒体报道"
-            }
-          ]
-        },
-        {
-          value: "research",
-          label: "科学研究",
-          children: [
-            {
-              value: "1",
-              label: "课题研究"
-            },
-            {
-              value: "2",
-              label: "调研考察"
-            }
-          ]
-        },
-        {
-          value: "achievement",
-          label: "科研成果",
-          children: [
-            {
-              value: "1",
-              label: "著作"
-            },
-            {
-              value: "2",
-              label: "学术论文"
-            },
-            {
-              value: "3",
-              label: "研究报告"
-            }
-          ]
-        },
-        {
-          value: "exchange",
-          label: "学术交流",
-          children: [
-            {
-              value: "1",
-              label: "学术学会"
-            },
-            {
-              value: "2",
-              label: "流通论坛"
-            },
-            {
-              value: "3",
-              label: "来访交流"
-            }
-          ]
-        }
-      ]
     };
   },
   components: {
