@@ -44,7 +44,7 @@
 
 <script>
 
-    import {editExpert, uploadImg} from "../../api/api";
+    import {editPerson, uploadImg} from "../../api/api";
     import {mapState} from "vuex";
     import myUpload from "vue-image-crop-upload";
     import CropImg from "../Upload/CropImg";
@@ -55,10 +55,10 @@
             return {
                 loading: false,
                 showCrop: false,
-                avatarURL: `http:${process.env.API_ROOT}data/team/expert/avatar`,
+                avatarURL: `http:${process.env.API_ROOT}data/team/person/avatar`,
                 canCrop: false,
                 /*测试上传图片的接口，返回结构为{url:''}*/
-                uploadUrl: `http:${process.env.API_ROOT}data/expert/uploadImg`,
+                uploadUrl: `http:${process.env.API_ROOT}data/person/uploadImg`,
                 show: false,
                 avatarID: false,
                 dialogVisible: false,
@@ -80,12 +80,13 @@
 
             async onEditorChange() {
                 this.loading = true;
-                let data = await editExpert({
+                let data = await editPerson({
                     name: this.expert.name,
                     id: this.expert.id,
                     position: this.expert.position,
                     content: this.expert.content,
-                    avatar: this.expert.avatar
+                    avatar: this.expert.avatar,
+                    sort:'expert'
                 });
 
                 const {code, msg} = data;

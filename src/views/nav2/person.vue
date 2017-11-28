@@ -57,11 +57,11 @@
     import util from "../../common/js/util";
     import {mapMutations} from "vuex";
     import {
-        getTeamList,
-        getTeamOne,
+        getPersonList,
+        getPerson,
         deletePerson,
         searchPerson,
-        updatePersonIndex
+       exchangePersonIndex
     } from "../../api/api";
 
     export default {
@@ -103,12 +103,12 @@
             //获取用户列表
             getUsers(start = 0) {
                 this.isLoading = true;
-                getTeamList(start).then(data => {
+                getPersonList({start,sort:'team'}).then(data => {
 //                    console.log(data)
                     if (this.total === 0) {
                         this.total = data.pageCount;
                     }
-                    this.persons = data.person;
+                    this.persons = data.list;
                     this.isLoading = false;
                     this.isReacher = false;
                     console.log(this.persons)
@@ -123,8 +123,8 @@
                 })
                     .then(() => {
                         this.isLoading = true;
-                        let person = [{id: row.id}];
-                        deletePerson({person}).then(res => {
+                        let list = [{id: row.id}];
+                        deletePerson({list,sort:'team'}).then(res => {
                             this.isLoading = false;
                             let {code, msg} = res.data;
                             if (code === 200) {
@@ -144,18 +144,46 @@
                     .catch(() => {
                     });
             },
+             //批量删除
+            batchRemove: function () {
+                let list = this.sels.map(item => ({id: item.id}));
+                this.$confirm("确认删除选中记录吗？", "提示", {
+                    type: "warning"
+                })
+                    .then(() => {
+                        this.isLoading = true;
+                        //NProgress.start();
+                        deletePerson({list,sort:'team'}).then(res => {
+                            this.isLoading = false;
+                            let {code, msg} = res;
+                            if (code === 200) {
+                                this.$message({
+                                    message: "删除成功",
+                                    type: "success"
+                                });
+                            } else {
+                                this.$message({
+                                    message: msg,
+                                    type: "error"
+                                });
+                            }
+                        });
+                    })
+                    .catch(() => {
+                    });
+            },
             //搜索专家
             handleReacher(start = 0) {
 
                 const name = this.filters.name;
 
                 this.listLoading = true;
-                searchPerson({name, start}).then(data => {
+                searchPerson({name, start,sort:'team'}).then(data => {
                     this.listLoading = false;
 //                    console.log(data)
-                    let {code, msg, persons, pageCount} = data;
+                    let {code, msg, list, pageCount} = data;
                     if (code === 200) {
-                        this.persons = persons;
+                        this.persons = list;
                         this.isReacher = true;
                         this.total = pageCount;
                     } else {
@@ -170,7 +198,7 @@
             handleEdit: async function (index, row) {
                 const id = this.persons[index].id;
 
-                const result = await getTeamOne({id});
+                const result = await getPerson({id,sort:'team'});
                 const {data, code, msg} = result.data;
                 if (code === 200) {
                     this.SAVE_TEAMONE(data[0]);
@@ -198,9 +226,7 @@
                     id[1] =  nextP.id;
                     rank[1] = thisP.rank; 
 
-               
-
-                updatePersonIndex({id,rank}).then((data)=>{
+                exchangePersonIndex({id,rank,sort:'team'}).then((data)=>{
                     let {code} = data;
                     if (code === 200) {
                         thisP.rank = rank[0];
@@ -236,7 +262,7 @@
 
                 console.log(id, rank)
 
-                updatePersonIndex({id,rank}).then((data)=>{
+               exchangePersonIndex({id,rank,sort:'team'}).then((data)=>{
                     let {code} = data;
                    
                     if (code === 200) {
@@ -262,34 +288,7 @@
             selsChange: function (sels) {
                 this.sels = sels;
             },
-            //批量删除
-            batchRemove: function () {
-                var person = this.sels.map(item => ({id: item.id}));
-                this.$confirm("确认删除选中记录吗？", "提示", {
-                    type: "warning"
-                })
-                    .then(() => {
-                        this.isLoading = true;
-                        //NProgress.start();
-                        batchRemoveUser({person}).then(res => {
-                            this.isLoading = false;
-                            let {code, msg} = res;
-                            if (code === 200) {
-                                this.$message({
-                                    message: "删除成功",
-                                    type: "success"
-                                });
-                            } else {
-                                this.$message({
-                                    message: msg,
-                                    type: "error"
-                                });
-                            }
-                        });
-                    })
-                    .catch(() => {
-                    });
-            }
+           
         },
         mounted() {
             this.getUsers();

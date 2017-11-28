@@ -51,17 +51,17 @@
     import CropImg from "../Upload/CropImg";
     import { quillEditor,uploadImg} from 'vue-quill-editor'
 
-    import {addExpert} from "../../api/api";
+    import {addPerson} from "../../api/api";
     import myUpload from "vue-image-crop-upload";
 
     export default {
         data() {
             return {
                 loading: false,
-                avatarURL: `http:${process.env.API_ROOT}data/team/expert/avatar`,
+                avatarURL: `http:${process.env.API_ROOT}data/team/person/avatar`,
                 canCrop:false,
                 /*测试上传图片的接口，返回结构为{url:''}*/
-                uploadUrl:`http:${process.env.API_ROOT}data/expert/uploadImg`,
+                uploadUrl:`http:${process.env.API_ROOT}data/person/uploadImg`,
                 name: "",
                 position: "",
                 content: "",
@@ -109,18 +109,19 @@
                     this.$message("请输入该专家的职位");
                     return;
                 }
-                if (!this.show) {
+                if (!this.dialogVisible) {
                     this.$message("头像未上传");
                     return;
                 }
 
                 this.loading=true;
 
-                let result = await addExpert({
+                let result = await addPerson({
                     name: this.name,
                     position: this.position,
                     content: this.content,
-                    avatar: this.avatar
+                    avatar: this.avatar,
+                    sort:'expert'
                 });
 
                 const {code, msg} = result.data;

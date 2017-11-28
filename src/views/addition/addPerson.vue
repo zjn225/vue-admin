@@ -109,7 +109,7 @@
                     this.$message("请输入该专家的职位");
                     return;
                 }
-                if (!this.show) {
+                if (!this.dialogVisible ) {
                     this.$message("头像未上传");
                     return;
                 }
@@ -120,7 +120,8 @@
                     name: this.name,
                     position: this.position,
                     content: this.content,
-                    avatar: this.avatar
+                    avatar: this.avatar,
+                    sort:'team'
                 });
 
                 const {code, msg} = result.data;

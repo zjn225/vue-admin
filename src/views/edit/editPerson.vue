@@ -85,7 +85,8 @@
                     id: this.person.id,
                     position: this.person.position,
                     content: this.person.content,
-                    avatar: this.person.avatar
+                    avatar: this.person.avatar,
+                    sort:'team'
                 });
 
                 const {code, msg} = data;

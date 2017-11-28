@@ -99,10 +99,10 @@ export const postResearchdir = params => {
 };
 
 /*研究团队模块*/
-export const getTeamList = params => {
+export const getPersonList = params => {
     return instance.get(`/data/team/catalog`, {params: params}).then(res => res.data);
 };
-export const getTeamOne = params => {
+export const getPerson = params => {
     return instance.get(`/data/team/person`, {params: params});
 };
 
@@ -180,7 +180,7 @@ export const  getIntro = params => {
 export const  updateIntro = params => {
     return instance.post(`/data/Intro`, params).then(res => res.data);
 };
-export const  updatePersonIndex = params => {
+export const exchangePersonIndex = params => {
     return instance.post(`/data/team/rank`, params).then(res => res.data);
 };
 export const  updateExpertIndex = params => {

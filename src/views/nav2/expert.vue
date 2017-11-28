@@ -57,11 +57,11 @@
     import util from "../../common/js/util";
     import {mapMutations} from "vuex";
     import {
-        getExpertList,
-        getExpertOne,
-        deleteExpert,
-        searchExpert,
-        updateExpertIndex
+        getPersonList,
+        getPerson,
+        deletePerson,
+        searchPerson,
+        exchangePersonIndex
     } from "../../api/api";
 
     export default {
@@ -103,12 +103,11 @@
             //获取用户列表
             getExperts(start = 0) {
                 this.isLoading = true;
-                getExpertList(start).then(data => {
-//                    console.log(data)
+                getPersonList({start,sort:'expert'}).then(data => {
                     if (this.total === 0) {
                         this.total = data.pageCount;
                     }
-                    this.experts = data.expert;
+                    this.experts = data.list;
                     this.isLoading = false;
                     this.isReacher = false;
                     console.log(this.experts)
@@ -123,8 +122,8 @@
                 })
                     .then(() => {
                         this.isLoading = true;
-                        let expert = [{id: row.id}];
-                        deleteExpert({expert}).then(res => {
+                        let list = [{id: row.id}];
+                        deletePerson({list,sort:'expert'}).then(res => {
                             this.isLoading = false;
                             let {code, msg} = res.data;
                             if (code === 200) {
@@ -144,18 +143,47 @@
                     .catch(() => {
                     });
             },
+              //批量删除
+            batchRemove: function () {
+                let list = this.sels.map(item => ({id: item.id}));
+                this.$confirm("确认删除选中记录吗？", "提示", {
+                    type: "warning"
+                })
+                    .then(() => {
+                        this.isLoading = true;
+                        //NProgress.start();
+                        batchRemoveUser({list,sort:'expert'}).then(res => {
+                            this.isLoading = false;
+                            let {code, msg} = res;
+                            if (code === 200) {
+                                this.$message({
+                                    message: "删除成功",
+                                    type: "success"
+                                });
+                                // this.getExperts();
+                            } else {
+                                this.$message({
+                                    message: msg,
+                                    type: "error"
+                                });
+                            }
+                        });
+                    })
+                    .catch(() => {
+                    });
+            },
             //搜索专家
             handleReacher(start = 0) {
 
                 const name = this.filters.name;
 
                 this.listLoading = true;
-                searchExpert({name, start}).then(data => {
+                searchPerson({name, start,sort:'expert'}).then(data => {
                     this.listLoading = false;
 //                    console.log(data)
-                    let {code, msg, experts, pageCount} = data;
+                    let {code, msg, list, pageCount} = data;
                     if (code === 200) {
-                        this.experts = experts;
+                        this.experts = list;
                         this.isReacher = true;
                         this.total = pageCount;
                     } else {
@@ -170,7 +198,7 @@
             handleEdit: async function (index, row) {
                 const id = this.experts[index].id;
 
-                const result = await getExpertOne({id});
+                const result = await getPerson({id,sort:'expert'});
                 const {data, code, msg} = result.data;
                 if (code === 200) {
                     this.SAVE_EXPERTONE(data[0]);
@@ -200,7 +228,7 @@
 
 
 
-                updateExpertIndex({id,rank}).then((data)=>{
+               exchangePersonIndex({id,rank,sort:'expert'}).then((data)=>{
                     let {code} = data;
                     if (code === 200) {
                         thisP.rank = rank[0];
@@ -236,7 +264,7 @@
 
                 console.log(id, rank)
 
-                updateExpertIndex({id,rank}).then((data)=>{
+               exchangePersonIndex({id,rank,sort:'expert'}).then((data)=>{
                     let {code} = data;
 
                     if (code === 200) {
@@ -261,36 +289,8 @@
             },
             selsChange: function (sels) {
                 this.sels = sels;
-            },
-            //批量删除
-            batchRemove: function () {
-                var expert = this.sels.map(item => ({id: item.id}));
-                this.$confirm("确认删除选中记录吗？", "提示", {
-                    type: "warning"
-                })
-                    .then(() => {
-                        this.isLoading = true;
-                        //NProgress.start();
-                        batchRemoveUser({expert}).then(res => {
-                            this.isLoading = false;
-                            let {code, msg} = res;
-                            if (code === 200) {
-                                this.$message({
-                                    message: "删除成功",
-                                    type: "success"
-                                });
-                                // this.getExperts();
-                            } else {
-                                this.$message({
-                                    message: msg,
-                                    type: "error"
-                                });
-                            }
-                        });
-                    })
-                    .catch(() => {
-                    });
             }
+          
         },
         mounted() {
             this.getExperts();
