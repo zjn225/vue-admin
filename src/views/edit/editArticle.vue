@@ -64,8 +64,9 @@
             </div>
         </div>
         <div class="btn">
-            <el-button type="primary" class="btn" id="submit" @click="onEditorChange()" icon="el-icon-upload">修改文章
+            <el-button type="primary" class="btn1" id="submit" @click="onEditorChange()" icon="el-icon-upload">修改文章
             </el-button>
+            
         </div>
         <CropImg
                    v-if="showCrop"                  
@@ -364,11 +365,14 @@ div {
   }
 
   .btn {
-    width: 120px;
-    position: relative;
-    top: 40px;
-    left: 58%;
-  }
+            margin-top: 80px;
+            .btn1{
+                width: 120px;
+                float: right;
+                 margin-right: 50px;
+            }
+            
+        }
   .sele {
     padding: 18px 5px 0;
   }

@@ -87,7 +87,7 @@ export const editDraft = params => {
     return instance.post(`/data/draft/edit`, params).then(res => res.data);
 };
 export const moveDraft = params => {
-    return instance.post(`/data/draft/batchMove`, params).then(res => res.data);
+    return instance.get(`/data/draft/batchMove`, {params: params}).then(res => res.data);
 };
 
 /*研究方向 */

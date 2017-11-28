@@ -58,13 +58,15 @@
         </el-col>
 
         <!--移动分类时候的弹窗-->
-        <el-dialog title="请选择要移动到的分类" :visible.sync="dialogFormVisible">
-            <el-cascader
+        <el-dialog title="请选择要移动到的分类" :visible.sync="dialogFormVisible" center width="25%">
+            <div style="text-align: center;">
+                <el-cascader
                     expand-trigger="hover"
-                    :options="optionsNEW"
+                    :options="options"
                     v-model="column"
             >
             </el-cascader>
+            </div>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
                 <el-button type="primary" @click="batchMove" v-if='isBatch'>确 定</el-button>
@@ -164,72 +166,7 @@
                         ]
                     }
                 ],
-                optionsNEW: [
-                    {
-                        value: "information",
-                        label: "科研资讯",
-                        children: [
-                            {
-                                value: "1",
-                                label: "科研简讯"
-                            },
-                            {
-                                value: "2",
-                                label: "媒体报道"
-                            }
-                        ]
-                    },
-                    {
-                        value: "research",
-                        label: "科学研究",
-                        children: [
-                            {
-                                value: "1",
-                                label: "课题研究"
-                            },
-                            {
-                                value: "2",
-                                label: "调研考察"
-                            }
-                        ]
-                    },
-                    {
-                        value: "achievement",
-                        label: "科研成果",
-                        children: [
-                            {
-                                value: "1",
-                                label: "著作"
-                            },
-                            {
-                                value: "2",
-                                label: "学术论文"
-                            },
-                            {
-                                value: "3",
-                                label: "研究报告"
-                            }
-                        ]
-                    },
-                    {
-                        value: "exchange",
-                        label: "学术交流",
-                        children: [
-                            {
-                                value: "1",
-                                label: "学术学会"
-                            },
-                            {
-                                value: "2",
-                                label: "流通论坛"
-                            },
-                            {
-                                value: "3",
-                                label: "来访交流"
-                            }
-                        ]
-                    }
-                ],
+                
                 filters: {
                     title: ""
                 },
@@ -408,7 +345,10 @@
             /*显示批量移动界面*/
             showColumn: function (flag, index) {
                 this.isBatch = flag;
-                flag || (this.removeID = index);
+                if(!flag){ 
+                    this.removeID = index;
+                    this.column = this.selectedOptions
+                }
                 this.dialogFormVisible = true;
             },
             handleMove: function (index, row) {

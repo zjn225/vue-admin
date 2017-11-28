@@ -35,16 +35,18 @@
             </el-table-column>
         </el-table>
           <!--移动分类时候的弹窗-->
-        <el-dialog title="请选择要移动到的分类" :visible.sync="dialogFormVisible">
-            <el-cascader
+        <el-dialog title="请选择要移动到的分类" :visible.sync="dialogFormVisible" width="25%" center>
+           <div style="text-align: center;">
+              <el-cascader
                     expand-trigger="hover"
-                    :options="optionsNEW"
+                    :options="options"
                     v-model="column"
             >
             </el-cascader>
+           </div>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
                 <el-button type="primary" @click="handleMove">确 定</el-button>
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
             </div>
         </el-dialog>
         <!--工具条-->
@@ -81,7 +83,6 @@ export default {
       currentPage: 1,
       column: [],
       dialogFormVisible: false,
-      selectedOptions: [], //级联选择器
       removeID: 0,
       options: [
         {
@@ -149,72 +150,7 @@ export default {
           ]
         }
       ],
-      optionsNEW: [
-        {
-          value: "information",
-          label: "科研资讯",
-          children: [
-            {
-              value: "1",
-              label: "科研简讯"
-            },
-            {
-              value: "2",
-              label: "媒体报道"
-            }
-          ]
-        },
-        {
-          value: "research",
-          label: "科学研究",
-          children: [
-            {
-              value: "1",
-              label: "课题研究"
-            },
-            {
-              value: "2",
-              label: "调研考察"
-            }
-          ]
-        },
-        {
-          value: "achievement",
-          label: "科研成果",
-          children: [
-            {
-              value: "1",
-              label: "著作"
-            },
-            {
-              value: "2",
-              label: "学术论文"
-            },
-            {
-              value: "3",
-              label: "研究报告"
-            }
-          ]
-        },
-        {
-          value: "exchange",
-          label: "学术交流",
-          children: [
-            {
-              value: "1",
-              label: "学术学会"
-            },
-            {
-              value: "2",
-              label: "流通论坛"
-            },
-            {
-              value: "3",
-              label: "来访交流"
-            }
-          ]
-        }
-      ],
+     
       filters: {
         title: ""
       },
@@ -286,9 +222,7 @@ export default {
             
             let { code, msg } = data;
             if (code === 200) {
-              
-
-        
+                   
               this.$message({
                 message: "发布成功",
                 type: "success"
@@ -387,12 +321,18 @@ export default {
     showColumn: function(flag, index) {
       this.isBatch = flag;
       flag || (this.removeID = index);
+      this.column[0] = this.drafts[index].sort;
+      this.column[1] = ""+this.drafts[index].type;
+      console.log(typeof this.column[1])
       this.dialogFormVisible = true;
     },
-    handleMove: function(index, row) {
+    handleMove: function() {
       const column = this.column;
-      const sort = this.drafts[index].sort;
-      const type = this.drafts[index].type;
+      console.log(typeof this.column[1])
+      
+      const sort = this.drafts[this.removeID].sort;
+      const type = this.drafts[this.removeID].type;
+      const id = this.drafts[this.removeID].id;
       if (column[0] === sort && column[1] === type) {
         this.$message({
           message: "当前文章已在您选择的这个分类，请不要重复移动",
@@ -403,13 +343,8 @@ export default {
       this.$confirm("确认移动该文章吗?", "提示", {
         type: "warning"
       }).then(() => {
-        const article = [
-          {
-            id: this.drafts[this.removeID].id
-          }
-        ];
-
-        moveDraft({ article, sort, type, column }).then(data => {
+        
+        moveDraft({ id, sort:column[0],type:column[1] }).then(data => {
           let { code, msg } = data;
           if (code === 200) {
             this.dialogFormVisible = false;
@@ -418,6 +353,7 @@ export default {
               type: "success"
             });
             this.getArticleList(0);
+            this.column = [];
           } else {
             this.dialogFormVisible = false;
             this.$message({
