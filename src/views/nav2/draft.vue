@@ -18,7 +18,9 @@
             </el-table-column>
             <el-table-column prop="source" label="文章来源" width="100">
             </el-table-column>
-            <el-table-column prop="time" label="发布时间" width="200" sortable>
+            <el-table-column prop="time" label="文章发布时间" width="130" sortable>
+            </el-table-column>
+            <el-table-column prop="draftTime" label="上次修改时间" width="200" sortable>
             </el-table-column>
             <el-table-column label="操作" width="420">
                 <template slot-scope="scope">
@@ -333,7 +335,7 @@ export default {
       let id = this.drafts[index].id;
 
       const result = await getDraft({ id });
-      const { data, code, msg } = result;
+      const { data, code, msg,dratTime } = result;
       if (code === 200) {
         this.SAVE_DRAFTINFO(data);
         this.$router.push({ path: "/editDraft" });

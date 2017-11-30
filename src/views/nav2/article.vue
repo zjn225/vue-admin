@@ -403,7 +403,7 @@
 
                     }];
 
-                    moveArticle({article, sort, type, column}).then(data => {
+                    moveArticle({article, column}).then(data => {
                         let {code, msg} = data;
                         if (code === 200) {
                             this.dialogFormVisible = false;

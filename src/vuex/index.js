@@ -38,6 +38,7 @@ const state = {
         author: '',
         source: '',
         time: '',
+        draftTime :null,
         content: '',
         selectedOptions: ''
     },

@@ -38,7 +38,8 @@
            
             <h3>文章来源</h3>
             <el-input class="source" v-model="draft.source" placeholder="文章来源"></el-input>
-
+           
+         
             <h3>是否将该文章列为首页轮播图</h3>
             <el-switch
                     v-model="isBanner"
@@ -57,6 +58,16 @@
                     <el-radio :label="index">图片{{index + 1}}</el-radio>
                 </el-radio-group>
             </div>
+             <el-table
+                :data="draft.draftTime"
+            style="width: 220px">
+            <el-table-column
+                prop="draftTime"
+            label="历史修改时间"
+            width="220">
+            </el-table-column>
+            
+            </el-table>
         </div>
         <div class="btn">
             <el-button type="success" class="btn2" size='medium' id="submit2" @click="renewDraft()" icon="el-icon-upload2">
@@ -90,7 +101,7 @@
                 canCrop: false,
                 /*测试上传图片的接口，返回结构为{url:''}*/
                 uploadUrl: `http:${process.env.API_ROOT}data/article/uploadImg`,
-         
+                activeNames:['1'],
                 indexbanner: 0, //注意是从0开始的，但是在页面是有+1的
                 loading: false,
                 /*显示裁切控件*/
@@ -225,16 +236,17 @@
             //不能在开关的change方法加入hasImg，否则先打开开关再加入图片就出现bug了
             countPic() {
                 var reg = /<img src=/g;
-                if (reg.test(this.content)) {
-                    let imgNum = this.content.match(reg);
+                if (reg.test(this.draft.content)) {
+                    let imgNum = this.draft.content.match(reg);
                     this.picNum = imgNum.length;
                 } else {
                     this.picNum = 0;
                 }
+                console.log( this.picNum)
             },
             hasImg() {
                 var reg = /<img src=/g;
-                if (reg.test(this.content)) {
+                if (reg.test(this.draft.content)) {
                     //有图片
                     this.hasPic = true;
                     this.countPic();
@@ -470,4 +482,5 @@
             padding: 18px 5px 0;
         }
     }
+    
 </style>
