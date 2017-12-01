@@ -207,7 +207,7 @@
                         ]
                     },
                     {
-                        value:"expert",
+                        value:"dynamic",
                         label:"智库专家",
                         children:[
                             {
