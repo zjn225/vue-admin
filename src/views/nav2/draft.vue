@@ -192,7 +192,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["SAVE_DRAFTINFO"]),
+    ...mapMutations(["SAVE_DRAFTINFO", 'SAVE_SELECTOPTION']),
 
     /*翻页*/
     handleCurrentChange(currentPage) {
@@ -337,6 +337,11 @@ export default {
       const result = await getDraft({ id });
       const { data, code, msg,dratTime } = result;
       if (code === 200) {
+        let selectedOptions = [];
+        selectedOptions[0] = this.drafts[index].sort; 
+        selectedOptions[1] = ""+this.drafts[index].type; 
+        this.SAVE_SELECTOPTION(selectedOptions)
+        console.log(selectedOptions)
         this.SAVE_DRAFTINFO(data);
         this.$router.push({ path: "/editDraft" });
       } else {

@@ -35,7 +35,16 @@
                     </el-date-picker>
                 </div>
             </div>
-           
+            <!-- 类别 -->
+            <div class="block">
+                <h3>分类</h3>
+                <el-cascader
+                        expand-trigger="hover"
+                        :options="options"
+                        v-model="selectedOptions"
+                        @change="handleChange">
+                </el-cascader>
+            </div> 
             <h3>文章来源</h3>
             <el-input class="source" v-model="draft.source" placeholder="文章来源"></el-input>
            
@@ -101,6 +110,7 @@
                 canCrop: false,
                 /*测试上传图片的接口，返回结构为{url:''}*/
                 uploadUrl: `http:${process.env.API_ROOT}data/article/uploadImg`,
+                selectedOptions: this.$store.state.selectedOptions,
                 activeNames:['1'],
                 indexbanner: 0, //注意是从0开始的，但是在页面是有+1的
                 loading: false,
@@ -118,6 +128,7 @@
                     // 编辑器的配置
                     // something config
                 },
+              
                 options:  [
                     {
                         value: "information",
@@ -301,8 +312,9 @@
                     author: this.draft.author,
                     content: this.draft.content,
                     source: this.draft.source,
-                    time: this.draft.time
-                 
+                    time: this.draft.time,
+                    sort : this.selectedOptions[0],
+                    type : this.selectedOptions[1]
                 });
                 const {code, msg} = result;
                 if (code === 200) {
@@ -348,16 +360,14 @@
                     return;
                 }
                 this.loading = true;
-                let selectedOptions = [];
-                selectedOptions[0] = this.draft.sort;                 
-                selectedOptions[1] = parseInt(this.draft.type);                 
+                                
                 let result = await postArticle({
                     title: this.draft.title,
                     author: this.draft.author,
                     content: this.draft.content,
                     source: this.draft.source,
                     time: this.draft.time,
-                    selectedOptions,
+                    selectedOptions : this.selectedOptions,
                     isbanner: this.isBanner,
                     indexbanner: this.indexbanner
                 });

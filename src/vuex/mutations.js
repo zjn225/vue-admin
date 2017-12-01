@@ -11,6 +11,7 @@ export default {
 
     [types.SAVE_SELECTOPTION](state, selectedOptions) {
         state.selectedOptions = selectedOptions;
+        console.log(state.selectedOptions)
     },
 
     [types.SAVE_TEAMONE](state, person) {
