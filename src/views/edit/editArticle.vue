@@ -32,7 +32,16 @@
                     </el-date-picker>
                 </div>
             </div>
-            <!--分类-->
+            <!-- 类别 -->
+            <div class="block">
+                <h3>分类</h3>
+                <el-cascader
+                        expand-trigger="hover"
+                        :options="options"
+                        v-model="selectedOptions"
+                        @change="handleChange">
+                </el-cascader>
+            </div>             
             <h3>文章来源</h3>
             <el-input class="source" v-model="article.source" placeholder="文章来源"></el-input>
 
@@ -70,21 +79,21 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import { editArticle,uploadImg } from "../../api/api";
+import { editArticle, uploadImg } from "../../api/api";
 import CropImg from "../Upload/CropImg";
-import { quillEditor } from 'vue-quill-editor'
+import { quillEditor } from "vue-quill-editor";
 
 export default {
   data() {
     return {
-        editorOption: {
-            // 编辑器的配置
-            // something config
-        },
-      content:'',
+      editorOption: {
+        // 编辑器的配置
+        // something config
+      },
+      content: "",
       picNum: 0,
-      indexbanner : this.$store.state.article.indexbanner,
-      // selectedOptions : this.$store.state.article.selectedOptions,
+      indexbanner: this.$store.state.article.indexbanner,
+      selectedOptions: this.$store.state.article.selectedOptions,
       loading: false,
       showCrop: false,
       uploadUrl: `http:${process.env.API_ROOT}data/article/uploadImg`,
@@ -93,6 +102,100 @@ export default {
           return time.getTime() < Date.now() - 8.64e7;
         }
       },
+      options: [
+        {
+          value: "information",
+          label: "科研资讯",
+          children: [
+            {
+              value: "1",
+              label: "科研简讯"
+            },
+            {
+              value: "2",
+              label: "媒体报道"
+            }
+          ]
+        },
+        {
+          value: "research",
+          label: "科学研究",
+          children: [
+            {
+              value: "1",
+              label: "课题研究"
+            },
+            {
+              value: "2",
+              label: "调研考察"
+            }
+          ]
+        },
+        {
+          value: "achievement",
+          label: "科研成果",
+          children: [
+            {
+              value: "1",
+              label: "著作"
+            },
+            {
+              value: "2",
+              label: "学术论文"
+            },
+            {
+              value: "3",
+              label: "研究报告"
+            }
+          ]
+        },
+        {
+          value: "exchange",
+          label: "学术交流",
+          children: [
+            {
+              value: "1",
+              label: "学术学会"
+            },
+            {
+              value: "2",
+              label: "流通论坛"
+            },
+            {
+              value: "3",
+              label: "来访交流"
+            }
+          ]
+        },
+        {
+          value: "advisory",
+          label: "咨询服务",
+          children: [
+            {
+              value: "1",
+              label: "政府咨询"
+            },
+            {
+              value: "2",
+              label: "企业咨询"
+            },
+            {
+              value: "3",
+              label: "培训课程"
+            }
+          ]
+        },
+        {
+          value: "expert",
+          label: "智库专家",
+          children: [
+            {
+              value: "1",
+              label: "专家动态"
+            }
+          ]
+        }
+      ]
     };
   },
   components: {
@@ -101,6 +204,8 @@ export default {
   },
   // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
   methods: {
+    ...mapMutations(['SAVE_SELECTOPTION']),
+
     handleChange(value) {
       this.countPic();
     },
@@ -113,29 +218,26 @@ export default {
     onEditorReady(editor) {
       this.countPic();
     },
-    // ...mapMutations(['SAVE_SELECTOPTION']),
-
-     /**
-            * @description 不能在开关的change方法加入hasImg，否则先打开开关再加入图片就出现bug了.
-            * @param {*} flag flag用于el-switch轮播图设置交互提醒
-            */
+    /**
+      * @description 不能在开关的change方法加入hasImg，否则先打开开关再加入图片就出现bug了.
+      * @param {*} flag flag用于el-switch轮播图设置交互提醒
+    */
     countPic(flag = false) {
       var reg = /src/g;
 
       if (reg.test(this.article.content)) {
         let ss = this.article.content.match(reg);
         this.picNum = ss.length;
-     
-      }else{
+      } else {
         this.picNum = 0;
-                    if(flag){
-                        this.$notify({
-                            title: '警告',
-                            message: '文章中没有图片，不能设置为轮播图',
-                            type: 'warning'
-                        });
-                        this.isBanner='0';
-                    }
+        if (flag) {
+          this.$notify({
+            title: "警告",
+            message: "文章中没有图片，不能设置为轮播图",
+            type: "warning"
+          });
+          this.isBanner = "0";
+        }
       }
     },
     hasImg() {
@@ -153,43 +255,43 @@ export default {
       this.hasImg();
 
       if (!this.article.content) {
-         this.$message({message: "请不要发表内容为空的文章",type: 'warning'});
+        this.$message({ message: "请不要发表内容为空的文章", type: "warning" });
         return;
       }
       if (!this.article.author) {
-        this.$message({message:"请标明作者",type: 'warning'});
+        this.$message({ message: "请标明作者", type: "warning" });
         return;
       }
       if (!this.article.title) {
-         this.$message({message:"请输入标题",type: 'warning'});
+        this.$message({ message: "请输入标题", type: "warning" });
         return;
       }
       if (!this.article.time) {
-        this.$message({message:"请选择发布日期",type: 'warning'});
+        this.$message({ message: "请选择发布日期", type: "warning" });
         return;
       }
       if (this.article.selectedOptions.length === 0) {
-         this.$message({message:"请选择分类",type: 'warning'});
+        this.$message({ message: "请选择分类", type: "warning" });
         return;
       }
       if (!this.article.source) {
-         this.$message({message:"请输入文章来源",type: 'warning'});
+        this.$message({ message: "请输入文章来源", type: "warning" });
         return;
       }
 
       if (!this.hasPic && this.article.isbanner) {
-         this.$message({message:"内容没有图片，请不要设置为首页的轮播图",type: 'warning'});
+        this.$message({ message: "内容没有图片，请不要设置为首页的轮播图", type: "warning" });
         return;
       }
 
       this.loading = true;
-      // this.article.selectedOptions = this.selectedOptions;
+      this.article.selectedOptions = this.selectedOptions;
       this.article.indexbanner = this.indexbanner;
       const result = await editArticle(this.article);
       const { code, msg } = result.data;
 
       if (code === 200) {
-        // this.SAVE_SELECTOPTION(this.selectedOptions);
+        this.SAVE_SELECTOPTION(this.selectedOptions);
 
         this.loading = false;
         this.$message({
@@ -198,69 +300,70 @@ export default {
         });
         this.$router.push({ path: "/article" });
       } else {
-        this.loading = false;        
+        this.loading = false;
         this.$message({
           message: msg,
           type: "error"
         });
       }
     },
-    
+
     onUploadSuccess: function(path) {
-      this.showCrop= false;    
+      this.showCrop = false;
       this.editor.focus();
       this.editor.insertEmbed(this.editor.getSelection().index, "image", path);
     },
-    onStopCrop(){
-      this.showCrop= false;      
+    onStopCrop() {
+      this.showCrop = false;
     },
-   
+
     onFileChange(e) {
       let fileInput = e.target;
       let file = fileInput.files[0];
       if (fileInput.files.length == 0) {
         return;
       }
-       
-      if (window.createObjectURL != undefined) { // basic
-           this.uploadUrl = window.createObjectURL(file);
-      } else if (window.URL != undefined) { // mozilla(firefox)
+
+      if (window.createObjectURL != undefined) {
+        // basic
+        this.uploadUrl = window.createObjectURL(file);
+      } else if (window.URL != undefined) {
+        // mozilla(firefox)
         this.uploadUrl = window.URL.createObjectURL(file);
-      
-      } else if (window.webkitURL != undefined) { // webkit or chrome
-          this.uploadUrl = window.webkitURL.createObjectURL(file);
+      } else if (window.webkitURL != undefined) {
+        // webkit or chrome
+        this.uploadUrl = window.webkitURL.createObjectURL(file);
       }
-     
+
       this.editor.focus();
-      this.showCrop= true;      
-    },
+      this.showCrop = true;
+    }
   },
   // 如果你需要得到当前的editor对象来做一些事情，你可以像下面这样定义一个方法属性来获取当前的editor对象，
   // 实际上这里的$refs对应的是当前组件内所有关联了ref属性的组件元素对象
   computed: {
     ...mapState(["article"]),
-    
-     editor() {
-       return this.$refs.myQuillEditor.quill;
-     }
-  },
-  created:{
 
+    editor() {
+      return this.$refs.myQuillEditor.quill;
+    }
   },
+  created: {},
   mounted() {
     let self = this;
-    console.log(this.article)
-    var imgHandler =  function imgHandler(){
+    console.log(this.article);
+    var imgHandler = function imgHandler() {
       let input = document.createElement("input");
       input.type = "file";
       input.name = self.fileName;
       input.accept = "image/jpeg,image/png,image/jpg,image/gif";
       input.onchange = self.onFileChange;
       input.click();
-    }
-    this.$refs.myQuillEditor.quill.getModule("toolbar").addHandler("image", imgHandler)
-  },
-
+    };
+    this.$refs.myQuillEditor.quill
+      .getModule("toolbar")
+      .addHandler("image", imgHandler);
+  }
 };
 </script>
 
@@ -302,14 +405,13 @@ div {
   }
 
   .btn {
-            margin-top: 80px;
-            .btn1{
-                width: 120px;
-                float: right;
-                 margin-right: 50px;
-            }
-            
-        }
+    margin-top: 80px;
+    .btn1 {
+      width: 120px;
+      float: right;
+      margin-right: 50px;
+    }
+  }
   .sele {
     padding: 18px 5px 0;
   }
