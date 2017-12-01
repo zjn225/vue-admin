@@ -57,7 +57,7 @@
                     inactive-text="否"
                     :active-value='1'
                     :inactive-value='0'
-                    @change="countPic()"
+                    @change="countPic(true)"
             >
             </el-switch>
             <div class="block" v-if="picNum && isBanner">
@@ -238,14 +238,25 @@
             onEditorReady(editor) {
                 this.countPic();
             },
-            //不能在开关的change方法加入hasImg，否则先打开开关再加入图片就出现bug了
-            countPic() {
+            /**
+            * @description 不能在开关的change方法加入hasImg，否则先打开开关再加入图片就出现bug了.
+            * @param {*} flag flag用于el-switch轮播图设置交互提醒
+            */
+            countPic(flag = false) {
                 var reg = /<img src=/g;
                 if (reg.test(this.content)) {
                     let imgNum = this.content.match(reg);
                     this.picNum = imgNum.length;
                 } else {
                     this.picNum = 0;
+                    if(flag){
+                        this.$notify({
+                            title: '警告',
+                            message: '文章中没有图片，不能设置为轮播图',
+                            type: 'warning'
+                        });
+                        this.isBanner='0';
+                    }
                 }
             },
             hasImg() {
@@ -262,27 +273,27 @@
             async saveDraft() {
               
                 if (this.content.length === 0) {
-                    this.$message("请不要发表内容为空的文章");
+                   this.$message({message: "请不要发表内容为空的文章",type: 'warning'});
                     return;
                 }
                 if (this.author.length === 0) {
-                    this.$message("请标明作者");
+                   this.$message({message:"请标明作者",type: 'warning'});
                     return;
                 }
                 if (this.title.length === 0) {
-                    this.$message("请输入标题");
+                    this.$message({message:"请输入标题",type: 'warning'});
                     return;
                 }
                 if (!this.time) {
-                    this.$message("请选择发布日期");
+                    this.$message({message:"请选择发布日期",type: 'warning'});
                     return;
                 }
                 if (this.selectedOptions.length === 0) {
-                    this.$message("请选择分类");
+                    this.$message({message:"请选择分类",type: 'warning'});
                     return;
                 }
                 if (this.source.length === 0) {
-                    this.$message("请输入文章来源");
+                    this.$message({message:"请输入文章来源",type: 'warning'});
                     return;
                 }
                
@@ -315,31 +326,31 @@
               
                 this.hasImg();
                 if (this.content.length === 0) {
-                    this.$message("请不要发表内容为空的文章");
+                    this.$message({message: "请不要发表内容为空的文章",type: 'warning'});
                     return;
                 }
                 if (this.author.length === 0) {
-                    this.$message("请标明作者");
+                    this.$message({message:"请标明作者",type: 'warning'});
                     return;
                 }
                 if (this.title.length === 0) {
-                    this.$message("请输入标题");
+                    this.$message({message:"请输入标题",type: 'warning'});
                     return;
                 }
                 if (!this.time) {
-                    this.$message("请选择发布日期");
+                    this.$message({message:"请选择发布日期",type: 'warning'});
                     return;
                 }
                 if (this.selectedOptions.length === 0) {
-                    this.$message("请选择分类");
+                    this.$message({message:"请选择分类",type: 'warning'});
                     return;
                 }
                 if (this.source.length === 0) {
-                    this.$message("请输入文章来源");
+                    this.$message({message:"请输入文章来源",type: 'warning'});
                     return;
                 }
                 if (!this.hasPic && this.isBanner == 1) {
-                    this.$message("内容没有图片，请不要设置为首页的轮播图");
+                    this.$message({message:"内容没有图片，请不要设置为首页的轮播图",type: 'warning'});
                     return;
                 }
                 this.loading = true;

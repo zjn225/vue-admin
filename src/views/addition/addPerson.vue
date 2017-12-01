@@ -98,19 +98,20 @@
             },
             async onEditorChange() {
                 if (!this.content) {
-                    this.$message("请不要发表内容为空的文章");
+                     this.$message({message:"请不要发表内容为空的文章",type: 'warning'});
                     return;
                 }
                 if (!this.name) {
-                    this.$message("请输入该专家的名字");
+                    this.$message({message:"请输入该专家的名字",type: 'warning'});
                     return;
                 }
                 if (!this.position) {
-                    this.$message("请输入该专家的职位");
+                    this.$message({message:"请输入该专家的职位",type: 'warning'});
+
                     return;
                 }
                 if (!this.dialogVisible ) {
-                    this.$message("头像未上传");
+                    this.$message({message:"头像未上传",type: 'warning'});
                     return;
                 }
 

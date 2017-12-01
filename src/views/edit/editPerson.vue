@@ -80,6 +80,19 @@
 
             async onEditorChange() {
                 this.loading = true;
+                if (!this.person.content) {
+                    this.$message({message:"请不要发表内容为空的文章",type: 'warning'});
+                    return;
+                }
+                if (!this.person.name) {
+                    this.$message({message:"请输入该专家的名字",type: 'warning'});
+                    return;
+                }
+                if (!this.person.position) {
+                    this.$message({message:"请输入该专家的职位",type: 'warning'});
+                    return;
+                }
+                
                 let data = await editPerson({
                     name: this.person.name,
                     id: this.person.id,
