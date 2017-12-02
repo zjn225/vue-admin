@@ -32,6 +32,15 @@ let postImg = axios.create({
 export const requestLogin = params => {
     return instance.post(`/user/login`, params).then(res => res.data);
 };
+export const requestLogOut = () => {
+    return instance.get(`/user/logout`).then(res => res.data);
+};
+export const requestVerCode = params => {
+    return instance.get(`/user/resetPassword`, {params: params}).then(res => res.data);
+};
+export const restPass = params => {
+    return instance.post(`/user/resetPassword`, params).then(res => res.data);
+};
 export const changePass = params => {
     return instance.post(`/user/changePassword`, params).then(res => res.data);
 };

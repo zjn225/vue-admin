@@ -89,6 +89,7 @@
 </template>
 
 <script>
+    import {requestLogOut} from '../api/api'
     export default {
         data() {
             return {
@@ -129,6 +130,7 @@
                 this.$confirm('确认退出吗?', '提示', {
                     //type: 'warning'
                 }).then(() => {
+                    requestLogOut();
                     sessionStorage.removeItem('status');
                     _this.$router.push('/login');
                 }).catch(() => {
