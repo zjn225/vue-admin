@@ -111,6 +111,12 @@
                     this.isLoading = false;
                     this.isReacher = false;
                     console.log(this.experts)
+                },()=>{
+                    this.loading = false;
+                    this.$message({
+                        message: '服务器错误',
+                        type: "error"
+                    });
                 });
             },
 
@@ -138,6 +144,12 @@
                                     type: "error"
                                 });
                             }
+                        });
+                    },(e)=>{
+                        this.loading = false;
+                        this.$message({
+                            message: '服务器错误',
+                            type: "error"
                         });
                     })
                     .catch(() => {
@@ -168,6 +180,12 @@
                                 });
                             }
                         });
+                    },(e)=>{
+                        this.loading = false;
+                        this.$message({
+                            message: '服务器错误',
+                            type: "error"
+                        });
                     })
                     .catch(() => {
                     });
@@ -192,6 +210,12 @@
                             type: "error"
                         });
                     }
+                },(e)=>{
+                    this.loading = false;
+                    this.$message({
+                        message: '服务器错误',
+                        type: "error"
+                    });
                 });
             },
             //显示编辑界面
@@ -244,7 +268,13 @@
                             type: "error"
                         });
                     }
-                })
+                },(e)=>{
+                   this.loading = false;
+                   this.$message({
+                       message: '服务器错误',
+                       type: "error"
+                   });
+               })
 
             },
 
@@ -279,7 +309,13 @@
                             type: "error"
                         });
                     }
-                })
+                },(e)=>{
+                   this.loading = false;
+                   this.$message({
+                       message: '服务器错误',
+                       type: "error"
+                   });
+               })
 
             },
 

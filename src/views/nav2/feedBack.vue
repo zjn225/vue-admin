@@ -174,6 +174,12 @@
                     this.Readfeeds = data.feedback;
                     this.isLoading = false;
                     this.sortReadFeeds();
+                },(e)=>{
+                    this.loading = false;
+                    this.$message({
+                        message: '服务器错误',
+                        type: "error"
+                    });
                 });
             },
             //分未读和已读
@@ -221,6 +227,12 @@
                                 });
                             }
                         });
+                    },(e)=>{
+                        this.loading = false;
+                        this.$message({
+                            message: '服务器错误',
+                            type: "error"
+                        });
                     })
                     .catch(() => {
                     });
@@ -248,6 +260,12 @@
                             type: "error"
                         });
                     }
+                },(e)=>{
+                    this.loading = false;
+                    this.$message({
+                        message: '服务器错误',
+                        type: "error"
+                    });
                 })
 
             },
@@ -282,6 +300,12 @@
                                     type: "error"
                                 });
                             }
+                        },(e)=>{
+                            this.loading = false;
+                            this.$message({
+                                message: '服务器错误',
+                                type: "error"
+                            });
                         });
                     })
                     .catch(() => {

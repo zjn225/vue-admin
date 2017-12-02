@@ -104,14 +104,20 @@
             getUsers(start = 0) {
                 this.isLoading = true;
                 getPersonList({start,sort:'team'}).then(data => {
-//                    console.log(data)
+
                     if (this.total === 0) {
                         this.total = data.pageCount;
                     }
                     this.persons = data.list;
                     this.isLoading = false;
                     this.isReacher = false;
-                    console.log(this.persons)
+
+                },(e)=>{
+                    this.loading = false;
+                    this.$message({
+                        message: '服务器错误',
+                        type: "error"
+                    });
                 });
             },
 
@@ -139,6 +145,12 @@
                                     type: "error"
                                 });
                             }
+                        },(e)=>{
+                            this.loading = false;
+                            this.$message({
+                                message: '服务器错误',
+                                type: "error"
+                            });
                         });
                     })
                     .catch(() => {
@@ -167,6 +179,12 @@
                                     type: "error"
                                 });
                             }
+                        },(e)=>{
+                            this.loading = false;
+                            this.$message({
+                                message: '服务器错误',
+                                type: "error"
+                            });
                         });
                     })
                     .catch(() => {
@@ -192,6 +210,12 @@
                             type: "error"
                         });
                     }
+                },(e)=>{
+                    this.loading = false;
+                    this.$message({
+                        message: '服务器错误',
+                        type: "error"
+                    });
                 });
             },
             //显示编辑界面
@@ -242,6 +266,12 @@
                             type: "error"
                         });
                     }
+                },(e)=>{
+                    this.loading = false;
+                    this.$message({
+                        message: '服务器错误',
+                        type: "error"
+                    });
                 })
 
             },
@@ -277,7 +307,13 @@
                             type: "error"
                         });
                     }
-                })
+                },(e)=>{
+                   this.loading = false;
+                   this.$message({
+                       message: '服务器错误',
+                       type: "error"
+                   });
+               })
 
             },
 

@@ -1,14 +1,16 @@
 <template>
     <div class="wrap">
         <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="旧密码" prop="oldPass" >
+            <el-form-item label="旧密码" prop="oldPass">
                 <el-input class="input" placeholder="请输入旧密码以确认身份" v-model.number="ruleForm2.oldPass"></el-input>
             </el-form-item>
             <el-form-item label="新密码" prop="pass">
-                <el-input class="input" placeholder="请输入新密码" type="password" v-model="ruleForm2.pass" auto-complete="off"></el-input>
+                <el-input class="input" placeholder="请输入新密码" type="password" v-model="ruleForm2.pass"
+                          auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="确认密码" prop="checkPass">
-                <el-input class="input"  placeholder="请再次输入新密码" type="password" v-model="ruleForm2.checkPass" auto-complete="off"></el-input>
+                <el-input class="input" placeholder="请再次输入新密码" type="password" v-model="ruleForm2.checkPass"
+                          auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="submitForm('ruleForm2')">提交</el-button>
@@ -19,7 +21,7 @@
 </template>
 
 <script>
-import {changePass} from "../../api/api";
+    import {changePass} from "../../api/api";
 
     export default {
         data() {
@@ -50,10 +52,10 @@ import {changePass} from "../../api/api";
                 },
                 rules2: {
                     pass: [
-                        { validator: validatePass, trigger: 'blur' }
+                        {validator: validatePass, trigger: 'blur'}
                     ],
                     checkPass: [
-                        { validator: validatePass2, trigger: 'blur' }
+                        {validator: validatePass2, trigger: 'blur'}
                     ],
                 }
             };
@@ -62,20 +64,26 @@ import {changePass} from "../../api/api";
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        changePass({oldPass:this.ruleForm2.oldPass,pass:this.ruleForm2.pass}).then(data=>{
-                           
-                            const {code,msg} = data;
-                            if(code === 200){
-                                  this.$message({
+                        changePass({oldPass: this.ruleForm2.oldPass, pass: this.ruleForm2.pass}).then(data => {
+
+                            const {code, msg} = data;
+                            if (code === 200) {
+                                this.$message({
                                     message: msg,
                                     type: "success"
                                 });
-                            }else{
+                            } else {
                                 this.$message({
                                     message: msg,
                                     type: "error"
                                 });
                             }
+                        }, (e) => {
+                            this.loading = false;
+                            this.$message({
+                                message: '服务器错误',
+                                type: "error"
+                            });
                         })
                     } else {
                         console.log('error submit!!');
@@ -91,13 +99,13 @@ import {changePass} from "../../api/api";
 </script>
 
 <style lang="scss" scoped>
-    .wrap{
-        .demo-ruleForm{
+    .wrap {
+        .demo-ruleForm {
             margin-top: 30px;
         }
-        .input{
+        .input {
             width: 300px;
-            margin:0 20px;
+            margin: 0 20px;
         }
 
     }

@@ -61,11 +61,11 @@
         <el-dialog title="请选择要移动到的分类" :visible.sync="dialogFormVisible" center width="25%">
             <div style="text-align: center;">
                 <el-cascader
-                    expand-trigger="hover"
-                    :options="options"
-                    v-model="column"
-            >
-            </el-cascader>
+                        expand-trigger="hover"
+                        :options="options"
+                        v-model="column"
+                >
+                </el-cascader>
             </div>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -166,35 +166,35 @@
                         ]
                     },
                     {
-                        value:"advisory",
-                        label:"咨询服务",
-                        children:[
+                        value: "advisory",
+                        label: "咨询服务",
+                        children: [
                             {
-                                value:"1",
-                                label:"政府咨询"
+                                value: "1",
+                                label: "政府咨询"
                             },
                             {
-                                value:"2",
-                                label:"企业咨询"
+                                value: "2",
+                                label: "企业咨询"
                             },
                             {
-                                value:"3",
-                                label:"培训课程"
+                                value: "3",
+                                label: "培训课程"
                             }
                         ]
                     },
                     {
-                        value:"dynamic",
-                        label:"智库专家",
-                        children:[
+                        value: "dynamic",
+                        label: "智库专家",
+                        children: [
                             {
-                                value:"1",
-                                label:"专家动态"
+                                value: "1",
+                                label: "专家动态"
                             },
                         ]
                     }
                 ],
-                
+
                 filters: {
                     title: ""
                 },
@@ -243,6 +243,12 @@
                             type: "error"
                         });
                     }
+                }, (e) => {
+                    this.loading = false;
+                    this.$message({
+                        message: '服务器错误',
+                        type: "error"
+                    });
                 });
             },
             ...mapMutations(["SAVE_ARTICLEINFO", 'SAVE_SELECTOPTION']),
@@ -279,6 +285,12 @@
                             type: "error"
                         });
                     }
+                },()=>{
+                    this.loading = false;
+                    this.$message({
+                        message: '服务器错误',
+                        type: "error"
+                    });
                 });
             },
             //删除
@@ -312,6 +324,12 @@
                                     type: "error"
                                 });
                             }
+                        },()=>{
+                            this.loading = false;
+                            this.$message({
+                                message: '服务器错误',
+                                type: "error"
+                            });
                         });
                     })
                     .catch(() => {
@@ -347,6 +365,12 @@
                                 type: "error"
                             });
                         }
+                    },(e)=>{
+                        this.loading = false;
+                        this.$message({
+                            message: '服务器错误',
+                            type: "error"
+                        });
                     });
                 });
             },
@@ -373,7 +397,7 @@
             /*显示批量移动界面*/
             showColumn: function (flag, index) {
                 this.isBatch = flag;
-                if(!flag){ 
+                if (!flag) {
                     this.removeID = index;
                     this.column = this.selectedOptions
                 }
@@ -419,6 +443,12 @@
                                 type: "error"
                             });
                         }
+                    },(e)=>{
+                        this.loading = false;
+                        this.$message({
+                            message: '服务器错误',
+                            type: "error"
+                        });
                     });
                 });
             },
@@ -456,6 +486,12 @@
                             type: "error"
                         });
                     }
+                },(e)=>{
+                    this.loading = false;
+                    this.$message({
+                        message: '服务器错误',
+                        type: "error"
+                    });
                 });
             }
         },

@@ -113,9 +113,9 @@
                                 sessionStorage.setItem('status', 1);
                                 this.$router.push({path: '/Main'});
                             }
-                        }, () => {
+                        }, (e) => {
                             this.$message({
-                                message: "请求失败",
+                                message: "服务器错误",
                                 type: "error"
                             });
                             this.logining = false;

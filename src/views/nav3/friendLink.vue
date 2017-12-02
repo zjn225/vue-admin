@@ -89,6 +89,12 @@ export default {
         this.listLoading = false;
 
         //NProgress.done();
+      },(e)=>{
+          this.loading = false;
+          this.$message({
+              message: '服务器错误',
+              type: "error"
+          });
       });
     },
     //删除
@@ -120,6 +126,12 @@ export default {
               });
             }
           });
+        },(e)=>{
+            this.loading = false;
+            this.$message({
+                message: '服务器错误',
+                type: "error"
+            });
         })
         .catch(() => {});
     },
@@ -172,6 +184,12 @@ export default {
               });
             }
           });
+        },(e)=>{
+            this.loading = false;
+            this.$message({
+                message: '服务器错误',
+                type: "error"
+            });
         })
         .catch(() => {});
     }  

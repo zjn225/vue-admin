@@ -14,11 +14,11 @@
             <el-button type="primary" class="btn" id="submit" @click="updateContent()">保存</el-button>
         </div>
          <CropImg
-                   v-if="showCrop"                  
+                   v-if="showCrop"
                    :uploadUrl="uploadUrl"
                    @onUploadSuccess="onUploadSuccess"
                    @onStopCrop="onStopCrop"
-                   ></CropImg>  
+                   ></CropImg>
     </div>
 </template>
 
@@ -65,6 +65,12 @@ export default {
             type: "error"
           });
         }
+      },(e)=>{
+          this.loading = false;
+          this.$message({
+              message: '服务器错误',
+              type: "error"
+          });
       });
     },
     updateContent() {
@@ -89,6 +95,12 @@ export default {
             type: "error"
           });
         }
+      },(e)=>{
+          this.loading = false;
+          this.$message({
+              message: '服务器错误',
+              type: "error"
+          });
       });
     },
      onUploadSuccess: function(path) {
@@ -178,7 +190,7 @@ export default {
       position: relative;
       top: 90px;
     }
-  
+
 
   .btn {
     width: 100px;

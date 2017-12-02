@@ -96,6 +96,12 @@ export default {
             type: "error"
           });
         }
+      },(e)=>{
+          this.loading = false;
+          this.$message({
+              message: '服务器错误',
+              type: "error"
+          });
       });
     },
     updateContent() {
@@ -120,6 +126,12 @@ export default {
             type: "error"
           });
         }
+      },(e)=>{
+          this.loading = false;
+          this.$message({
+              message: '服务器错误',
+              type: "error"
+          });
       });
     },
     onUploadSuccess: function(path) {

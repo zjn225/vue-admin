@@ -1,6 +1,6 @@
 <template>
     <section>
-          
+
         <!--列表-->
         <el-table :data="drafts" v-loading="listLoading" highlight-current-row style="width: 100%;"
                   @selection-change='selectArticle'>
@@ -53,9 +53,9 @@
         </el-dialog>
         <!--工具条-->
         <el-col :span="24" class="toolbar">
-           
+
             <el-button type="danger" @click="batchRemove" :disabled="this.sels.length<=1">批量删除</el-button>
-           
+
             <!--换页-->
             <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="20"
                            :total="total" style="float:right;">
@@ -180,7 +180,7 @@ export default {
               ]
           }
       ],
-     
+
       filters: {
         title: ""
       },
@@ -219,7 +219,7 @@ export default {
       });
       this.drafts = target;
       this.listLoading = false;
-      
+
     },
     //获取文章列表
     getArticleList(start, flag = true) {
@@ -232,12 +232,18 @@ export default {
           flag && (this.total = pageCount);
         } else {
         this.listLoading = false;
-            
+
           this.$message({
             message: msg,
             type: "error"
           });
         }
+      },()=>{
+          this.loading = false;
+          this.$message({
+              message: '服务器错误',
+              type: "error"
+          });
       });
     },
      postArticle(index){
@@ -249,10 +255,10 @@ export default {
           let id = this.drafts[index].id;
           publishDraft({id}).then(data=>{
           this.listLoading = false;
-            
+
             let { code, msg } = data;
             if (code === 200) {
-                   
+
               this.$message({
                 message: "发布成功",
                 type: "success"
@@ -264,7 +270,13 @@ export default {
                 type: "error"
               });
             }
-          })  
+          },(e)=>{
+              this.loading = false;
+              this.$message({
+                  message: '服务器错误',
+                  type: "error"
+              });
+          })
 
         })
     },
@@ -297,6 +309,12 @@ export default {
                 type: "error"
               });
             }
+          },(e)=>{
+              this.loading = false;
+              this.$message({
+                  message: '服务器错误',
+                  type: "error"
+              });
           });
         })
         .catch(() => {});
@@ -327,6 +345,12 @@ export default {
               type: "error"
             });
           }
+        },(e)=>{
+            this.loading = false;
+            this.$message({
+                message: '服务器错误',
+                type: "error"
+            });
         });
       });
     },
@@ -338,8 +362,8 @@ export default {
       const { data, code, msg,dratTime } = result;
       if (code === 200) {
         let selectedOptions = [];
-        selectedOptions[0] = this.drafts[index].sort; 
-        selectedOptions[1] = ""+this.drafts[index].type; 
+        selectedOptions[0] = this.drafts[index].sort;
+        selectedOptions[1] = ""+this.drafts[index].type;
         this.SAVE_SELECTOPTION(selectedOptions)
         console.log(selectedOptions)
         this.SAVE_DRAFTINFO(data);
@@ -364,7 +388,7 @@ export default {
     handleMove: function() {
       const column = this.column;
       console.log(typeof this.column[1])
-      
+
       const sort = this.drafts[this.removeID].sort;
       const type = this.drafts[this.removeID].type;
       const id = this.drafts[this.removeID].id;
@@ -378,7 +402,7 @@ export default {
       this.$confirm("确认移动该文章吗?", "提示", {
         type: "warning"
       }).then(() => {
-        
+
         moveDraft({ id, sort:column[0],type:column[1] }).then(data => {
           let { code, msg } = data;
           if (code === 200) {
@@ -396,6 +420,12 @@ export default {
               type: "error"
             });
           }
+        },(e)=>{
+            this.loading = false;
+            this.$message({
+                message: '服务器错误',
+                type: "error"
+            });
         });
       });
     }
