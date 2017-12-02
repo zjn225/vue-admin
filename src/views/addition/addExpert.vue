@@ -155,7 +155,6 @@
             cropSuccess(imgDataUrl, field) {
                 console.log("-------- crop success --------");
                 this.dialogImageUrl = imgDataUrl;
-                console.log(this.dialogImageUrl);
                 this.dialogVisible = true;
             },
             /**
@@ -167,7 +166,7 @@
             cropUploadSuccess(jsonData, field) {
                 console.log("-------- upload success --------");
                 this.avatar = jsonData.path;
-
+                this.show = !this.show;
             },
             /**
              * upload fail

@@ -225,6 +225,7 @@
                 const result = await getPerson({id,sort:'team'});
                 const {data, code, msg} = result.data;
                 if (code === 200) {
+                    console.log(data[0])
                     this.SAVE_TEAMONE(data[0]);
                     this.$router.push({path: "/editPerson"});
                 } else {

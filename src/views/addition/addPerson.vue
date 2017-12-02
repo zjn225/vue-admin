@@ -154,9 +154,9 @@
              * [param] field
              */
             cropSuccess(imgDataUrl, field) {
-                console.log("-------- crop success --------");
+                console.log(field)
                 this.dialogImageUrl = imgDataUrl;
-                console.log(this.dialogImageUrl);
+               
                 this.dialogVisible = true;
             },
             /**
@@ -168,7 +168,7 @@
             cropUploadSuccess(jsonData, field) {
                 console.log("-------- upload success --------");
                 this.avatar = jsonData.path;
-
+                this.show = !this.show;
             },
             /**
              * upload fail
@@ -177,9 +177,7 @@
              * [param] field
              */
             cropUploadFail(status, field) {
-                console.log("-------- upload fail --------");
-                console.log(status);
-                console.log("field: " + field);
+               
 
             },
             

@@ -118,7 +118,6 @@
              * [param] field
              */
             cropSuccess(imgDataUrl, field) {
-                console.log(imgDataUrl, field);
                 console.log("-------- crop success --------");
                 this.imgDataUrl = imgDataUrl;
             },

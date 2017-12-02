@@ -26,7 +26,7 @@
                       :height="200"
                       :url="avatarURL"
                       img-format="png"></myUpload>
-            <img class='avatar' :src='person.avatar' alt="asd">
+            <img class='avatar' :src='person.avatar'>
 
 
         </div>
@@ -144,6 +144,7 @@
             cropUploadSuccess(jsonData, field) {
                 console.log("-------- upload success --------");
                 this.person.avatar = jsonData.path;
+                this.show = !this.show;
 
             },
             /**
@@ -154,7 +155,6 @@
              */
             cropUploadFail(status, field) {
                 console.log("-------- upload fail --------");
-                console.log(status);
                 console.log("field: " + field);
 
             },

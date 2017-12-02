@@ -88,7 +88,7 @@
                     checkPass: 'admin'
                 },
                 ruleForm2:{
-                    email:'xiaorock@126.com'
+                    email:''
                 },
                 ruleForm3:{
                     pass:'',

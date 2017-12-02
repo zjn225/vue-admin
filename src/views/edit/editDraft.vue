@@ -371,7 +371,7 @@
                     isbanner: this.isBanner,
                     indexbanner: this.indexbanner
                 });
-                const {code, msg} = result.data;
+                const {code, msg} = result;
                 if (code === 200) {
 
                     //成功发布草稿后，发送请求删除该草稿
@@ -384,7 +384,7 @@
                         message: msg,
                         type: "success"
                     });
-                    this.$store.state.selectedOptions = selectedOptions;
+                    this.$store.state.selectedOptions = this.selectedOptions;
                     this.$router.push({path: "/article"});
                 } else {
                     this.$message({
