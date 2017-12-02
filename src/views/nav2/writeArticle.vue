@@ -270,7 +270,7 @@
                     this.hasPic = false;
                 }
             },
-            async saveDraft() {
+            saveDraft() {
               
                 if (this.content.length === 0) {
                    this.$message({message: "请不要发表内容为空的文章",type: 'warning'});
@@ -298,7 +298,7 @@
                 }
                
                 this.loading = true;
-                let result = await postDraft({
+                postDraft({
                     title: this.title,
                     author: this.author,
                     content: this.content,
@@ -306,9 +306,10 @@
                     time: this.time,
                     sort : this.selectedOptions[0],
                     type: this.selectedOptions[1]
-                });
-                const {code, msg} = result;
-                if (code === 200) {
+                }).then((result) => {
+                    console.log("sssss")
+                    const {code, msg} = result;
+                    if (code === 200) {
                     this.loading = false;
                     this.$message({
                         message: '存草稿成功，请到草稿箱查看',
@@ -321,6 +322,14 @@
                         type: "error"
                     });
                 }
+                },()=>{
+                    this.loading = false;    
+                    this.$message({
+                        message: '服务器错误',
+                        type: "error"
+                    });
+                });
+               
             },
             async onEditorChange() {
               
@@ -354,7 +363,7 @@
                     return;
                 }
                 this.loading = true;
-                let result = await postArticle({
+                postArticle({
                     title: this.title,
                     author: this.author,
                     content: this.content,
@@ -363,9 +372,9 @@
                     selectedOptions: this.selectedOptions,
                     isbanner: this.isBanner,
                     indexbanner: this.indexbanner
-                });
-                const {code, msg} = result.data;
-                if (code === 200) {
+                }).then(data=>{
+                    const {code, msg} = data;
+                    if (code === 200) {
                     this.loading = false;
                     this.$message({
                         message: msg,
@@ -379,6 +388,14 @@
                         type: "error"
                     });
                 }
+                },(e)=>{
+                    this.loading = false;    
+                    this.$message({
+                        message: '服务器错误',
+                        type: "error"
+                    });
+                })
+                
             },
             onUploadSuccess: function (path) {
                 this.showCrop = false;

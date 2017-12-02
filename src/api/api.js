@@ -39,7 +39,7 @@ export const changePass = params => {
 
 /*文章模块*/
 export const postArticle = params => {
-    return instance.post(`/data/article`,params);
+    return instance.post(`/data/article`,params).then(res => res.data);
 };
 export const getCatalog = params => {
     return instance.get(`/data/article/catalog`, {params: params});

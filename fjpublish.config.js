@@ -17,7 +17,7 @@ module.exports = {
      ],
     //modules结束
     // nobuild: true,  
-    
+    nobackup:false,
     tag: 'v1', //modules外的字段可用于每一个module继承,这里仅用于举例
 }
 
