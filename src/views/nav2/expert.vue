@@ -144,16 +144,15 @@
                                     type: "error"
                                 });
                             }
-                        });
-                    },(e)=>{
+                        },(e)=>{
                         this.loading = false;
                         this.$message({
                             message: '服务器错误',
                             type: "error"
                         });
-                    })
-                    .catch(() => {
                     });
+                    })
+                    
             },
               //批量删除
             batchRemove: function () {

@@ -119,203 +119,205 @@
 </template>
 
 <script>
-    import util from "../../common/js/util";
-    import {mapMutations} from "vuex";
-    import {
-        getReadFeedList,
-        removeFeeds,
-        batchRemoveFeeds,
-        addFeeds,
-        getFeedOne,
-        deleteFeed,
-        lookContent
-    } from "../../api/api";
+import util from "../../common/js/util";
+import { mapMutations } from "vuex";
+import {
+  getReadFeedList,
+  removeFeeds,
+  batchRemoveFeeds,
+  addFeeds,
+  getFeedOne,
+  deleteFeed,
+  lookContent
+} from "../../api/api";
 
-    export default {
-        data() {
-            return {
-                dialogVisible: false,
+export default {
+  data() {
+    return {
+      dialogVisible: false,
 
-                tabPosition: 'top',
-                Readfeeds:[],
-                isReadfeeds: [
-                    
-                ],
-                unReadfeeds: [
-                
-                ],
-                isReadTotal: 0,
-                unReadTotal: 0,
-                page: 1,
-                content : '',
-                isLoading: false,
-                sels: [], //列表选中列
-            };
-        },
-        methods: {
-            //已读的
-            handleCurrentChange(currentPage) {
-                const start = (currentPage - 1) * 20 + currentPage - 1;
-                getIsReadFeeds(start);
-            },
-
-            //未读的
-            handleCurrentChange(currentPage) {
-                const start = (currentPage - 1) * 20 + currentPage - 1;
-                getUnReadFeeds(start);
-            },
-
-            //获取反馈列表
-            getFeeds(start = 0) {
-                this.isLoading = false; //记得修改为true
-                getReadFeedList({start}).then(data => {
-                    this.isReadtotal = data.pageCount;
-                    console.log(data.feedback)
-                    this.Readfeeds = data.feedback;
-                    this.isLoading = false;
-                    this.sortReadFeeds();
-                },(e)=>{
-                    this.loading = false;
-                    this.$message({
-                        message: '服务器错误',
-                        type: "error"
-                    });
-                });
-            },
-            //分未读和已读
-            sortReadFeeds(){
-                 this.isReadfeeds = [];
-                this.unReadfeeds = [];
-                for(let i = 0, len = this.Readfeeds.length;i < len;i++){
-                    this.Readfeeds[i].index = i;
-                   
-                    console.log(this.Readfeeds[i])
-                    if(this.Readfeeds[i].isread == 1){
-                    this.Readfeeds[i].status = '已读';
-                        
-                        this.isReadfeeds.push(this.Readfeeds[i])
-                    }else{
-                    this.Readfeeds[i].status = '未读';
-                        
-                        this.unReadfeeds.push(this.Readfeeds[i])
-                        
-                    }
-                }
-            },
-
-            //删除
-            handleDel: function (index, row) {
-                this.$confirm("确认删除该记录吗?", "提示", {
-                    type: "warning"
-                })
-                    .then(() => {
-                        this.isLoading = true;
-                        let feed = [{id: row.id}];
-                        deleteFeed({feed}).then(data => {
-                            this.isLoading = false;
-                            let {code, msg} = data;
-                            if (code === 200) {
-                                this.$message({
-                                    message: "删除成功",
-                                    type: "success"
-                                });
-                                this.getFeeds(0);
-                            } else {
-                                this.$message({
-                                    message: msg,
-                                    type: "error"
-                                });
-                            }
-                        });
-                    },(e)=>{
-                        this.loading = false;
-                        this.$message({
-                            message: '服务器错误',
-                            type: "error"
-                        });
-                    })
-                    .catch(() => {
-                    });
-            },
-
-           
-            //查看详情列表
-            look: function (index,row) {
-               this.isLoading = true;
-                
-                this.Readfeeds[row.index].isread = 1;
-                this.sortReadFeeds();
-                let id = row.id;
-              
-                getFeedOne({id}).then(data => {
-           
-                    this.isLoading = false;
-                    let {feed, code, msg} = data
-                    if (code === 200) {
-                        this.content = feed.content;
-                        this.dialogVisible = true; //打开弹出框，里面是详情
-                    } else {
-                        this.$message({
-                            message: msg,
-                            type: "error"
-                        });
-                    }
-                },(e)=>{
-                    this.loading = false;
-                    this.$message({
-                        message: '服务器错误',
-                        type: "error"
-                    });
-                })
-
-            },
-            selsChange: function (sels) {
-                this.sels = sels;
-            },
-            //详情页的关闭
-            handleClose(done) {
-                done();
-            },
-            //批量删除
-            batchRemove: function () {
-                var feed = this.sels.map(item => ({id: item.id}));
-                this.$confirm("确认删除选中记录吗？", "提示", {
-                    type: "warning"
-                })
-                    .then(() => {
-                        this.isLoading = true;
-                      
-                        deleteFeed({feed}).then(res => {
-                            this.isLoading = false;
-                            let {code, msg} = res;
-                            if (code === 200) {
-                                this.$message({
-                                    message: "删除成功",
-                                    type: "success"
-                                });
-                            this.getFeeds(0);
-                            } else {
-                                this.$message({
-                                    message: msg,
-                                    type: "error"
-                                });
-                            }
-                        },(e)=>{
-                            this.loading = false;
-                            this.$message({
-                                message: '服务器错误',
-                                type: "error"
-                            });
-                        });
-                    })
-                    .catch(() => {
-                    });
-            }
-        },
-        mounted() {
-            this.getFeeds(0);
-        }
+      tabPosition: "top",
+      Readfeeds: [],
+      isReadfeeds: [],
+      unReadfeeds: [],
+      isReadTotal: 0,
+      unReadTotal: 0,
+      page: 1,
+      content: "",
+      isLoading: false,
+      sels: [] //列表选中列
     };
+  },
+  methods: {
+    //已读的
+    handleCurrentChange(currentPage) {
+      const start = (currentPage - 1) * 20 + currentPage - 1;
+      getIsReadFeeds(start);
+    },
+
+    //未读的
+    handleCurrentChange(currentPage) {
+      const start = (currentPage - 1) * 20 + currentPage - 1;
+      getUnReadFeeds(start);
+    },
+
+    //获取反馈列表
+    getFeeds(start = 0) {
+      this.isLoading = false; //记得修改为true
+      getReadFeedList({ start }).then(
+        data => {
+          this.isReadtotal = data.pageCount;
+          console.log(data.feedback);
+          this.Readfeeds = data.feedback;
+          this.isLoading = false;
+          this.sortReadFeeds();
+        },
+        e => {
+          this.loading = false;
+          this.$message({
+            message: "服务器错误",
+            type: "error"
+          });
+        }
+      );
+    },
+    //分未读和已读
+    sortReadFeeds() {
+      this.isReadfeeds = [];
+      this.unReadfeeds = [];
+      for (let i = 0, len = this.Readfeeds.length; i < len; i++) {
+        this.Readfeeds[i].index = i;
+
+        console.log(this.Readfeeds[i]);
+        if (this.Readfeeds[i].isread == 1) {
+          this.Readfeeds[i].status = "已读";
+
+          this.isReadfeeds.push(this.Readfeeds[i]);
+        } else {
+          this.Readfeeds[i].status = "未读";
+
+          this.unReadfeeds.push(this.Readfeeds[i]);
+        }
+      }
+    },
+
+    //删除
+    handleDel: function(index, row) {
+      this.$confirm("确认删除该记录吗?", "提示", {
+        type: "warning"
+      })
+        .then(() => {
+          this.isLoading = true;
+          let feed = [{ id: row.id }];
+          deleteFeed({ feed }).then(
+            data => {
+              this.isLoading = false;
+              let { code, msg } = data;
+              if (code === 200) {
+                this.$message({
+                  message: "删除成功",
+                  type: "success"
+                });
+                this.getFeeds(0);
+              } else {
+                this.$message({
+                  message: msg,
+                  type: "error"
+                });
+              }
+            },
+            e => {
+              this.loading = false;
+              this.$message({
+                message: "服务器错误",
+                type: "error"
+              });
+            }
+          );
+        })
+        
+    },
+
+    //查看详情列表
+    look: function(index, row) {
+      this.isLoading = true;
+
+      this.Readfeeds[row.index].isread = 1;
+      this.sortReadFeeds();
+      let id = row.id;
+
+      getFeedOne({ id }).then(
+        data => {
+          this.isLoading = false;
+          let { feed, code, msg } = data;
+          if (code === 200) {
+            this.content = feed.content;
+            this.dialogVisible = true; //打开弹出框，里面是详情
+          } else {
+            this.$message({
+              message: msg,
+              type: "error"
+            });
+          }
+        },
+        e => {
+          this.loading = false;
+          this.$message({
+            message: "服务器错误",
+            type: "error"
+          });
+        }
+      );
+    },
+    selsChange: function(sels) {
+      this.sels = sels;
+    },
+    //详情页的关闭
+    handleClose(done) {
+      done();
+    },
+    //批量删除
+    batchRemove: function() {
+      var feed = this.sels.map(item => ({ id: item.id }));
+      this.$confirm("确认删除选中记录吗？", "提示", {
+        type: "warning"
+      })
+        .then(() => {
+          this.isLoading = true;
+
+          deleteFeed({ feed }).then(
+            res => {
+              this.isLoading = false;
+              let { code, msg } = res;
+              if (code === 200) {
+                this.$message({
+                  message: "删除成功",
+                  type: "success"
+                });
+                this.getFeeds(0);
+              } else {
+                this.$message({
+                  message: msg,
+                  type: "error"
+                });
+              }
+            },
+            e => {
+              this.loading = false;
+              this.$message({
+                message: "服务器错误",
+                type: "error"
+              });
+            }
+          );
+        })
+        .catch(() => {});
+    }
+  },
+  mounted() {
+    this.getFeeds(0);
+  }
+};
 </script>
 
 <style scoped>
