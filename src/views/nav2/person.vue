@@ -22,9 +22,9 @@
             </el-table-column>
             <el-table-column type="index" label="序号">
             </el-table-column>
-            <el-table-column prop="name" label="姓名" sortable>
+            <el-table-column prop="name" label="姓名" >
             </el-table-column>
-            <el-table-column prop="position" label="职称" sortable>
+            <el-table-column prop="position" label="职称" >
             </el-table-column>
             <el-table-column label="操作" width="600">
                 <template slot-scope="scope">

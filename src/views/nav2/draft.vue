@@ -12,15 +12,15 @@
             </el-table-column>
             <el-table-column prop="author" label="作者" width="100">
             </el-table-column>
-            <el-table-column prop="_sort" label="类别" width="100" sortable>
+            <el-table-column prop="_sort" label="类别" width="100" >
             </el-table-column>
             <el-table-column prop="_type" label="子类别" width="100">
             </el-table-column>
             <el-table-column prop="source" label="文章来源" width="100">
             </el-table-column>
-            <el-table-column prop="time" label="文章发布时间" width="130" sortable>
+            <el-table-column prop="time" label="文章发布时间" width="130" >
             </el-table-column>
-            <el-table-column prop="draftTime" label="上次修改时间" width="200" sortable>
+            <el-table-column prop="draftTime" label="上次修改时间" width="200" >
             </el-table-column>
             <el-table-column label="操作" width="420">
                 <template slot-scope="scope">

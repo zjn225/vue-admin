@@ -26,13 +26,13 @@
             </el-table-column>
             <el-table-column type="index" label="序号" width="50">
             </el-table-column>
-            <el-table-column prop="title" label="标题" max-width="320" sortable>
+            <el-table-column prop="title" label="标题" max-width="320" >
             </el-table-column>
-            <el-table-column prop="author" label="作者" width="100" sortable>
+            <el-table-column prop="author" label="作者" width="100" >
             </el-table-column>
-            <el-table-column prop="source" label="文章来源" width="180" sortable>
+            <el-table-column prop="source" label="文章来源" width="180" >
             </el-table-column>
-            <el-table-column prop="time" label="发布时间" width="200" sortable>
+            <el-table-column prop="time" label="发布时间" width="200" >
             </el-table-column>
             <el-table-column label="操作" width="320">
                 <template slot-scope="scope">

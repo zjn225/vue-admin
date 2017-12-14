@@ -374,8 +374,8 @@
                     indexbanner: this.indexbanner
                 }).then(data=>{
                     const {code, msg} = data;
-                    if (code === 200) {
                     this.loading = false;
+                    if (code === 200) {
                     this.$message({
                         message: msg,
                         type: "success"

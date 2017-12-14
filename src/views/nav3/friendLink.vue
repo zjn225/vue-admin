@@ -20,9 +20,9 @@
             </el-table-column>
             <el-table-column type="index" label="序号" width="100">
             </el-table-column>
-            <el-table-column prop="name" label="网站名称" max-width="160" sortable>
+            <el-table-column prop="name" label="网站名称" max-width="160" >
             </el-table-column>
-            <el-table-column prop="link" label="网站链接" max-width="220" sortable>
+            <el-table-column prop="link" label="网站链接" max-width="220" >
             </el-table-column>
             <el-table-column label="操作" width="350">
                 <template slot-scope="scope">
